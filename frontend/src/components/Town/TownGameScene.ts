@@ -104,6 +104,10 @@ export default class TownGameScene extends Phaser.Scene {
       this._resourcePathPrefix + '/assets/tilesets/22_Museum_32x32.png',
     );
     this.load.image(
+      '23_Pets_32x32',
+      this._resourcePathPrefix + '/assets/tilesets/23_Pets_32x32.png',
+    );
+    this.load.image(
       '5_Classroom_and_library_32x32',
       this._resourcePathPrefix + '/assets/tilesets/5_Classroom_and_library_32x32.png',
     );
@@ -325,6 +329,7 @@ export default class TownGameScene extends Phaser.Scene {
     const tileset = [
       'Room_Builder_32x32',
       '22_Museum_32x32',
+      '23_Pets_32x32',
       '5_Classroom_and_library_32x32',
       '12_Kitchen_32x32',
       '1_Generic_32x32',

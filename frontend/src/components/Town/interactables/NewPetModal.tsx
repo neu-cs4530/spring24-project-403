@@ -25,19 +25,12 @@ import {
   import dog from './dog.jpg';
   
   export default function NewPetModal(): JSX.Element {
-<<<<<<< HEAD
     // will be replaced by react hook to fetch the pet adoption center controller
     //const gameAreaController = use<GenericGameAreaController>();
     const coveyTownController = useTownController();
     const newConversation = useInteractable('conversationArea');
 
     // will be replaced with actual pets list which will be fetched from the model which is provided by the controller
-=======
-    const coveyTownController = useTownController();
-    const newConversation = useInteractable('conversationArea');
-    const [topic, setTopic] = useState<string>('');
-
->>>>>>> 4ddd181 (first attempt at  Create the user interface (only frontend) as designed in task 1.5 for the pet adoption center and replace placeholder in Task 1.7.2 with the results of this task)
     const placeHolderPetsList = ['dog', 'cat', 'rabbit']
   
     const isOpen = newConversation !== undefined;

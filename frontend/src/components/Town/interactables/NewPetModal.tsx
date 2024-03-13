@@ -23,31 +23,42 @@ import {
   import { Omit_ConversationArea_type_ } from '../../../generated/client';
   import useTownController from '../../../hooks/useTownController';
   import dog from './dog.jpg';
+import PetAdoptionCenter from './PetAdoptionCenter';
   
   export default function NewPetModal(): JSX.Element {
     // will be replaced by react hook to fetch the pet adoption center controller
     //const gameAreaController = use<GenericGameAreaController>();
     const coveyTownController = useTownController();
-    const newConversation = useInteractable('conversationArea');
+    // this placeholder is necessary since no pet adoption centers have been created on the map/town yet
+    const adoptionCenter = useInteractable('conversationArea');
+    const adoptionCenterReal = useInteractable('petAdoptionCenter') as PetAdoptionCenter;
+    
+    // How to get controller for a given model for adoption center
+    //const adoptionCenterController = adoptionCenter ? coveyTownController.getPetAdoptionCenterController(adoptionCenterReal) : undefined;
 
     // will be replaced with actual pets list which will be fetched from the model which is provided by the controller
-    const placeHolderPetsList = ['dog', 'cat', 'rabbit']
-  
-    const isOpen = newConversation !== undefined;
+    
+    let pets = adoptionCenterReal?.getPets();
+    //let pets = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Fish'];
+    if (!pets) {
+      pets = [];
+    }
+    
+    const isOpen = adoptionCenter !== undefined;
   
     useEffect(() => {
-      if (newConversation) {
+      if (adoptionCenter) {
         coveyTownController.pause();
       } else {
         coveyTownController.unPause();
       }
-    }, [coveyTownController, newConversation]);
+    }, [coveyTownController, adoptionCenter]);
   
     const closeModal = useCallback(() => {
-      if (newConversation) {
-        coveyTownController.interactEnd(newConversation);
+      if (adoptionCenter) {
+        coveyTownController.interactEnd(adoptionCenter);
       }
-    }, [coveyTownController, newConversation]);
+    }, [coveyTownController, adoptionCenter]);
   
     const toast = useToast();
   
@@ -82,7 +93,7 @@ import {
                   align='center'
                   justify='center'
                 >
-                  {placeHolderPetsList.map((pet, index) => (
+                  {pets.map((pet, index) => (
                     <Box key={index}>
                       <img src={dog} alt="Placeholder"/>
                       <Text>{pet}</Text>

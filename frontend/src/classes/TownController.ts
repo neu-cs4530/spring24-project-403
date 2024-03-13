@@ -43,6 +43,8 @@ import InteractableAreaController, {
 import TicTacToeAreaController from './interactable/TicTacToeAreaController';
 import ViewingAreaController from './interactable/ViewingAreaController';
 import PlayerController from './PlayerController';
+import PetAdoptionCenterController from './interactable/PetAdoptionCenterController';
+import PetAdoptionCenter from '../components/Town/interactables/PetAdoptionCenter';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY_MS = 300;
 const SOCKET_COMMAND_TIMEOUT_MS = 5000;
@@ -642,6 +644,21 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         reject(new Error('Invalid town ID'));
       });
     });
+  }
+
+  /**
+   * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
+   */
+  public getPetAdoptionCenterController(petAdoptionCenter: PetAdoptionCenter): PetAdoptionCenterController {
+    const existingController = this._interactableControllers.find(
+      // TOOD: may need to change this to petAdoptionCenter.name
+      eachExistingArea => eachExistingArea.id === petAdoptionCenter.id,
+    );
+    if (existingController instanceof PetAdoptionCenterController) {
+      return existingController;
+    } else {
+      throw new Error(`No such pet adoption center controller ${existingController}`);
+    }
   }
 
   /**

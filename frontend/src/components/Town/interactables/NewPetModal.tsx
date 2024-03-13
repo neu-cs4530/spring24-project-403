@@ -25,10 +25,12 @@ import {
   import dog from './dog.jpg';
   
   export default function NewPetModal(): JSX.Element {
+    // will be replaced by react hook to fetch the pet adoption center controller
+    //const gameAreaController = use<GenericGameAreaController>();
     const coveyTownController = useTownController();
     const newConversation = useInteractable('conversationArea');
-    const [topic, setTopic] = useState<string>('');
 
+    // will be replaced with actual pets list which will be fetched from the model which is provided by the controller
     const placeHolderPetsList = ['dog', 'cat', 'rabbit']
   
     const isOpen = newConversation !== undefined;

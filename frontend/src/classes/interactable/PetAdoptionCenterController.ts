@@ -35,9 +35,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * @param id
    * @param topic
    */
-  constructor(id: string, topic?: string) {
+  constructor(id: string) {
     super(id);
-    this._topic = topic;
   }
 
   public isActive(): boolean {
@@ -73,17 +72,17 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * Create a new PetAdoptionCenterController to match a given ConversationAreaModel
+   * Create a new PetAdoptionCenterController to match a given PetAdoptionCenter
    * @param convAreaModel Conversation area to represent
    * @param playerFinder A function that will return a list of PlayerController's
    *                     matching a list of Player ID's
    */
   static fromConversationAreaModel(
-    convAreaModel: ConversationAreaModel,
+    petAdoptionCenterModel: PetAdoptionCenter,
     playerFinder: (playerIDs: string[]) => PlayerController[],
   ): PetAdoptionCenterController {
-    const ret = new PetAdoptionCenterController(convAreaModel.id, convAreaModel.topic);
-    ret.occupants = playerFinder(convAreaModel.occupants);
+    const ret = new PetAdoptionCenterController(petAdoptionCenterModel.id);
+    ret.occupants = playerFinder(petAdoptionCenterModel.occupants);
     return ret;
   }
 }

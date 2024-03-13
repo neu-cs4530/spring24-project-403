@@ -3,7 +3,7 @@ import { ConversationArea as ConversationAreaModel, PetAdoptionCenter } from '..
 import PlayerController from '../PlayerController';
 import InteractableAreaController, {
   BaseInteractableEventMap,
-  CONVERSATION_AREA_TYPE,
+  PET_ADOPTION_CENTER_TYPE,
 } from './InteractableAreaController';
 
 /**
@@ -49,7 +49,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   get type(): string {
-    return CONVERSATION_AREA_TYPE;
+    return PET_ADOPTION_CENTER_TYPE;
   }
 
 

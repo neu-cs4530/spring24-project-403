@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
 import { Player as PlayerModel, PlayerLocation } from '../types/CoveyTownSocket';
+import BasePet from '../../../townService/src/lib/BasePet';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
@@ -20,6 +21,13 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   private readonly _userName: string;
 
   public gameObjects?: PlayerGameObjects;
+
+  /**
+   * A map of pets owned by this player.
+   * 
+   * Is a map the best data structure for this? TBD
+   */
+  public pets = new Map<string, BasePet>();
 
   constructor(id: string, userName: string, location: PlayerLocation) {
     super();

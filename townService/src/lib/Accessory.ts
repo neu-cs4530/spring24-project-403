@@ -1,15 +1,16 @@
 enum AccessoryType {
-    HAT = 'hat',
-    COLLAR = 'collar',
-    GLASSES = 'glasses',  
+  HAT = 'hat',
+  COLLAR = 'collar',
+  GLASSES = 'glasses',
 }
 
 export default class Accessory {
-    private readonly _type: AccessoryType;
-    private readonly _color: string;
+  private readonly _type: AccessoryType;
 
-    constructor(type: AccessoryType, color: string) {
-        this._type = type;
-        this._color = color;
-    }
+  private readonly _color: string;
+
+  constructor(type: AccessoryType, color: string) {
+    this._type = type;
+    this._color = color;
+  }
 }

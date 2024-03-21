@@ -425,7 +425,9 @@ export default class Town {
 
     const petArea = objectLayer.objects
       .filter(eachObject => eachObject.type === 'PetAdoptionCenter')
-      .map(eachPetAreaObj => PetAdoptionCenterArea.fromMapObject(eachPetAreaObj, this._broadcastEmitter));
+      .map(eachPetAreaObj =>
+        PetAdoptionCenterArea.fromMapObject(eachPetAreaObj, this._broadcastEmitter),
+      );
 
     this._interactables = this._interactables
       .concat(viewingAreas)

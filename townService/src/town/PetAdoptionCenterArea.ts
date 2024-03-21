@@ -15,7 +15,6 @@ import {
 import InteractableArea from './InteractableArea';
 
 export default class PetAdoptionCenterArea extends InteractableArea {
-
   /**
    * Creates a new ViewingArea
    *
@@ -23,11 +22,7 @@ export default class PetAdoptionCenterArea extends InteractableArea {
    * @param coordinates the bounding box that defines this viewing area
    * @param townEmitter a broadcast emitter that can be used to emit updates to players
    */
-  public constructor(
-    id : InteractableID,
-    coordinates: BoundingBox,
-    townEmitter: TownEmitter,
-  ) {
+  public constructor(id: InteractableID, coordinates: BoundingBox, townEmitter: TownEmitter) {
     super(id, coordinates, townEmitter);
   }
 
@@ -48,7 +43,7 @@ export default class PetAdoptionCenterArea extends InteractableArea {
    *
    * @param viewingArea updated model
    */
-  public updateModel(command : PetAdoptionCenterCommand) {
+  public updateModel(command: PetAdoptionCenterCommand) {
     console.log('Trying to update PetAdoptionCenter');
   }
 
@@ -70,18 +65,17 @@ export default class PetAdoptionCenterArea extends InteractableArea {
    * @param townEmitter An emitter that can be used by this viewing area to broadcast updates to players in the town
    * @returns
    */
-    public static fromMapObject(mapObject: ITiledMapObject, townEmitter: TownEmitter): PetAdoptionCenterArea {
-        const { name, width, height } = mapObject;
-        if (!width || !height) {
-            throw new Error(`Malformed viewing area ${name}`);
-        }
-        const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
-        return new PetAdoptionCenterArea(
-            name as InteractableID,
-            rect,
-            townEmitter,
-        );
+  public static fromMapObject(
+    mapObject: ITiledMapObject,
+    townEmitter: TownEmitter,
+  ): PetAdoptionCenterArea {
+    const { name, width, height } = mapObject;
+    if (!width || !height) {
+      throw new Error(`Malformed viewing area ${name}`);
     }
+    const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
+    return new PetAdoptionCenterArea(name as InteractableID, rect, townEmitter);
+  }
 
   public handleCommand<CommandType extends InteractableCommand>(
     command: CommandType,

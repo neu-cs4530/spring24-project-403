@@ -1,4 +1,4 @@
-import {PetAdoptionCenter as PetAdoptionCenterModel} from '../../types/CoveyTownSocket';
+import { PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
 import InteractableAreaController, {
   BaseInteractableEventMap,
   PET_ADOPTION_CENTER_TYPE,
@@ -18,12 +18,11 @@ export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
  * frontend's. The PetAdoptionCenterController emits events when the pet adoption center changes.
  */
 export default class PetAdoptionCenterController extends InteractableAreaController<
-    PetAdoptionCenterEvents,
-    PetAdoptionCenterModel
+  PetAdoptionCenterEvents,
+  PetAdoptionCenterModel
 > {
-
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
-      throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
 
   private _model: PetAdoptionCenterModel;
@@ -50,7 +49,6 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   get type(): string {
     return PET_ADOPTION_CENTER_TYPE;
   }
-
 
   /**
    * A conversation area is empty if there are no occupants in it.

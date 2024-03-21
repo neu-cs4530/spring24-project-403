@@ -329,7 +329,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   public get petAdoptionCenterArea() {
-    console.log('this._interactableControllers', this._interactableControllers);
     const ret = this._interactableControllers.find(
       eachInteractable => eachInteractable instanceof PetAdoptionCenterController,
     );
@@ -667,12 +666,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
    */
   public getPetAdoptionCenterController(petAdoptionCenter: PetAdoptionCenter): PetAdoptionCenterController {
-    this._interactableControllers.map(eachExistingArea => {
-      console.log('eachExistingArea', eachExistingArea.friendlyName);
-    }, this);
-    const existingController = this._interactableControllers.find(
-      // TOOD: may need to change this to petAdoptionCenter.name
-          
+    const existingController = this._interactableControllers.find( 
       eachExistingArea => eachExistingArea.id === petAdoptionCenter.name,
     );
     if (existingController instanceof PetAdoptionCenterController) {

@@ -23,6 +23,7 @@ import ConversationArea from './ConversationArea';
 import GameAreaFactory from './games/GameAreaFactory';
 import InteractableArea from './InteractableArea';
 import ViewingArea from './ViewingArea';
+import PetAdoptionCenterArea from './PetAdoptionCenterArea';
 
 /**
  * The Town class implements the logic for each town: managing the various events that
@@ -422,10 +423,15 @@ export default class Town {
       .filter(eachObject => eachObject.type === 'GameArea')
       .map(eachGameAreaObj => GameAreaFactory(eachGameAreaObj, this._broadcastEmitter));
 
+    const petArea = objectLayer.objects
+      .filter(eachObject => eachObject.type === 'PetAdoptionCenter')
+      .map(eachPetAreaObj => PetAdoptionCenterArea.fromMapObject(eachPetAreaObj, this._broadcastEmitter));
+
     this._interactables = this._interactables
       .concat(viewingAreas)
       .concat(conversationAreas)
-      .concat(gameAreas);
+      .concat(gameAreas)
+      .concat(petArea);
     this._validateInteractables();
   }
 

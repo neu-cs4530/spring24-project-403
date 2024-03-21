@@ -3,7 +3,7 @@ import PetAdoptionCenterController, {
   } from '../../../classes/interactable/PetAdoptionCenterController';
   import { BoundingBox } from '../../../types/CoveyTownSocket';
   import Interactable, { KnownInteractableTypes } from '../Interactable';
-    import BasePet from '../../../../../townService/src/lib/BasePet';
+  import BasePet from '../../../../../townService/src/lib/BasePet';
   
   export default class PetAdoptionCenter extends Interactable {
     private _infoTextBox?: Phaser.GameObjects.Text;
@@ -54,7 +54,7 @@ import PetAdoptionCenterController, {
           .text(
             this.scene.scale.width / 2,
             this.scene.scale.height / 2,
-            "You've found the Pet Adoption Center. A wonderful place where you'll find lifelong companions.\nCome on in and find your best buddy.\nSee our friendly bunch of adoptable pets by pressing spacebar.",
+            "You've found the Pet Adoption Center.\nSee our friendly bunch of adoptable pets by pressing spacebar.",
             { color: '#000000', backgroundColor: '#FFFFFF' },
           )
           .setScrollFactor(0)

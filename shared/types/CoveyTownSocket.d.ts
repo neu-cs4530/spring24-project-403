@@ -219,7 +219,12 @@ interface InteractableCommandBase {
   type: string;
 }
 
-export type InteractableCommand =  ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
+export type InteractableCommand =  PetAdoptionCenterCommand | ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
+export interface PetAdoptionCenterCommand {
+  type: 'PetAdoptionCenterAdopt';
+  petID: string;
+  update: PetAdoptionCenter;
+}
 export interface ViewingAreaUpdateCommand  {
   type: 'ViewingAreaUpdate';
   update: ViewingArea;

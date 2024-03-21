@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { ConversationArea as ConversationAreaModel, PetAdoptionCenter } from '../../types/CoveyTownSocket';
-import PlayerController from '../PlayerController';
+import {PetAdoptionCenter as PetAdoptionCenterModel} from '../../types/CoveyTownSocket';
 import InteractableAreaController, {
   BaseInteractableEventMap,
   PET_ADOPTION_CENTER_TYPE,
@@ -21,22 +19,24 @@ export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
  */
 export default class PetAdoptionCenterController extends InteractableAreaController<
     PetAdoptionCenterEvents,
-    PetAdoptionCenter
+    PetAdoptionCenterModel
 > {
 
-  protected _updateFrom(newModel: PetAdoptionCenter): void {
+  protected _updateFrom(newModel: PetAdoptionCenterModel): void {
       throw new Error('Method not implemented.');
   }
 
-  private _topic?: string;
+  private _model: PetAdoptionCenterModel;
 
   /**
-   * Create a new ConversationAreaController
-   * @param id
-   * @param topic
+   * Constructs a new ViewingAreaController, initialized with the state of the
+   * provided viewingAreaModel.
+   *
+   * @param petAdoptionCenter The viewing area model that this controller should represent
    */
-  constructor(id: string) {
-    super(id);
+  constructor(petAdoptionCenter: PetAdoptionCenterModel) {
+    super(petAdoptionCenter.id);
+    this._model = petAdoptionCenter;
   }
 
   public isActive(): boolean {
@@ -63,26 +63,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * Return a representation of this ConversationAreaController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
-  toInteractableAreaModel(): ConversationAreaModel {
-    return {
-      id: this.id,
-      occupants: this.occupants.map(player => player.id),
-      type: 'PetAdoptionCenter',
-    };
-  }
-
-  /**
-   * Create a new PetAdoptionCenterController to match a given PetAdoptionCenter
-   * @param convAreaModel Conversation area to represent
-   * @param playerFinder A function that will return a list of PlayerController's
-   *                     matching a list of Player ID's
-   */
-  static fromConversationAreaModel(
-    petAdoptionCenterModel: PetAdoptionCenter,
-    playerFinder: (playerIDs: string[]) => PlayerController[],
-  ): PetAdoptionCenterController {
-    const ret = new PetAdoptionCenterController(petAdoptionCenterModel.id);
-    ret.occupants = playerFinder(petAdoptionCenterModel.occupants);
-    return ret;
+  toInteractableAreaModel(): PetAdoptionCenterModel {
+    return this._model;
   }
 }

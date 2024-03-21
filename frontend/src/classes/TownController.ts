@@ -10,6 +10,7 @@ import Interactable from '../components/Town/Interactable';
 import ConversationArea from '../components/Town/interactables/ConversationArea';
 import GameArea from '../components/Town/interactables/GameArea';
 import ViewingArea from '../components/Town/interactables/ViewingArea';
+import PetAdoptionCenter from '../components/Town/interactables/PetAdoptionCenter';
 import { LoginController } from '../contexts/LoginControllerContext';
 import { TownsService, TownsServiceClient } from '../generated/client';
 import useTownController from '../hooks/useTownController';
@@ -32,6 +33,7 @@ import {
   isConversationArea,
   isTicTacToeArea,
   isViewingArea,
+  isPetAdoptionCenter,
 } from '../types/TypeUtils';
 import ConnectFourAreaController from './interactable/ConnectFourAreaController';
 import ConversationAreaController from './interactable/ConversationAreaController';
@@ -44,7 +46,6 @@ import TicTacToeAreaController from './interactable/TicTacToeAreaController';
 import ViewingAreaController from './interactable/ViewingAreaController';
 import PlayerController from './PlayerController';
 import PetAdoptionCenterController from './interactable/PetAdoptionCenterController';
-import PetAdoptionCenter from '../components/Town/interactables/PetAdoptionCenter';
 
 const CALCULATE_NEARBY_PLAYERS_DELAY_MS = 300;
 const SOCKET_COMMAND_TIMEOUT_MS = 5000;
@@ -325,6 +326,18 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
 
   public get interactableEmitter() {
     return this._interactableEmitter;
+  }
+
+  public get petAdoptionCenterArea() {
+    console.log('this._interactableControllers', this._interactableControllers);
+    const ret = this._interactableControllers.find(
+      eachInteractable => eachInteractable instanceof PetAdoptionCenterController,
+    );
+    if (ret instanceof PetAdoptionCenterController) {
+      return ret;
+    } else {
+      throw new Error('No pet adoption center found');
+    }
   }
 
   public get viewingAreas() {
@@ -633,6 +646,10 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
             this._interactableControllers.push(
               new ConnectFourAreaController(eachInteractable.id, eachInteractable, this),
             );
+          } else if (isPetAdoptionCenter(eachInteractable)) {
+            this._interactableControllers.push(
+              new PetAdoptionCenterController(eachInteractable),
+            );
           }
         });
         this._userID = initialData.userID;
@@ -650,9 +667,13 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
    */
   public getPetAdoptionCenterController(petAdoptionCenter: PetAdoptionCenter): PetAdoptionCenterController {
+    this._interactableControllers.map(eachExistingArea => {
+      console.log('eachExistingArea', eachExistingArea.friendlyName);
+    }, this);
     const existingController = this._interactableControllers.find(
       // TOOD: may need to change this to petAdoptionCenter.name
-      eachExistingArea => eachExistingArea.id === petAdoptionCenter.id,
+          
+      eachExistingArea => eachExistingArea.id === petAdoptionCenter.name,
     );
     if (existingController instanceof PetAdoptionCenterController) {
       return existingController;
@@ -840,7 +861,7 @@ export function useActiveInteractableAreas(): GenericInteractableAreaController[
   const townController = useTownController();
   const [interactableAreas, setInteractableAreas] = useState<GenericInteractableAreaController[]>(
     (townController.gameAreas as GenericInteractableAreaController[])
-      .concat(townController.conversationAreas, townController.viewingAreas)
+      .concat(townController.conversationAreas, townController.viewingAreas, townController.petAdoptionCenterArea)
       .filter(eachArea => eachArea.isActive()),
   );
   useEffect(() => {

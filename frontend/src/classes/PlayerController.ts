@@ -13,6 +13,13 @@ export type PlayerGameObjects = {
   label: Phaser.GameObjects.Text;
   locationManagedByGameScene: boolean /* For the local player, the game scene will calculate the current location, and we should NOT apply updates when we receive events */;
 };
+
+export type PetInfo = {
+  name: string;
+  pet: BasePet;
+  sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  label: Phaser.GameObjects.Text;
+};
 export default class PlayerController extends (EventEmitter as new () => TypedEmitter<PlayerEvents>) {
   private _location: PlayerLocation;
 
@@ -26,8 +33,11 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
    * A map of pets owned by this player.
    * 
    * Is a map the best data structure for this? TBD
+   * We should still need to decide how to limit the number of pets a player can own.
    */
   public pets = new Map<string, BasePet>();
+
+  public activePet?: PetInfo;
 
   constructor(id: string, userName: string, location: PlayerLocation) {
     super();

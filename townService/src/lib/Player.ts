@@ -23,6 +23,8 @@ export default class Player {
   /** A special town emitter that will emit events to the entire town BUT NOT to this player */
   public readonly townEmitter: TownEmitter;
 
+  // TODO: pet info in here?
+
   constructor(userName: string, townEmitter: TownEmitter) {
     this.location = {
       x: 0,

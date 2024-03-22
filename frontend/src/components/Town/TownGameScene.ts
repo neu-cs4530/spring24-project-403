@@ -149,6 +149,7 @@ export default class TownGameScene extends Phaser.Scene {
   updatePlayers(players: PlayerController[]) {
     //Make sure that each player has sprites
     players.map(eachPlayer => this.createPlayerSprites(eachPlayer));
+    players.map(eachPlayer => this.createPetSprites(eachPlayer));
 
     // Remove disconnected players from board
     const disconnectedPlayers = this._players.filter(
@@ -214,6 +215,7 @@ export default class TownGameScene extends Phaser.Scene {
       return;
     }
     const gameObjects = this.coveyTownController.ourPlayer.gameObjects;
+    // update active pet here
     if (gameObjects && this._cursors) {
       const prevVelocity = gameObjects.sprite.body.velocity.clone();
       const body = gameObjects.sprite.body as Phaser.Physics.Arcade.Body;
@@ -222,6 +224,7 @@ export default class TownGameScene extends Phaser.Scene {
       body.setVelocity(0);
 
       const primaryDirection = this.getNewMovementDirection();
+      // add pet here
       switch (primaryDirection) {
         case 'left':
           body.setVelocityX(-MOVEMENT_SPEED);
@@ -241,8 +244,10 @@ export default class TownGameScene extends Phaser.Scene {
           break;
         default:
           // Not moving
+          // stop pet too
           gameObjects.sprite.anims.stop();
           // If we were moving, pick and idle frame to use
+          // add pet idle frame here
           if (prevVelocity.x < 0) {
             gameObjects.sprite.setTexture('atlas', 'misa-left');
           } else if (prevVelocity.x > 0) {
@@ -442,6 +447,7 @@ export default class TownGameScene extends Phaser.Scene {
       label,
       locationManagedByGameScene: true,
     };
+    // create pet sprite here
 
     this._interactables = this.getInteractables();
 
@@ -502,6 +508,8 @@ export default class TownGameScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    // create pet walking animations here
+
     const camera = this.cameras.main;
     camera.startFollow(this.coveyTownController.ourPlayer.gameObjects.sprite);
     camera.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -554,6 +562,34 @@ export default class TownGameScene extends Phaser.Scene {
     }
   }
 
+  createPetSprites(player: PlayerController) {
+    // need to call this again when active pet changes?
+    // For active pet
+    if (player.activePet) {
+      // depending on type, add pet sprite
+      const sprite = this.physics.add
+      // draw front facing pet sprite behind player sprite
+        .sprite(player.location.x, player.location.y, 'atlas', 'misa-front')
+        .setSize(30, 40)
+        .setOffset(0, 24);
+      // Add pet label (name?)
+      const label = this.add.text(
+        // determine label location depending on player direction, for now just above 
+        // pet that is behind player
+        player.location.x,
+        player.location.y - 20,
+        '(Pet name)',
+        {
+          font: '18px monospace',
+          color: '#000000',
+          // padding: {x: 20, y: 10},
+          backgroundColor: '#ffffff',
+        },
+      );
+      this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
+    }
+  }
+
   pause() {
     if (!this._paused) {
       this._paused = true;
@@ -563,6 +599,7 @@ export default class TownGameScene extends Phaser.Scene {
         const body = gameObjects.sprite.body as Phaser.Physics.Arcade.Body;
         body.setVelocity(0);
       }
+      // stop pet sprite here too
       assert(this.input.keyboard);
       this._previouslyCapturedKeys = this.input.keyboard.getCaptures();
       this.input.keyboard.clearCaptures();

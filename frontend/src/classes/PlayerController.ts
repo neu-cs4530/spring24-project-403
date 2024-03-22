@@ -13,6 +13,13 @@ export type PlayerGameObjects = {
   label: Phaser.GameObjects.Text;
   locationManagedByGameScene: boolean /* For the local player, the game scene will calculate the current location, and we should NOT apply updates when we receive events */;
 };
+
+export type PetInfo = {
+  name: string;
+  pet: BasePet;
+  sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  label: Phaser.GameObjects.Text;
+};
 export default class PlayerController extends (EventEmitter as new () => TypedEmitter<PlayerEvents>) {
   private _location: PlayerLocation;
 

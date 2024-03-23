@@ -1,7 +1,8 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
 import { Player as PlayerModel, PlayerLocation } from '../types/CoveyTownSocket';
-import BasePet from '../../../townService/src/lib/BasePet';
+import BasePet from './BasePet';
+import Mouse from './Mouse';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
@@ -31,7 +32,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   /**
    * A map of pets owned by this player.
-   * 
+   *
    * Is a map the best data structure for this? TBD
    * We should still need to decide how to limit the number of pets a player can own.
    */
@@ -44,6 +45,14 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._id = id;
     this._userName = userName;
     this._location = location;
+
+    this.pets.set('Stuart', new Mouse('Stuart', this.id, 'white'));
+    this.activePet = {
+      name: 'Stuart',
+      pet: this.pets.get('Stuart') as Mouse,
+      sprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+      label: {} as Phaser.GameObjects.Text,
+    };
   }
 
   set location(newLocation: PlayerLocation) {
@@ -99,6 +108,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       label.setX(sprite.body.x);
       label.setY(sprite.body.y - 20);
     }
+    // pets?
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {

@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
 import { Player as PlayerModel, PlayerLocation, Pet } from '../types/CoveyTownSocket';
+import Mouse from './Mouse';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
@@ -16,7 +17,7 @@ export type PlayerGameObjects = {
 
 export type PetInfo = {
   name: string;
-  pet: BasePet;
+  pet: Pet;
   sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   label: Phaser.GameObjects.Text;
 };
@@ -31,12 +32,25 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   private _pets: Pet[] | [];
 
+  public activePet?: PetInfo;
+
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();
     this._id = id;
     this._userName = userName;
     this._location = location;
     this._pets = pets || [];
+
+    // Hardcode pet data for visiualization
+    // TODO: DELETE THIS
+    const stuart = new Mouse("Stuart", this._id, "white");
+    this._pets.push(stuart);
+    this.activePet = {
+      name: 'Stuart',
+      pet: stuart,
+      sprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+      label: {} as Phaser.GameObjects.Text,
+    };
   }
 
   get pets(): Pet[] | undefined {
@@ -106,6 +120,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       label.setX(sprite.body.x);
       label.setY(sprite.body.y - 20);
     }
+    // pets?
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {

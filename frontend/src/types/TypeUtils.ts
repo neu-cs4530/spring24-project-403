@@ -5,6 +5,7 @@ import {
   ViewingArea,
   GameArea,
   ConnectFourGameState,
+  PetAdoptionCenter,
 } from './CoveyTownSocket';
 
 /**
@@ -30,4 +31,8 @@ export function isConnectFourArea(
   interactable: Interactable,
 ): interactable is GameArea<ConnectFourGameState> {
   return interactable.type === 'ConnectFourArea';
+}
+
+export function isPetAdoptionCenter(interactable: Interactable): interactable is PetAdoptionCenter {
+  return interactable.type === 'PetAdoptionCenter';
 }

@@ -1,7 +1,5 @@
 enum AccessoryType {
   HAT = 'hat',
-  COLLAR = 'collar',
-  GLASSES = 'glasses',
 }
 
 export default class Accessory {

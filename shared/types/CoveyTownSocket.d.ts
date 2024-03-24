@@ -62,6 +62,7 @@ export interface ConversationArea extends Interactable {
   topic?: string;
 };
 export interface PetAdoptionCenter extends Interactable {
+  pets : BasePet[];
   // TODO: Add any fields that are specific to the PetAdoptionCenter
 };
 export interface BoundingBox {

@@ -7,19 +7,17 @@ import BasePet from '../../../classes/BasePet';
 import Bear from '../../../classes/Bear';
 import Mouse from '../../../classes/Mouse';
 import Wolf from '../../../classes/Wolf';
+import TownGameScene from '../TownGameScene';
 
 export default class PetAdoptionCenter extends Interactable {
+  MAX_PETS = 5;
   private _infoTextBox?: Phaser.GameObjects.Text;
-
   private _petAdoptionCenter?: PetAdoptionCenterController;
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 
-  // May end up having interface for pets instead of BasePet
-  private _pets: BasePet[] = [];
-
-  getPets(): BasePet[] {
-    return this._pets;
+  public set pets(pets: BasePet[]) {
+    this.pets = pets;
   }
 
   getType(): KnownInteractableTypes {

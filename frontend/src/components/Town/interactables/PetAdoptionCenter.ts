@@ -4,16 +4,38 @@ import PetAdoptionCenterController, {
 import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 import BasePet from '../../../../../townService/src/lib/BasePet';
+import Wolf from '../../../../../townService/src/lib/Wolf';
+import Mouse from '../../../../../townService/src/lib/Mouse';
+import Bear from '../../../../../townService/src/lib/Bear';
+import TownGameScene from '../TownGameScene';
 
 export default class PetAdoptionCenter extends Interactable {
+  MAX_PETS = 5;
   private _infoTextBox?: Phaser.GameObjects.Text;
-
   private _petAdoptionCenter?: PetAdoptionCenterController;
+  private _pets: BasePet[] = [];
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 
-  // May end up having interface for pets instead of BasePet
-  private _pets: BasePet[] = [];
+  // constructor that randomly generates pets
+  constructor(scene: TownGameScene) {
+    super(scene);
+    this.getRandomizedPets();
+    console.log(this._pets);
+  }
+
+  getRandomizedPets(): BasePet[] {
+    for (let i = 0; i < this.MAX_PETS; i++) {
+      if (Math.random() < 0.3) {
+        this._pets.push(new Wolf());
+      } else if (Math.random() < 0.6) {
+        this._pets.push(new Mouse());
+      } else {
+        this._pets.push(new Bear());
+      }
+    }
+    return this._pets;
+  }
 
   getPets(): BasePet[] {
     return this._pets;

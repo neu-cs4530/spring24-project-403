@@ -108,6 +108,10 @@ export default class TownGameScene extends Phaser.Scene {
       this._resourcePathPrefix + '/assets/tilesets/23_Pets_32x32.png',
     );
     this.load.image(
+      '24_Accessories_32x32.png',
+      this._resourcePathPrefix + '/assets/tilesets/24_Accessories_32x32.png',
+    );
+    this.load.image(
       '5_Classroom_and_library_32x32',
       this._resourcePathPrefix + '/assets/tilesets/5_Classroom_and_library_32x32.png',
     );

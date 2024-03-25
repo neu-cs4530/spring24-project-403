@@ -572,7 +572,7 @@
                  "y":738.416428385755
                 }, 
                 {
-                 "height":139.542125968989,
+                 "height":99.9097307938022,
                  "id":43,
                  "name":"Pet Adoption Center",
                  "properties":[
@@ -584,9 +584,9 @@
                  "rotation":0,
                  "type":"GameArea",
                  "visible":true,
-                 "width":193.382740673867,
-                 "x":2942.91054838377,
-                 "y":881.487275687997
+                 "width":165.812378812868,
+                 "x":2943.48493092254,
+                 "y":895.846839157268
                 }, 
                 {
                  "height":0,
@@ -33877,8 +33877,17 @@
          "tilewidth":32
         }, 
         {
+         "columns":16,
          "firstgid":15533,
-         "source":"..\/tilesets\/24_Accessories_32x32.tsx"
+         "image":"..\/tilesets\/24_Accessories_32x32.png",
+         "imageheight":704,
+         "imagewidth":512,
+         "margin":0,
+         "name":"24_Accessories_32x32",
+         "spacing":0,
+         "tilecount":352,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",

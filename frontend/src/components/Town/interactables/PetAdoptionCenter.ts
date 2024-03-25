@@ -3,7 +3,10 @@ import PetAdoptionCenterController, {
 } from '../../../classes/interactable/PetAdoptionCenterController';
 import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
-import BasePet from '../../../../../townService/src/lib/BasePet';
+import BasePet from '../../../classes/BasePet';
+import Bear from '../../../classes/Bear';
+import Mouse from '../../../classes/Mouse';
+import Wolf from '../../../classes/Wolf';
 
 export default class PetAdoptionCenter extends Interactable {
   private _infoTextBox?: Phaser.GameObjects.Text;

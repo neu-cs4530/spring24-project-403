@@ -575,14 +575,8 @@
                  "height":99.9097307938022,
                  "id":43,
                  "name":"Pet Adoption Center",
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"ConnectFour"
-                        }],
                  "rotation":0,
-                 "type":"GameArea",
+                 "type":"PetAdoptionCenter",
                  "visible":true,
                  "width":165.812378812868,
                  "x":2943.48493092254,

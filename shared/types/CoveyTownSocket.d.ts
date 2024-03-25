@@ -17,7 +17,7 @@ export type TownJoinResponse = {
   interactables: TypedInteractable[];
 }
 
-export type InteractableType = 'ConversationArea' | 'ViewingArea' | 'TicTacToeArea' | 'ConnectFourArea';
+export type InteractableType = 'ConversationArea' | 'ViewingArea' | 'TicTacToeArea' | 'ConnectFourArea' | 'PetAdoptionCenter';
 export interface Interactable {
   type: InteractableType;
   id: InteractableID;
@@ -60,6 +60,9 @@ export type ChatMessage = {
 
 export interface ConversationArea extends Interactable {
   topic?: string;
+};
+export interface PetAdoptionCenter extends Interactable {
+  // TODO: Add any fields that are specific to the PetAdoptionCenter
 };
 export interface BoundingBox {
   x: number;
@@ -216,7 +219,12 @@ interface InteractableCommandBase {
   type: string;
 }
 
-export type InteractableCommand =  ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
+export type InteractableCommand =  PetAdoptionCenterCommand | ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
+export interface PetAdoptionCenterCommand {
+  type: 'PetAdoptionCenterAdopt';
+  petID: string;
+  update: PetAdoptionCenter;
+}
 export interface ViewingAreaUpdateCommand  {
   type: 'ViewingAreaUpdate';
   update: ViewingArea;

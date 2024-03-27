@@ -337,6 +337,7 @@ export default class TownGameScene extends Phaser.Scene {
       'Room_Builder_32x32',
       '22_Museum_32x32',
       '23_Pets_32x32',
+      '24_Accessories_32x32',
       '5_Classroom_and_library_32x32',
       '12_Kitchen_32x32',
       '1_Generic_32x32',

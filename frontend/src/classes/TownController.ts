@@ -805,16 +805,16 @@ export function useTownSettings() {
  */
 export function useInteractableAreaController<T>(interactableAreaID: string): T {
   const townController = useTownController();
-  let interactableAreaController = townController.gameAreas.find(
+  const interactableAreaController = townController.gameAreas.find(
     eachArea => eachArea.id == interactableAreaID,
   );
-  let interactableAreaControllerPetAdoption = townController.petAdoptionCenterArea;
+  const interactableAreaControllerPetAdoption = townController.petAdoptionCenterArea;
   if (!interactableAreaController && !interactableAreaControllerPetAdoption) {
     throw new Error(`Requested interactable area ${interactableAreaID} does not exist`);
   }
   if (interactableAreaController) {
     return interactableAreaController as unknown as T;
-  } 
+  }
   return interactableAreaControllerPetAdoption as unknown as T;
 }
 

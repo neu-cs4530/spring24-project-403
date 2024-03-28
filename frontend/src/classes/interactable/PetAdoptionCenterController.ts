@@ -13,7 +13,7 @@ import InteractableAreaController, {
  * are only ever emitted to local components (not to the townService).
  */
 export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
-  // TODO : Likely need to add "Adopt" event here 
+  // TODO : Likely need to add "Adopt" event here
 };
 
 /**
@@ -26,8 +26,9 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   PetAdoptionCenter
 > {
   MAX_PETS = 20;
+
   getRandomizedPets(): BasePet[] {
-    let pets: BasePet[] = [];
+    const pets: BasePet[] = [];
     for (let i = 0; i < this.MAX_PETS; i++) {
       if (Math.random() < 0.3) {
         pets.push(new Wolf());
@@ -39,11 +40,12 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     }
     return pets;
   }
+
   public get pets(): BasePet[] {
     this._model.pets = this.getRandomizedPets();
     return this._model.pets;
   }
-  
+
   protected _updateFrom(newModel: PetAdoptionCenter): void {
     throw new Error('Method not implemented.');
   }

@@ -11,9 +11,9 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BasePet from '../../../classes/BasePet';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
@@ -22,7 +22,8 @@ import { InteractableID } from '../../../types/CoveyTownSocket';
 import PetAdoptionCenter from './PetAdoptionCenter';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
-  const adoptionCenterController = useInteractableAreaController<PetAdoptionCenterController>(interactableID);
+  const adoptionCenterController =
+    useInteractableAreaController<PetAdoptionCenterController>(interactableID);
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<BasePet[]>([]);
@@ -44,25 +45,25 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   }, []);
 
   return (
-        <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
-          <GridItem height={'100%'}>
-            <h1>Adoptable Pets:</h1>
-            <Flex direction='column' align='center' justify='center'>
-              {pets.map((pet, index) => (
-                <Box key={index}>
-                  <img src={'https://placehold.co/20'} alt='Placeholder' />
-                  <Button>{pet.id}</Button>
-                </Box>
-              ))}
-            </Flex>
-          </GridItem>
-          <GridItem height={'100%'}>
-            <h1>Adopt PLACEHOLDER today!</h1>
-            <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-            <Text fontSize='xl'> PET DESCRIPTION PLACEHOLDER.</Text>
-            <Button onClick={adoptPet}>Adopt</Button>
-          </GridItem>
-        </Grid>
+    <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
+      <GridItem height={'100%'}>
+        <h1>Adoptable Pets:</h1>
+        <Flex direction='column' align='center' justify='center'>
+          {pets.map((pet, index) => (
+            <Box key={index}>
+              <img src={'https://placehold.co/20'} alt='Placeholder' />
+              <Button>{pet.id}</Button>
+            </Box>
+          ))}
+        </Flex>
+      </GridItem>
+      <GridItem height={'100%'}>
+        <h1>Adopt PLACEHOLDER today!</h1>
+        <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
+        <Text fontSize='xl'> PET DESCRIPTION PLACEHOLDER.</Text>
+        <Button onClick={adoptPet}>Adopt</Button>
+      </GridItem>
+    </Grid>
   );
 }
 
@@ -83,13 +84,18 @@ export default function PetAreaWrapper(): JSX.Element {
   }, [townController, adoptionCenter]);
   if (adoptionCenter) {
     return (
-      <Modal isOpen={true} onClose={closeModal} closeOnOverlayClick={false} size='xl' scrollBehavior={'inside'}>
+      <Modal
+        isOpen={true}
+        onClose={closeModal}
+        closeOnOverlayClick={false}
+        size='xl'
+        scrollBehavior={'inside'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{adoptionCenter.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <PetAdoptionArea interactableID={adoptionCenter.id}/>
+            <PetAdoptionArea interactableID={adoptionCenter.id} />
           </ModalBody>
         </ModalContent>
       </Modal>

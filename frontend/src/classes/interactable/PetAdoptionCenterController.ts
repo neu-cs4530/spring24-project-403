@@ -13,7 +13,7 @@ import InteractableAreaController, {
  * are only ever emitted to local components (not to the townService).
  */
 export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
-  // TODO
+  // TODO : Likely need to add "Adopt" event here 
 };
 
 /**

@@ -1,20 +1,11 @@
-import PetAdoptionCenterController, {
-  PetAdoptionCenterEvents,
-} from '../../../classes/interactable/PetAdoptionCenterController';
+import BasePet from '../../../classes/BasePet';
+import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
-import BasePet from '../../../classes/BasePet';
-import Bear from '../../../classes/Bear';
-import Mouse from '../../../classes/Mouse';
-import Wolf from '../../../classes/Wolf';
-import TownGameScene from '../TownGameScene';
 
 export default class PetAdoptionCenter extends Interactable {
-  MAX_PETS = 5;
-  MAX_PETS = 5;
   private _infoTextBox?: Phaser.GameObjects.Text;
   private _petAdoptionCenter?: PetAdoptionCenterController;
-  private _pets: BasePet[] = [];
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 

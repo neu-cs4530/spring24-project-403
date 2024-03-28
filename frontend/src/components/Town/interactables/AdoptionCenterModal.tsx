@@ -2,29 +2,24 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
+  Grid,
+  GridItem,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spacer,
-  useToast,
-  Grid,
-  GridItem,
   Text,
+  useToast
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
-import useTownController from '../../../hooks/useTownController';
-import PetAdoptionCenter from './PetAdoptionCenter';
-import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
-import { InteractableID } from '../../../types/CoveyTownSocket';
+import { useCallback, useEffect, useState } from 'react';
 import BasePet from '../../../classes/BasePet';
+import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
+import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
+import useTownController from '../../../hooks/useTownController';
+import { InteractableID } from '../../../types/CoveyTownSocket';
+import PetAdoptionCenter from './PetAdoptionCenter';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController = useInteractableAreaController<PetAdoptionCenterController>(interactableID);

@@ -11,8 +11,10 @@ import TownGameScene from '../TownGameScene';
 
 export default class PetAdoptionCenter extends Interactable {
   MAX_PETS = 5;
+  MAX_PETS = 5;
   private _infoTextBox?: Phaser.GameObjects.Text;
   private _petAdoptionCenter?: PetAdoptionCenterController;
+  private _pets: BasePet[] = [];
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 

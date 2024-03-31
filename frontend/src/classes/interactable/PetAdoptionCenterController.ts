@@ -1,4 +1,8 @@
-import { PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
+import { PetAdoptionCenter } from '../../types/CoveyTownSocket';
+import BasePet from '../BasePet';
+import Bear from '../Bear';
+import Mouse from '../Mouse';
+import Wolf from '../Wolf';
 import InteractableAreaController, {
   BaseInteractableEventMap,
   PET_ADOPTION_CENTER_TYPE,
@@ -9,7 +13,7 @@ import InteractableAreaController, {
  * are only ever emitted to local components (not to the townService).
  */
 export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
-  // TODO
+  // TODO : Likely need to add "Adopt" event here
 };
 
 /**
@@ -19,13 +23,34 @@ export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
  */
 export default class PetAdoptionCenterController extends InteractableAreaController<
   PetAdoptionCenterEvents,
-  PetAdoptionCenterModel
+  PetAdoptionCenter
 > {
-  protected _updateFrom(newModel: PetAdoptionCenterModel): void {
+  MAX_PETS = 20;
+
+  getRandomizedPets(): BasePet[] {
+    const pets: BasePet[] = [];
+    for (let i = 0; i < this.MAX_PETS; i++) {
+      if (Math.random() < 0.3) {
+        pets.push(new Wolf());
+      } else if (Math.random() < 0.6) {
+        pets.push(new Mouse());
+      } else {
+        pets.push(new Bear());
+      }
+    }
+    return pets;
+  }
+
+  public get pets(): BasePet[] {
+    this._model.pets = this.getRandomizedPets();
+    return this._model.pets;
+  }
+
+  protected _updateFrom(newModel: PetAdoptionCenter): void {
     throw new Error('Method not implemented.');
   }
 
-  private _model: PetAdoptionCenterModel;
+  private _model: PetAdoptionCenter;
 
   /**
    * Constructs a new ViewingAreaController, initialized with the state of the
@@ -33,7 +58,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    *
    * @param petAdoptionCenter The viewing area model that this controller should represent
    */
-  constructor(petAdoptionCenter: PetAdoptionCenterModel) {
+  constructor(petAdoptionCenter: PetAdoptionCenter) {
     super(petAdoptionCenter.id);
     this._model = petAdoptionCenter;
   }
@@ -61,7 +86,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * Return a representation of this ConversationAreaController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
-  toInteractableAreaModel(): PetAdoptionCenterModel {
+  toInteractableAreaModel(): PetAdoptionCenter {
     return this._model;
   }
 }

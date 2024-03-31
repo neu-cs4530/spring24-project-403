@@ -808,10 +808,14 @@ export function useInteractableAreaController<T>(interactableAreaID: string): T 
   const interactableAreaController = townController.gameAreas.find(
     eachArea => eachArea.id == interactableAreaID,
   );
-  if (!interactableAreaController) {
+  const interactableAreaControllerPetAdoption = townController.petAdoptionCenterArea;
+  if (!interactableAreaController && !interactableAreaControllerPetAdoption) {
     throw new Error(`Requested interactable area ${interactableAreaID} does not exist`);
   }
-  return interactableAreaController as unknown as T;
+  if (interactableAreaController) {
+    return interactableAreaController as unknown as T;
+  }
+  return interactableAreaControllerPetAdoption as unknown as T;
 }
 
 /**

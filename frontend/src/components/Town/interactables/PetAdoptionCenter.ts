@@ -1,12 +1,7 @@
-import PetAdoptionCenterController, {
-  PetAdoptionCenterEvents,
-} from '../../../classes/interactable/PetAdoptionCenterController';
+import BasePet from '../../../classes/BasePet';
+import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
-import BasePet from '../../../classes/BasePet';
-import Bear from '../../../classes/Bear';
-import Mouse from '../../../classes/Mouse';
-import Wolf from '../../../classes/Wolf';
 
 export default class PetAdoptionCenter extends Interactable {
   private _infoTextBox?: Phaser.GameObjects.Text;
@@ -15,11 +10,8 @@ export default class PetAdoptionCenter extends Interactable {
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 
-  // May end up having interface for pets instead of BasePet
-  private _pets: BasePet[] = [];
-
-  getPets(): BasePet[] {
-    return this._pets;
+  public set pets(pets: BasePet[]) {
+    this.pets = pets;
   }
 
   getType(): KnownInteractableTypes {

@@ -56,6 +56,7 @@ export default class PetAdoptionCenterArea extends InteractableArea {
       id: this.id,
       occupants: this.occupantsByID,
       type: 'PetAdoptionCenter',
+      pets: [],
     };
   }
 

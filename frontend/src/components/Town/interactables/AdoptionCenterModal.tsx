@@ -4,6 +4,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,6 +13,9 @@ import {
   ModalOverlay,
   Text,
   useToast,
+  VStack,
+  Heading,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import BasePet from '../../../classes/BasePet';
@@ -27,7 +31,6 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<BasePet[]>([]);
-  // create useState for "activePet" which is the pet being actively shown in the modal (referenced by id)
 
   useEffect(() => {
     if (adoptionCenter) {
@@ -41,28 +44,51 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const toast = useToast();
 
   const adoptPet = useCallback(async () => {
-    console.log('Adopting pet');
-  }, []);
+    toast({
+      title: 'Pet adopted!',
+      description: "You've successfully adopted a pet.",
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+  }, [toast]);
+
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+
+  const petDisplayName = (pet: BasePet): string => {
+    return pet.name || (pet.id.length > 5 ? pet.id.substring(0, 5) + '...' : pet.id);
+  };
 
   return (
-    <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
-      <GridItem height={'100%'}>
-        <h1>Adoptable Pets:</h1>
-        <Flex direction='column' align='center' justify='center'>
-          {pets.map((pet, index) => (
-            <Box key={index}>
-              <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button>{pet.id}</Button>
-            </Box>
-          ))}
-        </Flex>
-      </GridItem>
-      <GridItem height={'100%'}>
-        <h1>Adopt PLACEHOLDER today!</h1>
-        <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> PET DESCRIPTION PLACEHOLDER.</Text>
-        <Button onClick={adoptPet}>Adopt</Button>
-      </GridItem>
+    <Grid templateColumns={'repeat(2, 1fr)'} gap={6} p={4}>
+      <VStack spacing={4} align='stretch'>
+        <Heading size='md'>Adoptable Pets:</Heading>
+        {pets.map((pet, index) => (
+          <Flex
+            key={index}
+            align='center'
+            border='1px'
+            borderColor={borderColor}
+            p={4}
+            borderRadius='md'>
+            <Image src={'https://placehold.co/100'} alt='Pet' boxSize='50px' mr={4} />
+            <Text>{petDisplayName(pet)}</Text>
+            <Button ml='auto' colorScheme='teal' size='sm' onClick={adoptPet}>
+              Adopt
+            </Button>
+          </Flex>
+        ))}
+      </VStack>
+      <Box p={4} border='1px' borderColor={borderColor} borderRadius='md'>
+        <Heading size='md' mb={4}>
+          Adopt PLACEHOLDER today!
+        </Heading>
+        <Image src={'https://placehold.co/200'} alt='Pet Placeholder' mb={4} />
+        <Text mb={4}>PET DESCRIPTION PLACEHOLDER.</Text>
+        <Button colorScheme='teal' onClick={adoptPet}>
+          Adopt
+        </Button>
+      </Box>
     </Grid>
   );
 }

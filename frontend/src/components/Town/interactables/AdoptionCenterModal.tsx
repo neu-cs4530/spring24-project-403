@@ -21,7 +21,7 @@ import BasePet from '../../../classes/BasePet';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
-import { InteractableID } from '../../../types/CoveyTownSocket';
+import { InteractableID, PetAdoptionCenter } from '../../../types/CoveyTownSocket';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController =
@@ -57,6 +57,10 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     return pet.name || (pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id);
   };
 
+  const petImage = (pet: BasePet): string => {
+    return `./assets/pets/${pet.constructor.name.toLowerCase()}.png`;
+  };
+
   return (
     <VStack spacing={4} align='stretch' p={4}>
       <Heading size='md'>Adoptable Pets:</Heading>
@@ -68,8 +72,11 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
           borderColor={borderColor}
           p={4}
           borderRadius='md'>
-          <Image src={'https://placehold.co/100'} alt='Pet' boxSize='50px' mr={4} />
-          <Text>{petDisplayName(pet)}</Text>
+          <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
+          <VStack align='stretch'>
+            <Text>Type: {pet.constructor.name}</Text>
+            <Text>ID: {petDisplayName(pet)}</Text>
+          </VStack>
           <Button ml='auto' colorScheme='teal' size='sm' onClick={adoptPet}>
             Adopt
           </Button>

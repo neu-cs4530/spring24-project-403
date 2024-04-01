@@ -679,7 +679,13 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
               new ConnectFourAreaController(eachInteractable.id, eachInteractable, this),
             );
           } else if (isPetAdoptionCenter(eachInteractable)) {
-            this._interactableControllers.push(new PetAdoptionCenterController(eachInteractable));
+            this._interactableControllers.push(
+              new PetAdoptionCenterController(
+                eachInteractable.id,
+                this,
+                // no starting pet
+              )
+            );
           }
         });
         this._userID = initialData.userID;

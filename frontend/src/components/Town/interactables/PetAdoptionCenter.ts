@@ -1,6 +1,6 @@
 import BasePet from '../../../classes/BasePet';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
-import { BoundingBox } from '../../../types/CoveyTownSocket';
+import { BoundingBox, Pet } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
@@ -10,7 +10,7 @@ export default class PetAdoptionCenter extends Interactable {
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 
-  public set pets(pets: BasePet[]) {
+  public set pets(pets: Pet[]) {
     this.pets = pets;
   }
 

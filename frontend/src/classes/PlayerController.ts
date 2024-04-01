@@ -22,7 +22,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   public gameObjects?: PlayerGameObjects;
 
-  private _pets: Pet[] | [];
+  private _pets: Pet[] | undefined;
 
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();
@@ -30,6 +30,17 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._userName = userName;
     this._location = location;
     this._pets = pets || [];
+  }
+
+  public adoptPet(newPet: Pet | undefined): Pet | undefined {
+    console.log("Player:", this._userName, "adopts pet:", newPet);
+    if (newPet) {
+      if (!this._pets) {
+        this._pets = [];
+      }
+      this._pets.push(newPet);
+    } 
+    return this._pets?.pop();
   }
 
   set location(newLocation: PlayerLocation) {

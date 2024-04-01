@@ -18,7 +18,7 @@ import BasePet from '../../../classes/BasePet';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
-import { InteractableID } from '../../../types/CoveyTownSocket';
+import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
 import PetAdoptionCenter from './PetAdoptionCenter';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
@@ -26,23 +26,57 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     useInteractableAreaController<PetAdoptionCenterController>(interactableID);
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
-  const [pets, setPets] = useState<BasePet[]>([]);
-  // create useState for "activePet" which is the pet being actively shown in the modal (referenced by id)
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   useEffect(() => {
     if (adoptionCenter) {
       coveyTownController.pause();
-      setPets(adoptionCenterController?.pets);
+      if (pets.length === 0) {
+        setPets(adoptionCenterController?.pets);
+      }
     } else {
       coveyTownController.unPause();
     }
   }, [coveyTownController, adoptionCenter]);
 
+  useEffect(() => {
+    setActivePet(pets[0]);
+  }, [pets]);
+
+  useEffect(() => {
+    adoptionCenterController.pet = activePet;
+  }, [activePet]);
+
   const toast = useToast();
 
-  const adoptPet = useCallback(async () => {
-    console.log('Adopting pet');
-  }, []);
+  function adoptPet() {
+    console.log('Adopting pet: ', activePet.id);
+    adoptionCenterController.pet = activePet;
+    handleAdoption();
+  }
+
+  function handleAdoption() {
+    try {
+      const pet = adoptionCenterController.adoptPet();
+      if (!pet) {
+        throw new Error('Error adopting pet');
+      }
+      coveyTownController.emitPetChange(pet);
+      toast({
+        title: `Success`,
+        description: `You have adopted ${pet.id}!`,
+        status: 'info',
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Error`,
+        description: (error as Error).toString,
+        status: 'error',
+      });
+    }
+  }
 
   return (
     <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
@@ -103,3 +137,5 @@ export default function PetAreaWrapper(): JSX.Element {
   }
   return <></>;
 }
+
+

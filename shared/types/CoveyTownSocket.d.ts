@@ -65,14 +65,13 @@ export interface ConversationArea extends Interactable {
 
 export type PetType = 'wolf' | 'bear' | 'mouse'
 export interface Pet {
+  id: any;
   petType: PetType | undefined;
 };
 
 
-export interface PetAdoptionCenter extends Interactable {
-  pets : BasePet[];
-  // TODO: Add any fields that are specific to the PetAdoptionCenter
-};
+export type PetAdoptionCenter = Interactable
+
 export interface BoundingBox {
   x: number;
   y: number;

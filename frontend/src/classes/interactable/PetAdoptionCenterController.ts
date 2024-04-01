@@ -1,7 +1,9 @@
-import { PetAdoptionCenter } from '../../types/CoveyTownSocket';
+import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
 import BasePet from '../BasePet';
 import Bear from '../Bear';
 import Mouse from '../Mouse';
+import PlayerController from '../PlayerController';
+import TownController from '../TownController';
 import Wolf from '../Wolf';
 import InteractableAreaController, {
   BaseInteractableEventMap,
@@ -23,9 +25,27 @@ export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
  */
 export default class PetAdoptionCenterController extends InteractableAreaController<
   PetAdoptionCenterEvents,
-  PetAdoptionCenter
+  PetAdoptionCenterModel
 > {
-  MAX_PETS = 20;
+
+
+  MAX_PETS = 5;
+  private _pet?: Pet;
+  private _pets: BasePet[] = [];
+  protected _townController: TownController;
+
+    /**
+   * Create a new VehicleRackAreaController
+   * @param id
+   * @param vehicle
+   * @param townController
+   */
+    constructor(id: string, townController: TownController, pet?: Pet) {
+      super(id);
+      this._townController = townController;
+      this._pet = pet;
+    }
+  
 
   getRandomizedPets(): BasePet[] {
     const pets: BasePet[] = [];
@@ -41,27 +61,26 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pets;
   }
 
-  public get pets(): BasePet[] {
-    this._model.pets = this.getRandomizedPets();
-    return this._model.pets;
+  adoptPet() {
+    const pet = this._player?.adoptPet(this._pet);
+    console.log('Adopting pet: ', pet?.id);
+    this._townController.emitPetChange(pet);
+    return pet;
   }
-
-  protected _updateFrom(newModel: PetAdoptionCenter): void {
-    throw new Error('Method not implemented.');
-  }
-
-  private _model: PetAdoptionCenter;
 
   /**
-   * Constructs a new ViewingAreaController, initialized with the state of the
-   * provided viewingAreaModel.
-   *
-   * @param petAdoptionCenter The viewing area model that this controller should represent
+   * Set vehicle to undefined when selecting no vehicle
    */
-  constructor(petAdoptionCenter: PetAdoptionCenter) {
-    super(petAdoptionCenter.id);
-    this._model = petAdoptionCenter;
+  set pet(newPet: Pet | undefined) {
+    this._pet = newPet;
   }
+
+  public get pets(): BasePet[] {
+    this._pets = this.getRandomizedPets();
+    return this._pets;
+  }
+
+  protected _updateFrom(): void {}
 
   public isActive(): boolean {
     return this.occupants.length > 0;
@@ -86,7 +105,24 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * Return a representation of this ConversationAreaController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
-  toInteractableAreaModel(): PetAdoptionCenter {
-    return this._model;
+  toInteractableAreaModel(): PetAdoptionCenterModel {
+    return {
+      id: this.id,
+      occupants: this.occupants.map(player => player.id),
+      type: 'PetAdoptionCenter',
+    };
   }
+
+    /**
+   * Returns the player playing the game if there is one, or undefined otherwise
+   */
+    private get _player(): PlayerController | undefined {
+      const ourPlayer = this.occupants.find(
+        occupant => occupant.id === this._townController.ourPlayer.id,
+      );
+      console.log('Occupants:', this.occupants);
+      console.log('Our player in town controller:', this._townController.ourPlayer);
+      console.log('Our player:', ourPlayer);
+      return ourPlayer;
+    }
 }

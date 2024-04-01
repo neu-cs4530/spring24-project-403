@@ -6,15 +6,13 @@ import {
   InteractableCommand,
   InteractableCommandReturnType,
   InteractableID,
-  PetAdoptionCenter,
   PetAdoptionCenterCommand,
   TownEmitter,
-  ViewingArea as ViewingAreaModel,
-  ViewingAreaUpdateCommand,
+  PetAdoptionCenter as PetAdoptionCenterModel,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
 
-export default class PetAdoptionCenterArea extends InteractableArea {
+export default class PetAdoptionCenter extends InteractableArea {
   /**
    * Creates a new ViewingArea
    *
@@ -51,12 +49,11 @@ export default class PetAdoptionCenterArea extends InteractableArea {
    * Convert this ViewingArea instance to a simple ViewingAreaModel suitable for
    * transporting over a socket to a client.
    */
-  public toModel(): PetAdoptionCenter {
+  public toModel(): PetAdoptionCenterModel {
     return {
       id: this.id,
       occupants: this.occupantsByID,
       type: 'PetAdoptionCenter',
-      pets: [],
     };
   }
 
@@ -69,13 +66,17 @@ export default class PetAdoptionCenterArea extends InteractableArea {
   public static fromMapObject(
     mapObject: ITiledMapObject,
     townEmitter: TownEmitter,
-  ): PetAdoptionCenterArea {
+  ): PetAdoptionCenter {
     const { name, width, height } = mapObject;
     if (!width || !height) {
-      throw new Error(`Malformed viewing area ${name}`);
+      throw new Error(`Malformed pet adoption center area ${name}`);
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
-    return new PetAdoptionCenterArea(name as InteractableID, rect, townEmitter);
+    return new PetAdoptionCenter(
+      name as InteractableID,
+      rect,
+      townEmitter,
+    );
   }
 
   public handleCommand<CommandType extends InteractableCommand>(

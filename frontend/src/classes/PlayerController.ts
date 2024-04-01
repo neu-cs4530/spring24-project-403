@@ -1,10 +1,11 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
-import { Player as PlayerModel, PlayerLocation } from '../types/CoveyTownSocket';
+import { Player as PlayerModel, PlayerLocation, Pet } from '../types/CoveyTownSocket';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
   movement: (newLocation: PlayerLocation) => void;
+  petChange: (newPet: Pet | undefined) => void;
 };
 
 export type PlayerGameObjects = {
@@ -21,11 +22,14 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   public gameObjects?: PlayerGameObjects;
 
-  constructor(id: string, userName: string, location: PlayerLocation) {
+  private _pets: Pet[] | [];
+
+  constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();
     this._id = id;
     this._userName = userName;
     this._location = location;
+    this._pets = pets || [];
   }
 
   set location(newLocation: PlayerLocation) {
@@ -46,8 +50,22 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     return this._id;
   }
 
+  set pets(pets: Pet[] | undefined) {
+    if (pets) {
+      if (!this._pets) {
+        this._pets = [];
+      }
+      this._pets = [...this._pets, ...pets];
+    }
+    console.log("Player:", this._userName, "has pets:", this._pets);
+  }
+
+  get pets(): Pet[] | undefined {
+    return this._pets;
+  }
+
   toPlayerModel(): PlayerModel {
-    return { id: this.id, userName: this.userName, location: this.location };
+    return { id: this.id, userName: this.userName, location: this.location, pets: this.pets || []};
   }
 
   private _updateGameComponentLocation() {
@@ -84,6 +102,6 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {
-    return new PlayerController(modelPlayer.id, modelPlayer.userName, modelPlayer.location);
+    return new PlayerController(modelPlayer.id, modelPlayer.userName, modelPlayer.location, modelPlayer.pets);
   }
 }

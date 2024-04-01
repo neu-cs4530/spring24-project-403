@@ -36,6 +36,7 @@ export interface Player {
   id: PlayerID;
   userName: string;
   location: PlayerLocation;
+  pets: Pet[] | [];
 };
 
 export type XY = { x: number, y: number };
@@ -61,6 +62,13 @@ export type ChatMessage = {
 export interface ConversationArea extends Interactable {
   topic?: string;
 };
+
+export type PetType = 'wolf' | 'bear' | 'mouse'
+export interface Pet {
+  petType: PetType | undefined;
+};
+
+
 export interface PetAdoptionCenter extends Interactable {
   pets : BasePet[];
   // TODO: Add any fields that are specific to the PetAdoptionCenter
@@ -261,6 +269,7 @@ export type InteractableCommandResponse<MessageType> = {
 }
 
 export interface ServerToClientEvents {
+  playerAdoptPet: (adoptingPlayer: Player) => void;
   playerMoved: (movedPlayer: Player) => void;
   playerDisconnect: (disconnectedPlayer: Player) => void;
   playerJoined: (newPlayer: Player) => void;
@@ -277,4 +286,5 @@ export interface ClientToServerEvents {
   playerMovement: (movementData: PlayerLocation) => void;
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
+  playerAdoptPet: (petData: Pet | undefined) => void;
 }

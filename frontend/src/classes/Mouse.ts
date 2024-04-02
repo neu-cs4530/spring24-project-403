@@ -15,6 +15,7 @@ export default class Mouse extends BasePet {
     } else {
       throw new Error('Invalid constructor arguments for Mouse object');
     }
+    this.petType = 'mouse';
   }
 
   public makeSound(): string {

@@ -66,7 +66,7 @@ export interface ConversationArea extends Interactable {
 export type PetType = 'wolf' | 'bear' | 'mouse'
 export interface Pet {
   id: any;
-  petType: PetType | undefined;
+  petType: PetType;
   ownerId: string | undefined;
 };
 

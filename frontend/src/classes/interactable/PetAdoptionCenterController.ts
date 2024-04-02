@@ -29,26 +29,24 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 > {
 
 
+
   MAX_PETS = 5;
-  private _pet?: Pet;
-  private _pets: BasePet[] = [];
+  private _pets: Pet[] = [];
   protected _townController: TownController;
 
     /**
-   * Create a new VehicleRackAreaController
+   * Create a new PetAdoptionCenterController
    * @param id
-   * @param vehicle
    * @param townController
    */
-    constructor(id: string, townController: TownController, pet?: Pet) {
+    constructor(id: string, townController: TownController) {
       super(id);
       this._townController = townController;
-      this._pet = pet;
     }
   
 
-  getRandomizedPets(): BasePet[] {
-    const pets: BasePet[] = [];
+  getRandomizedPets(): Pet[] {
+    const pets: Pet[] = [];
     for (let i = 0; i < this.MAX_PETS; i++) {
       if (Math.random() < 0.3) {
         pets.push(new Wolf());
@@ -71,14 +69,13 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pet;
   }
 
-  /**
-   * Set vehicle to undefined when selecting no vehicle
-   */
-  set pet(newPet: Pet | undefined) {
-    this._pet = newPet;
+  /** Removes the pet at the given index from this controller's list of pets and replaces with a new randomly generated pet. Returns the new list of pets */
+  public replenish(): Pet[] {
+    this._pets = this.getRandomizedPets();
+    return this._pets;
   }
 
-  public get pets(): BasePet[] {
+  public get pets(): Pet[] {
     this._pets = this.getRandomizedPets();
     return this._pets;
   }
@@ -103,14 +100,14 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * A conversation area is empty if there are no occupants in it.
+   * A pet adoption center is empty if there are no occupants in it.
    */
   isEmpty(): boolean {
     return this.occupants.length === 0;
   }
 
   /**
-   * Return a representation of this ConversationAreaController that matches the
+   * Return a representation of this PetAdoptionCenterController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
   toInteractableAreaModel(): PetAdoptionCenterModel {
@@ -122,7 +119,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
     /**
-   * Returns the player playing the game if there is one, or undefined otherwise
+   * Returns the player in the pet adoption center if there is one, or undefined otherwise
    */
     private get _player(): PlayerController | undefined {
       const ourPlayer = this.occupants.find(

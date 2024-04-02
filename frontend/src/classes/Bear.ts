@@ -15,6 +15,7 @@ export default class Bear extends BasePet {
     } else {
       throw new Error('Invalid constructor arguments for Bear object');
     }
+    this.petType = 'bear';
   }
 
   public makeSound(): string {

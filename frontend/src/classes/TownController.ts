@@ -681,8 +681,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
             this._interactableControllers.push(
               new PetAdoptionCenterController(
                 eachInteractable.id,
-                this,
-                // no starting pet
+                this
               )
             );
           }

@@ -13,8 +13,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
-import BasePet from '../../../classes/BasePet';
+import { useCallback, useEffect, useState } from 'react';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
@@ -44,16 +43,12 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     setActivePet(pets[0]);
   }, [pets]);
 
-  useEffect(() => {
-    adoptionCenterController.pet = activePet;
-  }, [activePet]);
-
   const toast = useToast();
 
   function adoptPet() {
-    console.log('Adopting pet: ', activePet.id);
-    adoptionCenterController.pet = activePet;
     handleAdoption();
+    // replace the now adopted pet
+    setPets(adoptionCenterController.replenish());
   }
 
   function handleAdoption() {
@@ -85,15 +80,15 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
           {pets.map((pet, index) => (
             <Box key={index}>
               <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button>{pet.id}</Button>
+              <Button onClick={() => setActivePet(pet)}>{pet.id}</Button>
             </Box>
           ))}
         </Flex>
       </GridItem>
       <GridItem height={'100%'}>
-        <h1>Adopt PLACEHOLDER today!</h1>
+        <h1>Adopt a {activePet && activePet.petType} today!</h1>
         <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> PET DESCRIPTION PLACEHOLDER.</Text>
+        <Text fontSize='xl'> Pet id: {activePet && activePet.id}</Text>
         <Button onClick={adoptPet}>Adopt</Button>
       </GridItem>
     </Grid>

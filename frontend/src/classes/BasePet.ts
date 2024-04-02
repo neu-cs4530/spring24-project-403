@@ -35,7 +35,7 @@ export default abstract class BasePet implements Pet{
     }
     this._id = nanoid();
   }
-  petType: PetType | undefined;
+  petType!: PetType;
 
   get name(): string | undefined {
     return this._name;

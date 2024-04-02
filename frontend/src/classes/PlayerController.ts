@@ -3,7 +3,6 @@ import TypedEmitter from 'typed-emitter';
 import { Player as PlayerModel, PlayerLocation, Pet } from '../types/CoveyTownSocket';
 import Mouse from './Mouse';
 export const MOVEMENT_SPEED = 175;
-
 export type PlayerEvents = {
   movement: (newLocation: PlayerLocation) => void;
   petChange: (newPet: Pet | undefined) => void;
@@ -119,8 +118,16 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       }
       label.setX(sprite.body.x);
       label.setY(sprite.body.y - 20);
+
+
+      if (this.activePet) {
+        const { petSprite, petLabel } = this.activePet;
+        petSprite.setX(this.location.x + 20);
+        petSprite.setY(this.location.y + 20);
+        petLabel.setX(petSprite.body.x);
+        petLabel.setY(petSprite.body.y - 20);
+      }
     }
-    // pets?
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {

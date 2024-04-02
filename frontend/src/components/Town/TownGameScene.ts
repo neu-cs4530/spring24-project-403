@@ -10,7 +10,9 @@ import GameArea from './interactables/GameArea';
 import Transporter from './interactables/Transporter';
 import ViewingArea from './interactables/ViewingArea';
 import PetAdoptionCenter from './interactables/PetAdoptionCenter';
-import { act } from 'react-dom/test-utils';
+import { yellow } from '@material-ui/core/colors';
+const PET_OFFSET = 40;
+
 
 // Still not sure what the right type is here... "Interactable" doesn't do it
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,8 +31,6 @@ function interactableTypeForObjectType(type: string): any {
     throw new Error(`Unknown object type: ${type}`);
   }
 }
-
-const PET_OFFSET = 40;
 
 // Original inspiration and code from:
 // https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6
@@ -166,12 +166,20 @@ export default class TownGameScene extends Phaser.Scene {
           sprite.destroy();
           label.destroy();
         }
+        if (disconnectedPlayer.activePet) {
+        const {petSprite, petLabel } = disconnectedPlayer.activePet;
+        if (petSprite && petLabel) {
+          petSprite.destroy();
+          petLabel.destroy();
+        }
+      }
       }
     });
     // Remove disconnected players from list
     this._players = players;
   }
 
+  
   getNewMovementDirection() {
     if (this._cursors.find(keySet => keySet.left?.isDown)) {
       return 'left';
@@ -202,18 +210,36 @@ export default class TownGameScene extends Phaser.Scene {
       gameObjects.sprite.x = destination.x;
       this._lastLocation.x = destination.x;
       if (pet) {
-        pet.sprite.x = destination.x + PET_OFFSET;
-        console.log("moving pet pet sprite");
-        // pet.label.x = destination.x + PET_OFFSET;
+        const direction = this.getNewMovementDirection();
+        switch (direction) {
+          case 'left':
+            pet.petSprite.x = destination.x - PET_OFFSET;
+            break;
+          case 'right':
+            pet.petSprite.x = destination.x + PET_OFFSET;
+            break;
+          default:
+            pet.petSprite.x = destination.x;
+            break;
+        }
       }
     }
     if (destination.y !== undefined) {
       gameObjects.sprite.y = destination.y;
       this._lastLocation.y = destination.y;
       if (pet) {
-        pet.sprite.y = destination.y + PET_OFFSET;
-        console.log("moving pet pet sprite");
-        // pet.label.y = destination.y + PET_OFFSET;
+        const direction = this.getNewMovementDirection();
+        switch (direction) {
+          case 'back':
+            pet.petSprite.y = destination.y - PET_OFFSET;
+            break;
+          case 'front':
+            pet.petSprite.y = destination.y + PET_OFFSET;
+            break;
+          default:
+            pet.petSprite.y = destination.y;
+            break;
+        }
       }
     }
     if (destination.moving !== undefined) {
@@ -225,7 +251,72 @@ export default class TownGameScene extends Phaser.Scene {
     this.coveyTownController.emitMovement(this._lastLocation);
   }
 
+  updateSprite(sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+               label: Phaser.GameObjects.Text,
+               pet: boolean = false) {
+    const prevVelocity = sprite.body.velocity.clone();
+    const body = sprite.body as Phaser.Physics.Arcade.Body;
+
+    if (pet) {
+    console.log("updating pet sprite");
+    }
+    else {
+    console.log("updating player sprite");
+    }
+
+    // Stop any previous movement from the last frame
+    body.setVelocity(0);
+
+    const primaryDirection = this.getNewMovementDirection();
+    // add pet here, using another misa sprite as a placeholder for now
+    switch (primaryDirection) {
+      case 'left':
+        body.setVelocityX(-MOVEMENT_SPEED);
+        sprite.anims.play('misa-left-walk', true);
+        break;
+      case 'right':
+        body.setVelocityX(MOVEMENT_SPEED);
+        sprite.anims.play('misa-right-walk', true);
+        break;
+      case 'front':
+        body.setVelocityY(MOVEMENT_SPEED);
+        sprite.anims.play('misa-front-walk', true);
+        break;
+      case 'back':
+        body.setVelocityY(-MOVEMENT_SPEED);
+        sprite.anims.play('misa-back-walk', true);
+        break;
+      default:
+        // Not moving
+        // stop pet too
+        sprite.anims.stop();
+        // If we were moving, pick and idle frame to use
+        // add pet idle frame here
+        if (prevVelocity.x < 0) {
+          sprite.setTexture('atlas', 'misa-left');
+        } else if (prevVelocity.x > 0) {
+          sprite.setTexture('atlas', 'misa-right');
+        } else if (prevVelocity.y < 0) {
+          sprite.setTexture('atlas', 'misa-back');
+        } else if (prevVelocity.y > 0) {
+          sprite.setTexture('atlas', 'misa-front');
+        }
+        break;
+    }
+
+    // Normalize and scale the velocity so that player can't move faster along a diagonal
+    sprite.body.velocity.normalize().scale(MOVEMENT_SPEED);
+
+    // const isMoving = primaryDirection !== undefined;
+    label.setX(body.x);
+    label.setY(body.y - 20);
+    // const x = sprite.getBounds().centerX;
+    // const y = sprite.getBounds().centerY;
+
+  }
+
   update() {
+    // abstract into update sprite function
     if (this._paused) {
       return;
     }
@@ -233,128 +324,95 @@ export default class TownGameScene extends Phaser.Scene {
     const pet = this.coveyTownController.ourPlayer.activePet;
     // update active pet here?
     if (gameObjects && this._cursors) {
-      const prevVelocity = gameObjects.sprite.body.velocity.clone();
-      const body = gameObjects.sprite.body as Phaser.Physics.Arcade.Body;
+      // const prevVelocity = gameObjects.sprite.body.velocity.clone();
 
-      // Stop any previous movement from the last frame
-      body.setVelocity(0);
+      // if (!gameObjects.sprite.body || !gameObjects.label) {
+      //   return;
+      // }
+
+      this.updateSprite(gameObjects.sprite, gameObjects.label);
+      if (pet) {
+        // if (!pet.petSprite.body || !pet.petLabel) {
+        //   return;
+        // }
+        this.updateSprite(pet.petSprite, pet.petLabel, true);
+      }
+
+      
+    const primaryDirection = this.getNewMovementDirection();
+    const isMoving = primaryDirection !== undefined;
+    const x = gameObjects.sprite.getBounds().centerX;
+    const y = gameObjects.sprite.getBounds().centerY;
+
+    const playerX = gameObjects.sprite.x;
+    const playerY = gameObjects.sprite.y;
+
+    //Move the sprite
+    // update pet sprite location here
+    if (
+      !this._lastLocation ||
+      (isMoving && this._lastLocation.rotation !== primaryDirection) ||
+      this._lastLocation.moving !== isMoving)
+    {
+      if (!this._lastLocation) {
+        this._lastLocation = {
+          x,
+          y,
+          rotation: primaryDirection || 'front',
+          moving: isMoving,
+        };
+      }
+      this._lastLocation.x = x;
+      this._lastLocation.y = y;
+      this._lastLocation.rotation = primaryDirection || this._lastLocation.rotation || 'front';
+      this._lastLocation.moving = isMoving;
+      this._pendingOverlapExits.forEach((cb, interactable) => {
+        if (
+          !Phaser.Geom.Rectangle.Overlaps(
+            interactable.getBounds(),
+            gameObjects.sprite.getBounds(),
+          )
+        ) {
+          this._pendingOverlapExits.delete(interactable);
+          cb();
+        }
+      });
+      this.coveyTownController.emitMovement(this._lastLocation);
+
 
       if (pet) {
-        const petBody = pet.sprite.body as Phaser.Physics.Arcade.Body;
-        petBody.setVelocity(0);
-        
-        console.log("stopping pet movement");
-      }
-
-      const primaryDirection = this.getNewMovementDirection();
-      // add pet here, using another misa sprite as a placeholder for now
-      switch (primaryDirection) {
-        case 'left':
-          body.setVelocityX(-MOVEMENT_SPEED);
-          gameObjects.sprite.anims.play('misa-left-walk', true);
-          if (pet) {
-            pet.sprite.anims.play('misa-left-walk', true);
-          }
-          break;
-        case 'right':
-          body.setVelocityX(MOVEMENT_SPEED);
-          gameObjects.sprite.anims.play('misa-right-walk', true);
-          if (pet) {
-            pet.sprite.anims.play('misa-right-walk', true);
-          }
-          break;
-        case 'front':
-          body.setVelocityY(MOVEMENT_SPEED);
-          gameObjects.sprite.anims.play('misa-front-walk', true);
-          if (pet) {
-            pet.sprite.anims.play('misa-front-walk', true);
-          }
-          break;
-        case 'back':
-          body.setVelocityY(-MOVEMENT_SPEED);
-          gameObjects.sprite.anims.play('misa-back-walk', true);
-          if (pet) {
-            pet.sprite.anims.play('misa-back-walk', true);
-          }
-          break;
-        default:
-          // Not moving
-          // stop pet too
-          gameObjects.sprite.anims.stop();
-          if (pet) {
-            pet.sprite.anims.stop();
-          }
-          // If we were moving, pick and idle frame to use
-          // add pet idle frame here
-          if (prevVelocity.x < 0) {
-            gameObjects.sprite.setTexture('atlas', 'misa-left');
-            if (pet) {
-              pet.sprite.setTexture('atlas', 'misa-left');
-            }
-          } else if (prevVelocity.x > 0) {
-            gameObjects.sprite.setTexture('atlas', 'misa-right');
-            if (pet) {
-              pet.sprite.setTexture('atlas', 'misa-right');
-            }
-          } else if (prevVelocity.y < 0) {
-            gameObjects.sprite.setTexture('atlas', 'misa-back');
-            if (pet) {
-              pet.sprite.setTexture('atlas', 'misa-back');
-            }
-          } else if (prevVelocity.y > 0) {
-            gameObjects.sprite.setTexture('atlas', 'misa-front');
-            if (pet) {
-              pet.sprite.setTexture('atlas', 'misa-front');
-            }
-          }
-          break;
-      }
-
-      // Normalize and scale the velocity so that player can't move faster along a diagonal
-      gameObjects.sprite.body.velocity.normalize().scale(MOVEMENT_SPEED);
-
-      const isMoving = primaryDirection !== undefined;
-      gameObjects.label.setX(body.x);
-      gameObjects.label.setY(body.y - 20);
-      const x = gameObjects.sprite.getBounds().centerX;
-      const y = gameObjects.sprite.getBounds().centerY;
-      //Move the sprite
-      if (
-        !this._lastLocation ||
-        (isMoving && this._lastLocation.rotation !== primaryDirection) ||
-        this._lastLocation.moving !== isMoving
-      ) {
-        if (!this._lastLocation) {
-          this._lastLocation = {
-            x,
-            y,
-            rotation: primaryDirection || 'front',
-            moving: isMoving,
-          };
+        switch (primaryDirection) {
+          case 'left':
+            pet.petSprite.body.x = playerX + PET_OFFSET;
+            break;
+          case 'right':
+            pet.petSprite.body.x = playerX - PET_OFFSET;
+            break;
+          default:
+            break;
         }
-        this._lastLocation.x = x;
-        this._lastLocation.y = y;
-        this._lastLocation.rotation = primaryDirection || this._lastLocation.rotation || 'front';
-        this._lastLocation.moving = isMoving;
-        this._pendingOverlapExits.forEach((cb, interactable) => {
-          if (
-            !Phaser.Geom.Rectangle.Overlaps(
-              interactable.getBounds(),
-              gameObjects.sprite.getBounds(),
-            )
-          ) {
-            this._pendingOverlapExits.delete(interactable);
-            cb();
-          }
-        });
-        this.coveyTownController.emitMovement(this._lastLocation);
+        switch (primaryDirection) {
+          case 'back':
+            pet.petSprite.body.y = playerY + PET_OFFSET;
+            break;
+          case 'front':
+            pet.petSprite.body.y = playerY - PET_OFFSET;
+            break;
+          default:
+            break;
       }
-
+    }    
+  }
       //Update the location for the labels of all of the other players
       for (const player of this._players) {
         if (player.gameObjects?.label && player.gameObjects?.sprite.body) {
           player.gameObjects.label.setX(player.gameObjects.sprite.body.x);
           player.gameObjects.label.setY(player.gameObjects.sprite.body.y - 20);
+
+          if (player.activePet) {
+            player.activePet.petLabel.setX(player.activePet.petSprite.body.x);
+            player.activePet.petLabel.setY(player.activePet.petSprite.body.y - 20);
+          }
         }
       }
     }
@@ -515,11 +573,10 @@ export default class TownGameScene extends Phaser.Scene {
           backgroundColor: '#ffffff',
         })
         .setDepth(6);
-      this.coveyTownController.ourPlayer.activePet = {
-        name: pet.name,
-        pet: pet?.pet,
-        sprite: petSprite,
-        label,
+        this.coveyTownController.ourPlayer.activePet = {
+        ...pet,
+        petSprite: petSprite,
+        petLabel: label,
       };
     }
 
@@ -652,7 +709,6 @@ export default class TownGameScene extends Phaser.Scene {
     // For active pet
     console.log("Creating pet sprite");
     if (player.activePet) {
-      let pet : PetInfo = player.activePet;
       // depending on type, add pet sprite
       const sprite = this.physics.add
         // draw front facing pet sprite behind player sprite
@@ -670,7 +726,7 @@ export default class TownGameScene extends Phaser.Scene {
         // pet that is behind player
         player.location.x,
         player.location.y - PET_OFFSET - 20,
-        pet.name,
+        player.activePet.name,
         {
           font: '18px monospace',
           color: '#000000',
@@ -678,10 +734,10 @@ export default class TownGameScene extends Phaser.Scene {
           backgroundColor: '#ffffff',
         },
       );
-      pet = {
+      player.activePet = {
         ...player.activePet,
-        sprite: sprite,
-        label: label,
+        petSprite: sprite,
+        petLabel: label,
       };
       this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
     }
@@ -698,8 +754,8 @@ export default class TownGameScene extends Phaser.Scene {
       }
       const pet = this.coveyTownController.ourPlayer.activePet;
       if (pet) {
-        pet.sprite.anims.stop();
-        const body = pet.sprite.body as Phaser.Physics.Arcade.Body;
+        pet.petSprite.anims.stop();
+        const body = pet.petSprite.body as Phaser.Physics.Arcade.Body;
         body.setVelocity(0);
       }
       assert(this.input.keyboard);

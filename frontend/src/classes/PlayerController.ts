@@ -4,7 +4,6 @@ import { Player as PlayerModel, PlayerLocation } from '../types/CoveyTownSocket'
 import BasePet from './BasePet';
 import Mouse from './Mouse';
 export const MOVEMENT_SPEED = 175;
-
 export type PlayerEvents = {
   movement: (newLocation: PlayerLocation) => void;
 };
@@ -18,8 +17,8 @@ export type PlayerGameObjects = {
 export type PetInfo = {
   name: string;
   pet: BasePet;
-  sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  label: Phaser.GameObjects.Text;
+  petSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  petLabel: Phaser.GameObjects.Text;
 };
 export default class PlayerController extends (EventEmitter as new () => TypedEmitter<PlayerEvents>) {
   private _location: PlayerLocation;
@@ -50,8 +49,8 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this.activePet = {
       name: 'Stuart',
       pet: this.pets.get('Stuart') as Mouse,
-      sprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-      label: {} as Phaser.GameObjects.Text,
+      petSprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+      petLabel: {} as Phaser.GameObjects.Text,
     };
   }
 
@@ -107,8 +106,16 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       }
       label.setX(sprite.body.x);
       label.setY(sprite.body.y - 20);
+
+
+      if (this.activePet) {
+        const { petSprite, petLabel } = this.activePet;
+        petSprite.setX(this.location.x + 20);
+        petSprite.setY(this.location.y + 20);
+        petLabel.setX(petSprite.body.x);
+        petLabel.setY(petSprite.body.y - 20);
+      }
     }
-    // pets?
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {

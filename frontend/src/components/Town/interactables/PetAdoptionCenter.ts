@@ -4,7 +4,9 @@ import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
   private _infoTextBox?: Phaser.GameObjects.Text;
+
   private _isInteracting = false;
+
   private _petAdoptionCenter?: PetAdoptionCenterController;
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];

@@ -32,6 +32,10 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._pets = pets || [];
   }
 
+  get pets(): Pet[] | undefined {
+    return this._pets;
+  }
+
   set pets(pets: Pet[] | undefined) {
     if (pets) {
       if (!this._pets) {
@@ -39,7 +43,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       }
       this._pets = [...this._pets, ...pets];
     }
-    console.log("Player with id:", this._id, "has pets:", this._pets);
+    console.log('Player with id:', this._id, 'has pets:', this._pets);
   }
 
   set location(newLocation: PlayerLocation) {
@@ -60,14 +64,8 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     return this._id;
   }
 
-
-
-  get pets(): Pet[] | undefined {
-    return this._pets;
-  }
-
   toPlayerModel(): PlayerModel {
-    return { id: this.id, userName: this.userName, location: this.location, pets: this.pets || []};
+    return { id: this.id, userName: this.userName, location: this.location, pets: this.pets || [] };
   }
 
   private _updateGameComponentLocation() {
@@ -104,6 +102,11 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   }
 
   static fromPlayerModel(modelPlayer: PlayerModel): PlayerController {
-    return new PlayerController(modelPlayer.id, modelPlayer.userName, modelPlayer.location, modelPlayer.pets);
+    return new PlayerController(
+      modelPlayer.id,
+      modelPlayer.userName,
+      modelPlayer.location,
+      modelPlayer.pets,
+    );
   }
 }

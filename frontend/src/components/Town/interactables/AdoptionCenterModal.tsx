@@ -14,6 +14,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
@@ -45,14 +46,8 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
 
   const toast = useToast();
 
-  function adoptPet() {
-    handleAdoption();
-    // replace the now adopted pet
-    setPets(adoptionCenterController.replenish());
-  }
-
   function handleAdoption() {
-    try {;
+    try {
       const pet = adoptionCenterController.adoptPet(activePet);
       if (!pet) {
         throw new Error('Error adopting pet.');
@@ -70,6 +65,12 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
         status: 'error',
       });
     }
+  }
+
+  function adoptPet() {
+    handleAdoption();
+    // replace the now adopted pet
+    setPets(adoptionCenterController.replenish());
   }
 
   return (
@@ -131,5 +132,3 @@ export default function PetAreaWrapper(): JSX.Element {
   }
   return <></>;
 }
-
-

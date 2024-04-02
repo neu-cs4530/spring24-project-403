@@ -62,7 +62,6 @@ export type ConnectionProperties = {
  * by calling the `addListener` method on a TownController
  */
 export type TownEvents = {
-
   /**
    * An event that indicates that a player has adopted a pet. This event is dispatched after updating the player presses the adopt button -
    * the new pet can be found on the PlayerController.
@@ -393,7 +392,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * Registers listeners for the events that can come from the server to our socket
    */
   registerSocketListeners() {
-
     /**
      * When a player adopts a pet, update local state and emit an event to the controller's event listeners
      */
@@ -679,10 +677,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
             );
           } else if (isPetAdoptionCenter(eachInteractable)) {
             this._interactableControllers.push(
-              new PetAdoptionCenterController(
-                eachInteractable.id,
-                this
-              )
+              new PetAdoptionCenterController(eachInteractable.id, this),
             );
           }
         });
@@ -697,21 +692,21 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     });
   }
 
-    /**
+  /**
    * Emit a pet adoption event for the current player, updating the state locally and
-   * also notifying the townService that our player has adopted a pet. 
+   * also notifying the townService that our player has adopted a pet.
    *
    * @param newPet
    */
-    public emitPetChange(newPet: Pet | undefined) {
-      //this._socket.emit('playerAdoptPet', newPet);
-      const ourPlayer = this._ourPlayer;
-      assert(ourPlayer);
-      if (newPet) {
-        ourPlayer.pets = [newPet];
-      }
-      //this.emit('playerAdoptPet', ourPlayer);
+  public emitPetChange(newPet: Pet | undefined) {
+    //this._socket.emit('playerAdoptPet', newPet);
+    const ourPlayer = this._ourPlayer;
+    assert(ourPlayer);
+    if (newPet) {
+      ourPlayer.pets = [newPet];
     }
+    //this.emit('playerAdoptPet', ourPlayer);
+  }
 
   /**
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary

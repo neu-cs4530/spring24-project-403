@@ -27,23 +27,21 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   PetAdoptionCenterEvents,
   PetAdoptionCenterModel
 > {
-
-
-
   MAX_PETS = 5;
+
   private _pets: Pet[] = [];
+
   protected _townController: TownController;
 
-    /**
+  /**
    * Create a new PetAdoptionCenterController
    * @param id
    * @param townController
    */
-    constructor(id: string, townController: TownController) {
-      super(id);
-      this._townController = townController;
-    }
-  
+  constructor(id: string, townController: TownController) {
+    super(id);
+    this._townController = townController;
+  }
 
   getRandomizedPets(): Pet[] {
     const pets: Pet[] = [];
@@ -59,7 +57,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pets;
   }
 
-  adoptPet(pet : Pet | undefined) {
+  adoptPet(pet: Pet | undefined) {
     if (!pet) {
       return undefined;
     }
@@ -84,7 +82,6 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     this.occupants = newModel.occupants.map(occupantID =>
       this._townController.getPlayer(occupantID),
     );
-    
   }
 
   public isActive() {
@@ -118,13 +115,13 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     };
   }
 
-    /**
+  /**
    * Returns the player in the pet adoption center if there is one, or undefined otherwise
    */
-    private get _player(): PlayerController | undefined {
-      const ourPlayer = this.occupants.find(
-        occupant => occupant.id === this._townController.ourPlayer.id,
-      );
-      return ourPlayer;
-    }
+  private get _player(): PlayerController | undefined {
+    const ourPlayer = this.occupants.find(
+      occupant => occupant.id === this._townController.ourPlayer.id,
+    );
+    return ourPlayer;
+  }
 }

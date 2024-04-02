@@ -5,7 +5,7 @@ import { Pet, PetType } from '../types/CoveyTownSocket';
 /**
  * An abstract class representing the basic attributes of a pet in the game
  */
-export default abstract class BasePet implements Pet{
+export default abstract class BasePet implements Pet {
   /** The unique identifier for this pet * */
   private readonly _id: string;
 
@@ -35,6 +35,7 @@ export default abstract class BasePet implements Pet{
     }
     this._id = nanoid();
   }
+
   petType!: PetType;
 
   get name(): string | undefined {

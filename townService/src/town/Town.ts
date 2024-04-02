@@ -177,10 +177,10 @@ export default class Town {
     /**
      * Register an event listener for the client socket: if the
      * client adopts a pet, inform the CoveyTownController
-   */
-    //socket.on('playerAdoptPet', (petData: Pet | undefined) => {
+     */
+    // socket.on('playerAdoptPet', (petData: Pet | undefined) => {
     //  this._updatePlayerPets(newPlayer, petData);
-    //});
+    // });
 
     // Set up a listener to process commands to interactables.
     // Dispatches commands to the appropriate interactable and sends the response back to the client
@@ -276,21 +276,20 @@ export default class Town {
     this._broadcastEmitter.emit('playerMoved', player.toPlayerModel());
   }
 
-    /**
+  /**
    * Adopts a pet for a given player within the town
    *
    *
    * @param player Player to update pets for
    * @param pet New pet for this player
    */
-    private _updatePlayerPets(player: Player, pet: Pet | undefined): void {
-      if (pet) {
-        player.pets = [...player.pets, pet];
-      }
-  
-      this._broadcastEmitter.emit('playerAdoptPet', player.toPlayerModel());
+  private _updatePlayerPets(player: Player, pet: Pet | undefined): void {
+    if (pet) {
+      player.pets = [...player.pets, pet];
     }
-  
+
+    this._broadcastEmitter.emit('playerAdoptPet', player.toPlayerModel());
+  }
 
   /**
    * Removes a player from a conversation area, updating the conversation area's occupants list,

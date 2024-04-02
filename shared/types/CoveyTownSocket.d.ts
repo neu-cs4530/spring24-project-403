@@ -36,7 +36,7 @@ export interface Player {
   id: PlayerID;
   userName: string;
   location: PlayerLocation;
-  pets: Pet[] | [];
+  pets?: Pet[] | [];
 };
 
 export type XY = { x: number, y: number };

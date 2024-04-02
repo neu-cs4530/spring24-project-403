@@ -277,21 +277,6 @@ export default class Town {
   }
 
   /**
-   * Adopts a pet for a given player within the town
-   *
-   *
-   * @param player Player to update pets for
-   * @param pet New pet for this player
-   */
-  private _updatePlayerPets(player: Player, pet: Pet | undefined): void {
-    if (pet) {
-      player.pets = [...player.pets, pet];
-    }
-
-    this._broadcastEmitter.emit('playerAdoptPet', player.toPlayerModel());
-  }
-
-  /**
    * Removes a player from a conversation area, updating the conversation area's occupants list,
    * and emitting the appropriate message (area updated or area destroyed)
    *

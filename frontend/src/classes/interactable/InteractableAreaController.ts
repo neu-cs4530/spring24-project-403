@@ -105,7 +105,6 @@ export default abstract class InteractableAreaController<
    * Set the occupants of this interactable area, emitting an event if the occupants change.
    */
   public set occupants(newOccupants: PlayerController[]) {
-    console.log('Setting occupants:', newOccupants);
     if (
       newOccupants.length !== this._occupants.length ||
       _.xor(newOccupants, this._occupants).length > 0
@@ -114,7 +113,6 @@ export default abstract class InteractableAreaController<
       //eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.emit('occupantsChange', newOccupants);
-      console.log('Setting occupants:', newOccupants);
       this._occupants = newOccupants;
     }
   }
@@ -127,7 +125,6 @@ export default abstract class InteractableAreaController<
    * @param occupants
    */
   updateFrom(newModel: InteractableModelType, occupants: PlayerController[]): void {
-    console.log('here1');
     this.occupants = occupants;
     this._updateFrom(newModel);
   }

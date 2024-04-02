@@ -34,6 +34,11 @@ export default class PetAdoptionCenter extends InteractableArea {
    */
   public remove(player: Player): void {
     super.remove(player);
+    this._emitAreaChanged();
+  }
+
+  public get isActive(): boolean {
+    return true;
   }
 
   /**
@@ -58,7 +63,7 @@ export default class PetAdoptionCenter extends InteractableArea {
   }
 
   /**
-   * Creates a new ViewingArea object that will represent a Viewing Area object in the town map.
+   * Creates a new Pet Adoption Center object that will represent a Viewing Area object in the town map.
    * @param mapObject An ITiledMapObject that represents a rectangle in which this viewing area exists
    * @param townEmitter An emitter that can be used by this viewing area to broadcast updates to players in the town
    * @returns
@@ -85,6 +90,7 @@ export default class PetAdoptionCenter extends InteractableArea {
     if (command.type === 'PetAdoptionCenterAdopt') {
       const adopt = command as PetAdoptionCenterCommand;
       this.updateModel(adopt);
+      this._emitAreaChanged();
       return {} as InteractableCommandReturnType<CommandType>;
     }
     throw new InvalidParametersError('Unknown command type');

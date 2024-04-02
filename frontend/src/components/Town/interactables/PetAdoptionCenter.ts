@@ -1,11 +1,10 @@
-import BasePet from '../../../classes/BasePet';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import { BoundingBox, Pet } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
   private _infoTextBox?: Phaser.GameObjects.Text;
-
+  private _isInteracting = false;
   private _petAdoptionCenter?: PetAdoptionCenterController;
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
@@ -23,19 +22,17 @@ export default class PetAdoptionCenter extends Interactable {
     //this._petAdoptionCenter?.removeListener('TODO', this._changeListener);
   }
 
-  addedToScene(): void {
+  addedToScene() {
     super.addedToScene();
     this.setTintFill();
     this.setAlpha(0.3);
+    this.setDepth(-1);
     this.scene.add.text(
       this.x - this.displayWidth / 2,
-      this.y - this.displayHeight / 2,
+      this.y + this.displayHeight / 2,
       this.name,
       { color: '#FFFFFF', backgroundColor: '#000000' },
     );
-    this._petAdoptionCenter = this.townController.getPetAdoptionCenterController(this);
-    //this._changeListener = newTopic => this._updateLabelText(newTopic);
-    //this._conversationArea.addListener('topicChange', this._changeListener);
   }
 
   public getBoundingBox(): BoundingBox {
@@ -65,5 +62,13 @@ export default class PetAdoptionCenter extends Interactable {
 
   overlapExit(): void {
     this._infoTextBox?.setVisible(false);
+    if (this._isInteracting) {
+      this.townController.interactableEmitter.emit('endInteraction', this);
+      this._isInteracting = false;
+    }
+  }
+
+  interact(): void {
+    this._isInteracting = true;
   }
 }

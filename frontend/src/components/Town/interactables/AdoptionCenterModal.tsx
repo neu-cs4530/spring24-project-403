@@ -57,12 +57,11 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   }
 
   function handleAdoption() {
-    try {
-      const pet = adoptionCenterController.adoptPet();
+    try {;
+      const pet = adoptionCenterController.adoptPet(activePet);
       if (!pet) {
-        throw new Error('Error adopting pet');
+        throw new Error('Error adopting pet.');
       }
-      coveyTownController.emitPetChange(pet);
       toast({
         title: `Success`,
         description: `You have adopted ${pet.id}!`,

@@ -67,6 +67,7 @@ export type PetType = 'wolf' | 'bear' | 'mouse'
 export interface Pet {
   id: any;
   petType: PetType | undefined;
+  ownerId: string | undefined;
 };
 
 
@@ -285,5 +286,4 @@ export interface ClientToServerEvents {
   playerMovement: (movementData: PlayerLocation) => void;
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
-  playerAdoptPet: (petData: Pet | undefined) => void;
 }

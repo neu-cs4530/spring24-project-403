@@ -413,7 +413,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
       }
       */
       if (playerToUpdate) {
-        playerToUpdate.pets = [...changedPlayer.pets, ...playerToUpdate.pets || []];
         this.emit('playerAdoptPet', playerToUpdate);
       }
     });
@@ -706,16 +705,13 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * @param newPet
    */
     public emitPetChange(newPet: Pet | undefined) {
-      this._socket.emit('playerAdoptPet', newPet);
+      //this._socket.emit('playerAdoptPet', newPet);
       const ourPlayer = this._ourPlayer;
       assert(ourPlayer);
-      if (!ourPlayer.pets) {
-        ourPlayer.pets = [];
-      }
       if (newPet) {
-        ourPlayer.pets = ourPlayer.pets.concat([newPet]);
+        ourPlayer.pets = [newPet];
       }
-      this.emit('playerAdoptPet', ourPlayer);
+      //this.emit('playerAdoptPet', ourPlayer);
     }
 
   /**

@@ -22,7 +22,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   public gameObjects?: PlayerGameObjects;
 
-  private _pets: Pet[] | undefined;
+  private _pets: Pet[] | [];
 
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();
@@ -32,15 +32,14 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._pets = pets || [];
   }
 
-  public adoptPet(newPet: Pet | undefined): Pet | undefined {
-    console.log("Player:", this._userName, "adopts pet:", newPet);
-    if (newPet) {
+  set pets(pets: Pet[] | undefined) {
+    if (pets) {
       if (!this._pets) {
-        this._pets = [];
+        this._pets = pets;
       }
-      this._pets.push(newPet);
-    } 
-    return this._pets?.pop();
+      this._pets = [...this._pets, ...pets];
+    }
+    console.log("Player with id:", this._id, "has pets:", this._pets);
   }
 
   set location(newLocation: PlayerLocation) {
@@ -61,15 +60,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     return this._id;
   }
 
-  set pets(pets: Pet[] | undefined) {
-    if (pets) {
-      if (!this._pets) {
-        this._pets = [];
-      }
-      this._pets = [...this._pets, ...pets];
-    }
-    console.log("Player:", this._userName, "has pets:", this._pets);
-  }
+
 
   get pets(): Pet[] | undefined {
     return this._pets;

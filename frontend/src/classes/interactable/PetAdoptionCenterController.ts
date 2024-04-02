@@ -61,9 +61,12 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pets;
   }
 
-  adoptPet() {
-    const pet = this._player?.adoptPet(this._pet);
-    console.log('Adopting pet: ', pet?.id);
+  adoptPet(pet : Pet | undefined) {
+    if (!pet) {
+      return undefined;
+    }
+    pet.ownerId = this._player?.id;
+    console.log('Adopting pet (controller): ', pet?.id);
     this._townController.emitPetChange(pet);
     return pet;
   }
@@ -80,9 +83,14 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return this._pets;
   }
 
-  protected _updateFrom(): void {}
+  protected _updateFrom(newModel: PetAdoptionCenterModel): void {
+    this.occupants = newModel.occupants.map(occupantID =>
+      this._townController.getPlayer(occupantID),
+    );
+    
+  }
 
-  public isActive(): boolean {
+  public isActive() {
     return this.occupants.length > 0;
   }
 
@@ -120,9 +128,6 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
       const ourPlayer = this.occupants.find(
         occupant => occupant.id === this._townController.ourPlayer.id,
       );
-      console.log('Occupants:', this.occupants);
-      console.log('Our player in town controller:', this._townController.ourPlayer);
-      console.log('Our player:', ourPlayer);
       return ourPlayer;
     }
 }

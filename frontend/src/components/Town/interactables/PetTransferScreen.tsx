@@ -52,7 +52,7 @@ export default function PetTransferScreen(): JSX.Element {
   return (
     <Box p={5} shadow='md' borderWidth='1px' borderRadius='lg' overflow='hidden'>
       <Heading as='h2' size='lg' mb={4}>
-        Pet Transfer: Available Players
+        Pet Transfer Center
       </Heading>
       <Select
         placeholder='Select the pet you want to transfer'
@@ -79,7 +79,7 @@ export default function PetTransferScreen(): JSX.Element {
               onClick={() => {
                 handleTransfer(player.id);
               }}>
-              Transfer Pet
+              Transfer to {player.userName}
             </Button>
           </ListItem>
         ))}

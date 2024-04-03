@@ -3,6 +3,7 @@ import React from 'react';
 import { usePlayers } from '../../classes/TownController';
 import useTownController from '../../hooks/useTownController';
 import PlayerName from './PlayerName';
+import PlayerPets from './PlayerPets';
 
 /**
  * Lists the current players in the town, along with the current town's name and ID
@@ -29,6 +30,7 @@ export default function PlayersInTownList(): JSX.Element {
         {sorted.map(player => (
           <ListItem key={player.id}>
             <PlayerName player={player} />
+            <PlayerPets player={player} />
           </ListItem>
         ))}
       </OrderedList>

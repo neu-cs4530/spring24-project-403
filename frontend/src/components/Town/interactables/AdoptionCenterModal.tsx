@@ -3,7 +3,7 @@ import {
   Button,
   Flex,
   Grid,
-  GridItem,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,6 +12,9 @@ import {
   ModalOverlay,
   Text,
   useToast,
+  VStack,
+  Heading,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';
@@ -74,25 +77,27 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   }
 
   return (
-    <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
-      <GridItem height={'100%'}>
-        <h1>Adoptable Pets:</h1>
-        <Flex direction='column' align='center' justify='center'>
-          {pets.map((pet, index) => (
-            <Box key={index}>
-              <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button onClick={() => setActivePet(pet)}>{pet.id}</Button>
-            </Box>
-          ))}
+    <VStack spacing={4} align='stretch' p={4}>
+      <Heading size='md'>Adoptable Pets:</Heading>
+      {pets.map((pet, index) => (
+        <Flex
+          key={index}
+          align='center'
+          border='1px'
+          borderColor={borderColor}
+          p={4}
+          borderRadius='md'>
+          <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
+          <VStack align='stretch'>
+            <Text>Type: {pet.constructor.name}</Text>
+            <Text>ID: {petDisplayName(pet)}</Text>
+          </VStack>
+          <Button ml='auto' colorScheme='teal' size='sm' onClick={() => setActivePet(pet)}>
+            Adopt
+          </Button>
         </Flex>
-      </GridItem>
-      <GridItem height={'100%'}>
-        <h1>Adopt a {activePet && activePet.petType} today!</h1>
-        <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> Pet id: {activePet && activePet.id}</Text>
-        <Button onClick={adoptPet}>Adopt</Button>
-      </GridItem>
-    </Grid>
+      ))}
+    </VStack>
   );
 }
 

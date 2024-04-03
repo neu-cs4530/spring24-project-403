@@ -102,7 +102,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
             <Text>Type: {pet.constructor.name}</Text>
             <Text>ID: {petDisplayName(pet)}</Text>
           </VStack>
-          <Button ml='auto' colorScheme='teal' size='sm' onClick={() => setActivePet(pet)}>
+          <Button ml='auto' colorScheme='teal' size='sm' onClick={adoptPet}>
             Adopt
           </Button>
         </Flex>

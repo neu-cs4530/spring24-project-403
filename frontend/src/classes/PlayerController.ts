@@ -43,7 +43,21 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       }
       this._pets = [...this._pets, ...pets];
     }
-    console.log('Player with id:', this._id, 'has pets:', this._pets);
+    console.log('Player with username:', this.userName, 'has pets:', this._pets);
+  }
+
+  get playerPets(): Pet[] | [] {
+    return this._pets;
+  }
+
+  public removePet(petId: string): void {
+    this._pets = this._pets.filter(p => p.id !== petId);
+    console.log('Player with username:', this.userName, 'has pets:', this._pets);
+  }
+
+  public addPet(pet: Pet): void {
+    this._pets = [pet, ...this._pets];
+    console.log('Player with username:', this.userName, 'has pets:', this._pets);
   }
 
   set location(newLocation: PlayerLocation) {

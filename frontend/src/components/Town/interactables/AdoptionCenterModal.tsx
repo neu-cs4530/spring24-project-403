@@ -13,12 +13,12 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
-import BasePet from '../../../classes/BasePet';
+import { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
-import { InteractableID } from '../../../types/CoveyTownSocket';
+import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
 import PetAdoptionCenter from './PetAdoptionCenter';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
@@ -26,23 +26,52 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     useInteractableAreaController<PetAdoptionCenterController>(interactableID);
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
-  const [pets, setPets] = useState<BasePet[]>([]);
-  // create useState for "activePet" which is the pet being actively shown in the modal (referenced by id)
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   useEffect(() => {
     if (adoptionCenter) {
       coveyTownController.pause();
-      setPets(adoptionCenterController?.pets);
+      if (pets.length === 0) {
+        setPets(adoptionCenterController?.pets);
+      }
     } else {
       coveyTownController.unPause();
     }
   }, [coveyTownController, adoptionCenter]);
 
+  useEffect(() => {
+    setActivePet(pets[0]);
+  }, [pets]);
+
   const toast = useToast();
 
-  const adoptPet = useCallback(async () => {
-    console.log('Adopting pet');
-  }, []);
+  function handleAdoption() {
+    try {
+      const pet = adoptionCenterController.adoptPet(activePet);
+      if (!pet) {
+        throw new Error('Error adopting pet.');
+      }
+      toast({
+        title: `Success`,
+        description: `You have adopted ${pet.id}!`,
+        status: 'info',
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Error`,
+        description: (error as Error).toString,
+        status: 'error',
+      });
+    }
+  }
+
+  function adoptPet() {
+    handleAdoption();
+    // replace the now adopted pet
+    setPets(adoptionCenterController.replenish());
+  }
 
   return (
     <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
@@ -52,15 +81,15 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
           {pets.map((pet, index) => (
             <Box key={index}>
               <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button>{pet.id}</Button>
+              <Button onClick={() => setActivePet(pet)}>{pet.id}</Button>
             </Box>
           ))}
         </Flex>
       </GridItem>
       <GridItem height={'100%'}>
-        <h1>Adopt PLACEHOLDER today!</h1>
+        <h1>Adopt a {activePet && activePet.petType} today!</h1>
         <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> PET DESCRIPTION PLACEHOLDER.</Text>
+        <Text fontSize='xl'> Pet id: {activePet && activePet.id}</Text>
         <Button onClick={adoptPet}>Adopt</Button>
       </GridItem>
     </Grid>

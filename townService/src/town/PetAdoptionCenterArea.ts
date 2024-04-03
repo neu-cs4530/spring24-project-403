@@ -6,28 +6,25 @@ import {
   InteractableCommand,
   InteractableCommandReturnType,
   InteractableID,
-  PetAdoptionCenter,
   PetAdoptionCenterCommand,
   TownEmitter,
-  ViewingArea as ViewingAreaModel,
-  ViewingAreaUpdateCommand,
+  PetAdoptionCenter as PetAdoptionCenterModel,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
 
-export default class PetAdoptionCenterArea extends InteractableArea {
+export default class PetAdoptionCenter extends InteractableArea {
   /**
-   * Creates a new ViewingArea
-   *
-   * @param viewingArea model containing this area's starting state
-   * @param coordinates the bounding box that defines this viewing area
-   * @param townEmitter a broadcast emitter that can be used to emit updates to players
+   * Creates a new PetAdoptionCenter object that will represent a PetAdoptionCenter Area object in the town map.
+   * @param id The unique identifier for this pet adoption center
+   * @param coordinates The coordinates of the pet adoption center area
+   * @param townEmitter An emitter that can be used by this pet adoption center area to broadcast updates to players in the town
    */
   public constructor(id: InteractableID, coordinates: BoundingBox, townEmitter: TownEmitter) {
     super(id, coordinates, townEmitter);
   }
 
   /**
-   * Removes a player from this viewing area.
+   * Removes a player from this pet adoption center area.
    *
    * When the last player leaves, this method clears the video of this area and
    * emits that update to all of the players
@@ -36,46 +33,41 @@ export default class PetAdoptionCenterArea extends InteractableArea {
    */
   public remove(player: Player): void {
     super.remove(player);
+    this._emitAreaChanged();
+  }
+
+  public get isActive(): boolean {
+    return true;
   }
 
   /**
-   * Updates the state of this ViewingArea, setting the video, isPlaying and progress properties
-   *
-   * @param viewingArea updated model
-   */
-  public updateModel(command: PetAdoptionCenterCommand) {
-    console.log('Trying to update PetAdoptionCenter');
-  }
-
-  /**
-   * Convert this ViewingArea instance to a simple ViewingAreaModel suitable for
+   * Convert this PetAdoptionCenterArea instance to a simple PetAdoptionCenter suitable for
    * transporting over a socket to a client.
    */
-  public toModel(): PetAdoptionCenter {
+  public toModel(): PetAdoptionCenterModel {
     return {
       id: this.id,
       occupants: this.occupantsByID,
       type: 'PetAdoptionCenter',
-      pets: [],
     };
   }
 
   /**
-   * Creates a new ViewingArea object that will represent a Viewing Area object in the town map.
-   * @param mapObject An ITiledMapObject that represents a rectangle in which this viewing area exists
-   * @param townEmitter An emitter that can be used by this viewing area to broadcast updates to players in the town
+   * Creates a new Pet Adoption Center object that will represent a PetAdoptionCenter Area object in the town map.
+   * @param mapObject An ITiledMapObject that represents a rectangle in which this pet adoption center area exists
+   * @param townEmitter An emitter that can be used by this pet adoption center area to broadcast updates to players in the town
    * @returns
    */
   public static fromMapObject(
     mapObject: ITiledMapObject,
     townEmitter: TownEmitter,
-  ): PetAdoptionCenterArea {
+  ): PetAdoptionCenter {
     const { name, width, height } = mapObject;
     if (!width || !height) {
-      throw new Error(`Malformed viewing area ${name}`);
+      throw new Error(`Malformed pet adoption center area ${name}`);
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
-    return new PetAdoptionCenterArea(name as InteractableID, rect, townEmitter);
+    return new PetAdoptionCenter(name as InteractableID, rect, townEmitter);
   }
 
   public handleCommand<CommandType extends InteractableCommand>(
@@ -83,7 +75,7 @@ export default class PetAdoptionCenterArea extends InteractableArea {
   ): InteractableCommandReturnType<CommandType> {
     if (command.type === 'PetAdoptionCenterAdopt') {
       const adopt = command as PetAdoptionCenterCommand;
-      this.updateModel(adopt);
+      this._emitAreaChanged();
       return {} as InteractableCommandReturnType<CommandType>;
     }
     throw new InvalidParametersError('Unknown command type');

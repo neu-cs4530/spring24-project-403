@@ -23,6 +23,7 @@ import {
   InteractableCommandBase,
   InteractableCommandResponse,
   InteractableID,
+  Pet,
   PlayerID,
   PlayerLocation,
   TownSettingsUpdate,
@@ -61,6 +62,12 @@ export type ConnectionProperties = {
  * by calling the `addListener` method on a TownController
  */
 export type TownEvents = {
+  /**
+   * An event that indicates that a player has adopted a pet. This event is dispatched after updating the player presses the adopt button -
+   * the new pet can be found on the PlayerController.
+   */
+  playerAdoptPet: (changedPlayer: PlayerController) => void;
+
   /**
    * An event that indicates that the TownController is now connected to the townService
    * @param providerVideoToken a secret token that can be used to connect to the video service
@@ -386,6 +393,29 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    */
   registerSocketListeners() {
     /**
+     * When a player adopts a pet, update local state and emit an event to the controller's event listeners
+     */
+    this._socket.on('playerAdoptPet', changedPlayer => {
+      const playerToUpdate = this.players.find(eachPlayer => eachPlayer.id === changedPlayer.id);
+      /**
+       * This code will be used to update the player's sprite when they adopt a pet. TODO: Implement this
+      if (playerToUpdate && playerToUpdate.gameObjects) {
+        const { sprite } = playerToUpdate.gameObjects;
+        const vehicleType = playerToUpdate.vehicle ? playerToUpdate.vehicle.vehicleType : 'walk';
+        sprite.body.setVelocity(0, 0);
+        sprite.anims.stop();
+        sprite.setTexture(
+          `${vehicleType}-atlas`,
+          `${vehicleType}-${playerToUpdate.location.rotation}`,
+        );
+      }
+      */
+      if (playerToUpdate) {
+        this.emit('playerAdoptPet', playerToUpdate);
+      }
+    });
+
+    /**
      * On chat messages, forward the messages to listeners who subscribe to the controller's events
      */
     this._socket.on('chatMessage', message => {
@@ -646,7 +676,9 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
               new ConnectFourAreaController(eachInteractable.id, eachInteractable, this),
             );
           } else if (isPetAdoptionCenter(eachInteractable)) {
-            this._interactableControllers.push(new PetAdoptionCenterController(eachInteractable));
+            this._interactableControllers.push(
+              new PetAdoptionCenterController(eachInteractable.id, this),
+            );
           }
         });
         this._userID = initialData.userID;
@@ -658,6 +690,22 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         reject(new Error('Invalid town ID'));
       });
     });
+  }
+
+  /**
+   * Emit a pet adoption event for the current player, updating the state locally and
+   * also notifying the townService that our player has adopted a pet.
+   *
+   * @param newPet
+   */
+  public emitPetChange(newPet: Pet | undefined) {
+    //this._socket.emit('playerAdoptPet', newPet);
+    const ourPlayer = this._ourPlayer;
+    assert(ourPlayer);
+    if (newPet) {
+      ourPlayer.pets = [newPet];
+    }
+    //this.emit('playerAdoptPet', ourPlayer);
   }
 
   /**

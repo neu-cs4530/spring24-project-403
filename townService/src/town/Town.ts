@@ -13,6 +13,7 @@ import {
   Interactable,
   InteractableCommand,
   InteractableCommandBase,
+  Pet,
   PlayerLocation,
   ServerToClientEvents,
   SocketData,
@@ -172,6 +173,14 @@ export default class Town {
         }
       }
     });
+
+    /**
+     * Register an event listener for the client socket: if the
+     * client adopts a pet, inform the CoveyTownController
+     */
+    // socket.on('playerAdoptPet', (petData: Pet | undefined) => {
+    //  this._updatePlayerPets(newPlayer, petData);
+    // });
 
     // Set up a listener to process commands to interactables.
     // Dispatches commands to the appropriate interactable and sends the response back to the client

@@ -36,6 +36,7 @@ export interface Player {
   id: PlayerID;
   userName: string;
   location: PlayerLocation;
+  pets?: Pet[] | [];
 };
 
 export type XY = { x: number, y: number };
@@ -61,10 +62,17 @@ export type ChatMessage = {
 export interface ConversationArea extends Interactable {
   topic?: string;
 };
-export interface PetAdoptionCenter extends Interactable {
-  pets : BasePet[];
-  // TODO: Add any fields that are specific to the PetAdoptionCenter
+
+export type PetType = 'wolf' | 'bear' | 'mouse'
+export interface Pet {
+  id: any;
+  petType: PetType;
+  ownerId: string | undefined;
 };
+
+
+export type PetAdoptionCenter = Interactable
+
 export interface BoundingBox {
   x: number;
   y: number;
@@ -261,6 +269,7 @@ export type InteractableCommandResponse<MessageType> = {
 }
 
 export interface ServerToClientEvents {
+  playerAdoptPet: (adoptingPlayer: Player) => void;
   playerMoved: (movedPlayer: Player) => void;
   playerDisconnect: (disconnectedPlayer: Player) => void;
   playerJoined: (newPlayer: Player) => void;

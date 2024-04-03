@@ -1,7 +1,9 @@
-import { PetAdoptionCenter } from '../../types/CoveyTownSocket';
+import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
 import BasePet from '../BasePet';
 import Bear from '../Bear';
 import Mouse from '../Mouse';
+import PlayerController from '../PlayerController';
+import TownController from '../TownController';
 import Wolf from '../Wolf';
 import InteractableAreaController, {
   BaseInteractableEventMap,
@@ -23,12 +25,26 @@ export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
  */
 export default class PetAdoptionCenterController extends InteractableAreaController<
   PetAdoptionCenterEvents,
-  PetAdoptionCenter
+  PetAdoptionCenterModel
 > {
-  MAX_PETS = 20;
+  MAX_PETS = 5;
 
-  getRandomizedPets(): BasePet[] {
-    const pets: BasePet[] = [];
+  private _pets: Pet[] = [];
+
+  protected _townController: TownController;
+
+  /**
+   * Create a new PetAdoptionCenterController
+   * @param id
+   * @param townController
+   */
+  constructor(id: string, townController: TownController) {
+    super(id);
+    this._townController = townController;
+  }
+
+  getRandomizedPets(): Pet[] {
+    const pets: Pet[] = [];
     for (let i = 0; i < this.MAX_PETS; i++) {
       if (Math.random() < 0.3) {
         pets.push(new Wolf());
@@ -41,29 +57,34 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pets;
   }
 
-  public get pets(): BasePet[] {
-    this._model.pets = this.getRandomizedPets();
-    return this._model.pets;
+  adoptPet(pet: Pet | undefined) {
+    if (!pet) {
+      return undefined;
+    }
+    pet.ownerId = this._player?.id;
+    console.log('Adopting pet (controller): ', pet?.id);
+    this._townController.emitPetChange(pet);
+    return pet;
   }
 
-  protected _updateFrom(newModel: PetAdoptionCenter): void {
-    throw new Error('Method not implemented.');
+  /** Removes the pet at the given index from this controller's list of pets and replaces with a new randomly generated pet. Returns the new list of pets */
+  public replenish(): Pet[] {
+    this._pets = this.getRandomizedPets();
+    return this._pets;
   }
 
-  private _model: PetAdoptionCenter;
-
-  /**
-   * Constructs a new ViewingAreaController, initialized with the state of the
-   * provided viewingAreaModel.
-   *
-   * @param petAdoptionCenter The viewing area model that this controller should represent
-   */
-  constructor(petAdoptionCenter: PetAdoptionCenter) {
-    super(petAdoptionCenter.id);
-    this._model = petAdoptionCenter;
+  public get pets(): Pet[] {
+    this._pets = this.getRandomizedPets();
+    return this._pets;
   }
 
-  public isActive(): boolean {
+  protected _updateFrom(newModel: PetAdoptionCenterModel): void {
+    this.occupants = newModel.occupants.map(occupantID =>
+      this._townController.getPlayer(occupantID),
+    );
+  }
+
+  public isActive() {
     return this.occupants.length > 0;
   }
 
@@ -76,17 +97,31 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * A conversation area is empty if there are no occupants in it.
+   * A pet adoption center is empty if there are no occupants in it.
    */
   isEmpty(): boolean {
     return this.occupants.length === 0;
   }
 
   /**
-   * Return a representation of this ConversationAreaController that matches the
+   * Return a representation of this PetAdoptionCenterController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
-  toInteractableAreaModel(): PetAdoptionCenter {
-    return this._model;
+  toInteractableAreaModel(): PetAdoptionCenterModel {
+    return {
+      id: this.id,
+      occupants: this.occupants.map(player => player.id),
+      type: 'PetAdoptionCenter',
+    };
+  }
+
+  /**
+   * Returns the player in the pet adoption center if there is one, or undefined otherwise
+   */
+  private get _player(): PlayerController | undefined {
+    const ourPlayer = this.occupants.find(
+      occupant => occupant.id === this._townController.ourPlayer.id,
+    );
+    return ourPlayer;
   }
 }

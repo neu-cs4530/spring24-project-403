@@ -76,6 +76,16 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     setPets(adoptionCenterController.replenish());
   }
 
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+
+  const petDisplayName = (pet: Pet): string => {
+    return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
+  };
+
+  const petImage = (pet: Pet): string => {
+    return `./assets/pets/${pet.constructor.name.toLowerCase()}.png`;
+  };
+
   return (
     <VStack spacing={4} align='stretch' p={4}>
       <Heading size='md'>Adoptable Pets:</Heading>

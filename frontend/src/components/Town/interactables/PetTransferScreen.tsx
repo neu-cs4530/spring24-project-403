@@ -69,27 +69,30 @@ export default function PetTransferScreen(): JSX.Element {
       </Select>
       <OrderedList spacing={3}>
         {transferTo.map(player => (
-          <ListItem key={player.id} d='flex' alignItems='center' justifyContent='space-between'>
-            <Stack direction='row' align='center'>
-              <VStack align='start'>
-                <Text fontWeight='bold'>
-                  <PlayerName player={player} />
-                </Text>
-                <Text>
-                  <PlayerPets player={player} />
-                </Text>
-              </VStack>
-            </Stack>
-            <Button
-              colorScheme='teal'
-              variant='outline'
-              disabled={player.id === ourPlayer.id}
-              onClick={() => {
-                handleTransfer(player.id);
-              }}>
-              Transfer to {player.userName}
-            </Button>
-          </ListItem>
+          <>
+            <ListItem key={player.id} d='flex' alignItems='center' justifyContent='space-between'>
+              <Stack direction='row' align='center'>
+                <VStack align='start'>
+                  <Text fontWeight='bold'>
+                    <PlayerName player={player} />
+                  </Text>
+                  <Text>
+                    <PlayerPets player={player} />
+                  </Text>
+                </VStack>
+              </Stack>
+              <Button
+                colorScheme='teal'
+                variant='outline'
+                disabled={player.id === ourPlayer.id}
+                onClick={() => {
+                  handleTransfer(player.id);
+                }}>
+                Transfer to {player.userName}
+              </Button>
+            </ListItem>
+            <hr />
+          </>
         ))}
       </OrderedList>
     </Box>

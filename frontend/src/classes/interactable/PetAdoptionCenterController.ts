@@ -1,5 +1,4 @@
 import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
-import BasePet from '../BasePet';
 import Bear from '../Bear';
 import Mouse from '../Mouse';
 import PlayerController from '../PlayerController';

@@ -1,6 +1,5 @@
 import BasePet from './BasePet';
-
-type MouseColor = 'white' | 'brown' | 'white_brown' | 'grey';
+import { MouseColor } from '../types/CoveyTownSocket';
 
 export default class Mouse extends BasePet {
   static mouseColors: MouseColor[] = ['white', 'brown', 'white_brown', 'grey'];

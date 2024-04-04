@@ -1,43 +1,46 @@
-import Bear from './Bear';
-import Mouse from './Mouse';
-import Wolf from './Wolf';
+import { nanoid } from 'nanoid';
+import BearModel from './BearModel';
+import MouseModel from './MouseModel';
+import WolfModel from './WolfModel';
 
 describe('BasePet', () => {
-  it('should create a new bear with a random id and random color', () => {
-    const pet = new Bear(undefined, undefined, undefined);
+  it('should create a new bear with a random id', () => {
+    const pet = new BearModel(nanoid());
     expect(pet.id).toBeDefined();
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
-    expect(Bear.bearColors).toContain(pet.color);
+    expect(pet.color).toBeUndefined();
   });
   it('should create a new bear with a specific name, id, and color', () => {
-    const pet = new Bear('Yogi', '123', 'brown');
+    const pet = new BearModel(nanoid(), 'Yogi', '123', 'brown');
+    expect(pet.id).toBeDefined();
     expect(pet.name).toBe('Yogi');
     expect(pet.ownerId).toBe('123');
     expect(pet.color).toBe('brown');
   });
-  it('should create a new mouse with a random id and random color', () => {
-    const pet = new Mouse(undefined, undefined, undefined);
+  it('should create a new mouse with a random id', () => {
+    const pet = new MouseModel(nanoid());
     expect(pet.id).toBeDefined();
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
-    expect(Mouse.mouseColors).toContain(pet.color);
+    expect(pet.color).toBeUndefined();
   });
   it('should create a new mouse with a specific name, id, and color', () => {
-    const pet = new Mouse('Stuart', '123', 'white');
+    const pet = new MouseModel(nanoid(), 'Stuart', '123', 'white');
+    expect(pet.id).toBeDefined();
     expect(pet.name).toBe('Stuart');
     expect(pet.ownerId).toBe('123');
     expect(pet.color).toBe('white');
   });
   it('should create a new wolf with a random id and random color', () => {
-    const pet = new Wolf(undefined, undefined, undefined);
+    const pet = new WolfModel(nanoid(), undefined, undefined, undefined);
     expect(pet.id).toBeDefined();
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
-    expect(Wolf.wolfColors).toContain(pet.color);
+    expect(pet.color).toBeUndefined();
   });
   it('should create a new wolf with a specific name, id, and color', () => {
-    const pet = new Wolf('Blaidd', '123', 'grey');
+    const pet = new WolfModel(nanoid(), 'Blaidd', '123', 'grey');
     expect(pet.id).toBeDefined();
     expect(pet.name).toBe('Blaidd');
     expect(pet.ownerId).toBe('123');

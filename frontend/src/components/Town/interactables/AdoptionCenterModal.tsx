@@ -129,7 +129,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
 
   return (
     <VStack spacing={4} align='stretch' p={4}>
-      <Heading size='md'>Adoptable Pets:</Heading>
+      <Heading size='md'>Adoptable Pets</Heading>
       {pets.map((pet, index) => (
         <Flex
           key={index}

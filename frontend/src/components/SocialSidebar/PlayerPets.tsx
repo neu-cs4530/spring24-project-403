@@ -9,7 +9,11 @@ type PlayerPetsProps = {
 
 export default function PlayerPets({ player }: PlayerPetsProps): JSX.Element {
   if (player.playerPets.length === 0) {
-    return <Text>No pets</Text>;
+    return (
+      <UnorderedList spacing={3}>
+        <ListItem>No pets</ListItem>
+      </UnorderedList>
+    );
   }
 
   return (

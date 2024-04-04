@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { ListItem, OrderedList, Text, UnorderedList } from '@chakra-ui/react';
 import PlayerController from '../../classes/PlayerController';
 import { Pet } from '../../types/CoveyTownSocket';
 
@@ -7,22 +8,17 @@ type PlayerPetsProps = {
 };
 
 export default function PlayerPets({ player }: PlayerPetsProps): JSX.Element {
-  const [currentPlayersPets, setcurrentPlayersPets] = useState<Pet[] | []>(player.playerPets);
-
-  useEffect(() => {
-    setcurrentPlayersPets(player.playerPets);
-  }, [player.playerPets]);
+  if (player.playerPets.length === 0) {
+    return <Text>No pets</Text>;
+  }
 
   return (
-    <>
-      <ol>
-        {player.playerPets.length === 0 && <li>No pets</li>}
-        {player.playerPets.map(pet => (
-          <li key={pet.id}>
-            {pet.petType} (ID: {pet.id})
-          </li>
-        ))}
-      </ol>
-    </>
+    <UnorderedList spacing={3}>
+      {player.playerPets.map(pet => (
+        <ListItem key={pet.id}>
+          {pet.petType} (ID: {pet.id})
+        </ListItem>
+      ))}
+    </UnorderedList>
   );
 }

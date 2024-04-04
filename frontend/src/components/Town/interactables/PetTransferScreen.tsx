@@ -88,15 +88,18 @@ export default function PetTransferScreen(): JSX.Element {
                     </Text>
                   </VStack>
                 </Stack>
-                <Button
-                  colorScheme='teal'
-                  variant='outline'
-                  disabled={player.id === ourPlayer.id}
-                  onClick={() => {
-                    handleTransfer(player.id);
-                  }}>
-                  Transfer to {player.userName}
-                </Button>
+                <VStack>
+                  <Button
+                    colorScheme='teal'
+                    variant='outline'
+                    disabled={player.id === ourPlayer.id}
+                    onClick={() => {
+                      handleTransfer(player.id);
+                    }}>
+                    Transfer to{' '}
+                    {(player.id === ourPlayer.id && 'you (disabled)') || player.userName}
+                  </Button>
+                </VStack>
               </ListItem>
               <hr />
             </>

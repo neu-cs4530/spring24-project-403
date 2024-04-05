@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Phaser from 'phaser';
-import PlayerController, { PetInfo, MOVEMENT_SPEED } from '../../classes/PlayerController';
+import PlayerController, { MOVEMENT_SPEED } from '../../classes/PlayerController';
 import TownController from '../../classes/TownController';
 import { PlayerLocation } from '../../types/CoveyTownSocket';
 import { Callback } from '../VideoCall/VideoFrontend/types';
@@ -10,8 +10,7 @@ import GameArea from './interactables/GameArea';
 import Transporter from './interactables/Transporter';
 import ViewingArea from './interactables/ViewingArea';
 import PetAdoptionCenter from './interactables/PetAdoptionCenter';
-import { yellow } from '@material-ui/core/colors';
-const PET_OFFSET = 40;
+const PET_OFFSET = 30;
 
 // Still not sure what the right type is here... "Interactable" doesn't do it
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,7 +196,7 @@ export default class TownGameScene extends Phaser.Scene {
   moveOurPlayerTo(destination: Partial<PlayerLocation>) {
     const gameObjects = this.coveyTownController.ourPlayer.gameObjects;
     console.log('moving player');
-    const pet = this.coveyTownController.ourPlayer.activePet;
+    // const pet = this.coveyTownController.ourPlayer.activePet;
     if (!gameObjects) {
       throw new Error('Unable to move player without game objects created first');
     }
@@ -557,18 +556,18 @@ export default class TownGameScene extends Phaser.Scene {
     if (pet) {
       // create pet sprite here
       const petSprite = this.physics.add
-        .sprite(spawnPoint.x, spawnPoint.y, 'atlas', 'misa-front')
+        .sprite(spawnPoint.x, spawnPoint.y - PET_OFFSET, 'atlas', 'misa-front')
         .setSize(32, 32)
         .setOffset(0, 24)
-        .setDepth(6);
+        .setDepth(5);
       const petLabel = this.add
-        .text(spawnPoint.x, spawnPoint.y - 20, '(PET Nake)', {
+        .text(spawnPoint.x, spawnPoint.y - PET_OFFSET - 20, pet.name, {
           font: '18px monospace',
           color: '#000000',
           // padding: {x: 20, y: 10},
           backgroundColor: '#ffffff',
         })
-        .setDepth(6);
+        .setDepth(5);
       this.coveyTownController.ourPlayer.activePet = {
         ...pet,
         petSprite: petSprite,
@@ -585,10 +584,10 @@ export default class TownGameScene extends Phaser.Scene {
     this._collidingLayers.push(wallsLayer);
     this._collidingLayers.push(aboveLayer);
     this._collidingLayers.push(onTheWallsLayer);
+    if (pet && pet.petSprite) {
+      this._collidingLayers.forEach(layer => this.physics.add.collider(pet.petSprite, layer));
+    }
     this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
-    // if (pet) {
-    //   this._collidingLayers.forEach(layer => this.physics.add.collider(pet.petSprite, layer));
-    // }
 
     // Create the player's walking animations from the texture atlas. These are stored in the global
     // animation manager so any sprite can access them.
@@ -706,18 +705,14 @@ export default class TownGameScene extends Phaser.Scene {
   createPetSprite(player: PlayerController) {
     // need to call this again when active pet changes?
     // For active pet
-    console.log('Creating pet sprite');
     if (player.activePet && !player.activePet.petSprite) {
       // depending on type, add pet sprite
       const sprite = this.physics.add
         // draw front facing pet sprite behind player sprite
         .sprite(player.location.x, player.location.y - PET_OFFSET, 'atlas', 'misa-front')
-        .setSize(30, 40)
+        .setSize(32, 32)
         .setOffset(0, 24);
-      // Add pet label (name?)
       const label = this.add.text(
-        // determine label location depending on player direction, for now just above
-        // pet that is behind player
         player.location.x,
         player.location.y - PET_OFFSET - 20,
         player.activePet.name,

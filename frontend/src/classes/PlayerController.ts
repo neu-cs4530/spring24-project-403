@@ -17,8 +17,8 @@ export type PlayerGameObjects = {
 export type PetInfo = {
   name: string;
   pet: Pet;
-  sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  label: Phaser.GameObjects.Text;
+  petSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  petLabel: Phaser.GameObjects.Text;
 };
 export default class PlayerController extends (EventEmitter as new () => TypedEmitter<PlayerEvents>) {
   private _location: PlayerLocation;
@@ -42,7 +42,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
     // Hardcode pet data for visiualization
     // TODO: DELETE THIS
-    const stuart = new Mouse("Stuart", this._id, "white");
+    const stuart = new Mouse('Stuart', this._id, 'white');
     this._pets.push(stuart);
     this.activePet = {
       name: 'Stuart',
@@ -118,7 +118,6 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       }
       label.setX(sprite.body.x);
       label.setY(sprite.body.y - 20);
-
 
       if (this.activePet) {
         const { petSprite, petLabel } = this.activePet;

@@ -1,6 +1,5 @@
 import BasePet from './BasePet';
-
-type WolfColor = 'grey' | 'white' | 'black' | 'brown';
+import { WolfColor } from '../types/CoveyTownSocket';
 
 export default class Wolf extends BasePet {
   static wolfColors: WolfColor[] = ['grey', 'white', 'black', 'brown'];

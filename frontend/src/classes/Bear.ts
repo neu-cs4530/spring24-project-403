@@ -1,6 +1,5 @@
 import BasePet from './BasePet';
-
-type BearColor = 'black' | 'brown';
+import { BearColor } from '../types/CoveyTownSocket';
 
 export default class Bear extends BasePet {
   static bearColors: BearColor[] = ['black', 'brown'];
@@ -19,6 +18,6 @@ export default class Bear extends BasePet {
   }
 
   public makeSound(): string {
-    return 'Awooo!';
+    return 'Grrrr!';
   }
 }

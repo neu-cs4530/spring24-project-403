@@ -1,11 +1,11 @@
-import { nanoid } from 'nanoid';
 import Accessory from './Accessory';
-import { Pet, PetType } from '../types/CoveyTownSocket';
+import { nanoid } from 'nanoid';
+import { Pet as PetModel, PetType } from '../types/CoveyTownSocket';
 
 /**
  * An abstract class representing the basic attributes of a pet in the game
  */
-export default abstract class BasePet implements Pet {
+export default abstract class BasePet implements PetModel {
   /** The unique identifier for this pet * */
   private readonly _id: string;
 
@@ -86,6 +86,16 @@ export default abstract class BasePet implements Pet {
     } else {
       throw new Error('Pet does not have this accessory');
     }
+  }
+
+  toPetModel(): PetModel {
+    return {
+      id: this._id,
+      name: this._name,
+      petType: this.petType,
+      ownerId: this._ownerId,
+      color: this._color,
+    };
   }
 
   public abstract makeSound(): string;

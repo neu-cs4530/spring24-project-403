@@ -65,11 +65,18 @@ export interface ConversationArea extends Interactable {
 
 export type PetType = 'wolf' | 'bear' | 'mouse'
 export interface Pet {
-  id: any;
+  id: string;
+  name: string | undefined;
   petType: PetType;
   ownerId: string | undefined;
+  color: string | undefined;
 };
 
+export type BearColor = 'black' | 'brown';
+
+type MouseColor = 'white' | 'brown' | 'white_brown' | 'grey';
+
+type WolfColor = 'grey' | 'white' | 'black' | 'brown';
 
 export type PetAdoptionCenter = Interactable
 

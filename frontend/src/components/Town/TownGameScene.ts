@@ -13,7 +13,8 @@ import GameArea from './interactables/GameArea';
 import Transporter from './interactables/Transporter';
 import ViewingArea from './interactables/ViewingArea';
 import PetAdoptionCenter from './interactables/PetAdoptionCenter';
-const PET_OFFSET = 40;
+const PET_OFFSET_X = 26;
+const PET_OFFSET_Y = 34;
 
 // Still not sure what the right type is here... "Interactable" doesn't do it
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -148,6 +149,26 @@ export default class TownGameScene extends Phaser.Scene {
       this._resourcePathPrefix + '/assets/atlas/atlas.png',
       this._resourcePathPrefix + '/assets/atlas/atlas.json',
     );
+    this.load.spritesheet(
+      'wolves',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet(
+      'bears',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/bears.png',
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      },
+    );
+    this.load.spritesheet('mice', this._resourcePathPrefix + '/assets/atlas/pet-animate/mice.png', {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
   }
 
   updatePlayers(players: PlayerController[]) {
@@ -220,47 +241,32 @@ export default class TownGameScene extends Phaser.Scene {
     const playerX = gameObjects.sprite.x;
     const playerY = gameObjects.sprite.y;
     const petSprite = gameObjects.petSprite;
+    const petType = 'bears'; // need to make this so it updates to the player's pet type
+    let animKey = `${petType}-`;
     assert(petSprite);
     switch (direction) {
       case 'left':
-        if (moving) {
-          petSprite.anims.play('misa-left-walk', true);
-        } else {
-          petSprite.setTexture('atlas', 'misa-left');
-        }
-        petSprite.setX(playerX + PET_OFFSET);
-        petSprite.setY(playerY);
+        petSprite.flipX = true;
+        animKey += 'right-walk';
         break;
       case 'right':
-        if (moving) {
-          petSprite.anims.play('misa-right-walk', true);
-        } else {
-          petSprite.setTexture('atlas', 'misa-right');
-        }
-        petSprite.setX(playerX - PET_OFFSET);
-        petSprite.setY(playerY);
+        petSprite.flipX = false;
+        animKey += 'right-walk';
         break;
       case 'front':
-        if (moving) {
-          petSprite.anims.play('misa-front-walk', true);
-        } else {
-          petSprite.setTexture('atlas', 'misa-front');
-        }
-        petSprite.setX(playerX);
-        petSprite.setY(playerY - PET_OFFSET);
-        petSprite.setDepth(5);
+        animKey += 'forward-walk';
         break;
       case 'back':
-        if (moving) {
-          petSprite.anims.play('misa-back-walk', true);
-        } else {
-          petSprite.setTexture('atlas', 'misa-back');
-        }
-        petSprite.setX(playerX);
-        petSprite.setY(playerY + PET_OFFSET);
-        petSprite.setDepth(7);
+        animKey += 'backward-walk';
         break;
     }
+    if (moving) {
+      petSprite.anims.play(animKey, true);
+    } else {
+      petSprite.anims.stop();
+    }
+    petSprite.setX(playerX + PET_OFFSET_X);
+    petSprite.setY(playerY + PET_OFFSET_Y);
   }
 
   update() {
@@ -314,8 +320,8 @@ export default class TownGameScene extends Phaser.Scene {
       const isMoving = primaryDirection !== undefined;
       gameObjects.label.setX(body.x);
       gameObjects.label.setY(body.y - 20);
-      gameObjects.petSprite?.setX(gameObjects.sprite.x);
-      gameObjects.petSprite?.setY(gameObjects.sprite.y - PET_OFFSET);
+      gameObjects.petSprite?.setX(gameObjects.sprite.x + PET_OFFSET_X);
+      gameObjects.petSprite?.setY(gameObjects.sprite.y + PET_OFFSET_Y);
       const x = gameObjects.sprite.getBounds().centerX;
       const y = gameObjects.sprite.getBounds().centerY;
       //Move the sprite
@@ -411,6 +417,19 @@ export default class TownGameScene extends Phaser.Scene {
       return ret;
     });
 
+    const pets = ['wolves', 'bears', 'mice'];
+    const directions = ['right', 'forward', 'backward'];
+    pets.forEach(pet => {
+      directions.forEach((direction, index) => {
+        this.anims.create({
+          key: `${pet}-${direction}-walk`,
+          frames: this.anims.generateFrameNumbers(pet, { start: index * 4, end: index * 4 + 3 }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      });
+    });
+
     this._collidingLayers = [];
     // Parameters: layer name (or index) from Tiled, tileset, x, y
     const belowLayer = this.map.createLayer('Below Player', tileset, 0, 0);
@@ -501,9 +520,14 @@ export default class TownGameScene extends Phaser.Scene {
     let petSprite = undefined;
     if (this.coveyTownController.ourPlayer.activePet) {
       petSprite = this.physics.add
-        .sprite(spawnPoint.x, spawnPoint.y - PET_OFFSET, 'atlas', 'misa-front')
-        .setSize(30, 40)
-        .setOffset(0, 24)
+        .sprite(
+          spawnPoint.x + PET_OFFSET_X,
+          spawnPoint.y + PET_OFFSET_Y,
+          'bears',
+          'bears-forward-walk', // will need to be updated to the pet type
+        )
+        .setSize(32, 32)
+        .setOffset(PET_OFFSET_X, PET_OFFSET_Y)
         .setDepth(5);
     }
     this.coveyTownController.ourPlayer.gameObjects = {
@@ -618,7 +642,12 @@ export default class TownGameScene extends Phaser.Scene {
       let petSprite = undefined;
       if (player.activePet) {
         petSprite = this.physics.add
-          .sprite(player.location.x, player.location.y - PET_OFFSET, 'atlas', 'misa-front')
+          .sprite(
+            player.location.x + PET_OFFSET_X,
+            player.location.y + PET_OFFSET_Y,
+            'atlas',
+            'misa-front',
+          )
           .setSize(32, 32)
           .setOffset(0, 24);
       }

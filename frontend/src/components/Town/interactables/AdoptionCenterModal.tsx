@@ -4,6 +4,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,6 +13,9 @@ import {
   ModalOverlay,
   Text,
   useToast,
+  VStack,
+  Heading,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';

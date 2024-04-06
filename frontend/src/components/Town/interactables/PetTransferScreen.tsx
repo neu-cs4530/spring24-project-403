@@ -16,10 +16,12 @@ import useTownController from '../../../hooks/useTownController';
 import { Pet } from '../../../types/CoveyTownSocket';
 import PlayerName from '../../SocialSidebar/PlayerName';
 import PlayerPets from '../../SocialSidebar/PlayerPets';
+import PlayerController from '../../../classes/PlayerController';
 
 export default function PetTransferScreen(): JSX.Element {
   const players = usePlayers();
   const { ourPlayer } = useTownController();
+  const townController = useTownController();
   const transferTo = players
     .concat([])
     .sort((p1, p2) =>
@@ -33,12 +35,29 @@ export default function PetTransferScreen(): JSX.Element {
     setMyPets(ourPlayer.pets || []);
   }, [ourPlayer.pets]);
 
+
+  useEffect(() => {
+    const handleUpdate = (pets: Pet[]) => {
+      setMyPets(pets);
+    }
+
+    ourPlayer.addListener('petsUpdated', handleUpdate);
+    return () => {
+      ourPlayer.removeListener('petsUpdated', handleUpdate);
+    };
+  }
+  , [ourPlayer]);
+
+
+  const emitTransfer = (petToTransfer: Pet, ourPlayer: PlayerController, selectedPlayer: PlayerController) => {
+    townController.emitPetTransfer(petToTransfer, ourPlayer, selectedPlayer);
+  }
+
   function handleTransfer(playerID: string) {
     const selectedPlayer = players.find(player => player.id === playerID);
     const petToTransfer = ourPlayer.pets?.find(pet => pet.id === petToTransferID);
     if (selectedPlayer && petToTransfer) {
-      selectedPlayer.addPet(petToTransfer);
-      ourPlayer.removePet(petToTransferID);
+      emitTransfer(petToTransfer, ourPlayer, selectedPlayer);
       toast({
         title: 'Pet transferred successfully.',
         description: `Pet ${petToTransfer.id} has been transferred to ${selectedPlayer.userName}.`,
@@ -109,3 +128,5 @@ export default function PetTransferScreen(): JSX.Element {
     </Box>
   );
 }
+
+

@@ -1,8 +1,4 @@
-import Bear from '../../../classes/Bear';
-import Mouse from '../../../classes/Mouse';
-import Wolf from '../../../classes/Wolf';
-import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
-import { BoundingBox, Pet, InteractableType } from '../../../types/CoveyTownSocket';
+import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
@@ -11,45 +7,12 @@ export default class PetAdoptionCenter extends Interactable {
 
   private _isInteracting = false;
 
-  private _pets: Pet[] = [];
-
-  private _petAdoptionCenter?: PetAdoptionCenterController;
-
-  //private _changeListener?: PetAdoptionCenterEvents['TODO'];
-
-  getRandomizedPets(): Pet[] {
-    const pets: Pet[] = [];
-    for (let i = 0; i < this.MAX_PETS; i++) {
-      if (Math.random() < 0.3) {
-        pets.push(new Wolf());
-      } else if (Math.random() < 0.6) {
-        pets.push(new Mouse());
-      } else {
-        pets.push(new Bear());
-      }
-    }
-    return pets;
-  }
-  
-  public get pets(): Pet[] {
-    console.log('getting pets from frontend')
-    if (!this.pets || this.pets.length === 0) {
-      this._pets = this.getRandomizedPets();
-    }
-    return this._pets;
-  }
-
-  public set pets(pets: Pet[]) {
-    this._pets = pets;
-  }
-
   getType(): KnownInteractableTypes {
     return 'petAdoptionCenter';
   }
 
   removedFromScene(): void {
     super.removedFromScene();
-    //this._petAdoptionCenter?.removeListener('TODO', this._changeListener);
   }
 
   addedToScene() {
@@ -63,7 +26,6 @@ export default class PetAdoptionCenter extends Interactable {
       this.name,
       { color: '#FFFFFF', backgroundColor: '#000000' },
     );
-    this.pets = this.getRandomizedPets();
   }
 
   public getBoundingBox(): BoundingBox {

@@ -66,7 +66,7 @@ export type TownEvents = {
    * An event that indicates that a player has adopted a pet. This event is dispatched after updating the player presses the adopt button -
    * the new pet can be found on the PlayerController.
    */
-  playerAdoptedPet: (changedPlayer: PlayerController) => void;
+  playerChangedPets: (changedPlayer: PlayerController) => void;
 
   /**
    * An event that indicates that the TownController is now connected to the townService
@@ -135,6 +135,7 @@ export type TownEvents = {
  *
  */
 export default class TownController extends (EventEmitter as new () => TypedEmitter<TownEvents>) {
+
   /** The socket connection to the townsService. Messages emitted here
    * are received by the TownController in that service.
    */
@@ -396,7 +397,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     /**
      * When a player adopts a pet, update local state and emit an event to the controller's event listeners
      */
-    this._socket.on('playerAdoptedPet', changedPlayer => {
+    this._socket.on('playerChangedPets', changedPlayer => {
       const playerToUpdate = this.players.find(eachPlayer => eachPlayer.id === changedPlayer.id);
       /**
        * This code will be used to update the player's sprite when they adopt a pet. TODO: Implement this
@@ -696,7 +697,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    *
    * @param newPet
    */
-  public emitPetChange(newPet: Pet) {
+  public emitPetAdoption(newPet: Pet) {
     const ourPlayer = this._ourPlayer;
     assert(ourPlayer);
     this._socket.emit('playerAdoptPet', newPet, ourPlayer.location);
@@ -707,8 +708,22 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
         ourPlayer.pets = ourPlayer.pets.concat([newPet]);
       }
     }
-    this.emit('playerAdoptedPet', ourPlayer);
+    this.emit('playerChangedPets', ourPlayer);
   }
+
+    /**
+   * Emit a pet adoption event for the current player, updating the state locally and
+   * also notifying the townService that our player has adopted a pet.
+   *
+   * @param newPet
+   */
+    public emitPetTransfer(toTransfer: Pet, to: PlayerController, from: PlayerController) {
+      const ourPlayer = this._ourPlayer;
+      assert(ourPlayer);
+      this._socket.emit('playerAddPet', toTransfer);
+      this._socket.emit('playerRemovePet', toTransfer);
+      this.emit('playerChangedPets', ourPlayer);
+    }
 
   /**
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
@@ -785,10 +800,10 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     this._socket.emit('interactableUpdate', viewingArea.toInteractableAreaModel());
   }
 
-    /**
-   * Emit a viewing area update to the townService
-   * @param viewingArea The Viewing Area Controller that is updated and should be emitted
-   *    with the event
+
+  /**
+   * Emit a change for the pet adoption center to the townService.
+   * @param petAdoptionCenterArea 
    */
     public emitPetAdoptionCenterAreaUpdate(petAdoptionCenterArea: PetAdoptionCenterController) {
       this._socket.emit('interactableUpdate', petAdoptionCenterArea.toInteractableAreaModel());

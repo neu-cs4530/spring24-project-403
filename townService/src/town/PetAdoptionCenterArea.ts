@@ -45,7 +45,6 @@ export default class PetAdoptionCenter extends InteractableArea {
       this._pets.push(this.getRandomizedPets()[0]);
     }
     this._emitAreaChanged();
-    console.log('Pet adoption center pets after removal', this._pets);
   }
 
   public get pets(): Pet[] {

@@ -5,6 +5,7 @@ import { Player as PlayerModel, PlayerLocation, TownEmitter, Pet } from '../type
  * Each user who is connected to a town is represented by a Player object
  */
 export default class Player {
+
   /** The current location of this user in the world map * */
   public location: PlayerLocation;
 
@@ -38,6 +39,19 @@ export default class Player {
     this._sessionToken = nanoid();
     this.townEmitter = townEmitter;
     this.pets = [];
+  }
+
+  public addPet(pet: Pet): void {
+    if ((this.pets as Pet[]).includes(pet)) {
+      return;
+    }
+    this.pets = [pet, ...this.pets];
+    console.log('Player with username:', this.userName, 'has pets:', this.pets);
+  }
+
+  public removePet(petData: Pet) {
+    this.pets = (this.pets as Pet[]).filter(pet => pet.id !== petData.id);
+    console.log('Player with username:', this.userName, 'has pets:', this.pets);
   }
 
   get userName(): string {

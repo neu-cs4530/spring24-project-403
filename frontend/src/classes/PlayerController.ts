@@ -5,7 +5,7 @@ export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
   movement: (newLocation: PlayerLocation) => void;
-  petChange: (newPet: Pet | undefined) => void;
+  petsUpdated: (pets: Pet[]) => void;
 };
 
 export type PlayerGameObjects = {
@@ -46,22 +46,12 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
           this._pets = [...this._pets, pet];
         }
       });
+      this.emit('petsUpdated', pets);
     }
-    console.log('Player with username:', this.userName, 'has pets:', this._pets);
   }
 
   get playerPets(): Pet[] | [] {
     return this._pets;
-  }
-
-  public removePet(petId: string): void {
-    this._pets = this._pets.filter(p => p.id !== petId);
-    console.log('Player with username:', this.userName, 'has pets:', this._pets);
-  }
-
-  public addPet(pet: Pet): void {
-    this._pets = [pet, ...this._pets];
-    console.log('Player with username:', this.userName, 'has pets:', this._pets);
   }
 
   set location(newLocation: PlayerLocation) {

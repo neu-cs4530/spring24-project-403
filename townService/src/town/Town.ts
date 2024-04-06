@@ -139,6 +139,16 @@ export default class Town {
       this._updatePlayerPets(newPlayer, petData);
     });
 
+    socket.on('playerRemovePet', (petData: Pet) => {
+      newPlayer.removePet(petData);
+      this._broadcastEmitter.emit('playerChangedPets', newPlayer.toPlayerModel());
+    });
+
+    socket.on('playerAddPet', (petData: Pet) => {
+      newPlayer.addPet(petData);
+      this._broadcastEmitter.emit('playerChangedPets', newPlayer.toPlayerModel());
+    });
+
     // Register an event listener for the client socket: if the client disconnects,
     // clean up our listener adapter, and then let the CoveyTownController know that the
     // player's session is disconnected
@@ -254,7 +264,9 @@ export default class Town {
    * @param vehicle New location for this player
    */
     private _updatePlayerPets(player: Player, pet: Pet): void {
-      this._broadcastEmitter.emit('playerAdoptedPet', player.toPlayerModel());
+      console.log('Adding pet to player backend');
+      player.addPet(pet);
+      this._broadcastEmitter.emit('playerChangedPets', player.toPlayerModel());
     }
 
   /**

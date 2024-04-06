@@ -278,7 +278,7 @@ export type InteractableCommandResponse<MessageType> = {
 }
 
 export interface ServerToClientEvents {
-  playerAdoptedPet: (adoptingPlayer: Player) => void;
+  playerChangedPets: (adoptingPlayer: Player) => void;
   playerMoved: (movedPlayer: Player) => void;
   playerDisconnect: (disconnectedPlayer: Player) => void;
   playerJoined: (newPlayer: Player) => void;
@@ -296,4 +296,6 @@ export interface ClientToServerEvents {
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
   playerAdoptPet: (petData: Pet, location: PlayerLocation) => void;
+  playerAddPet: (petData: Pet) => void;
+  playerRemovePet: (petData: Pet) => void;
 }

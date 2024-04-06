@@ -60,6 +60,8 @@ export default class TownGameScene extends Phaser.Scene {
 
   private _paused = false;
 
+  private _movementAllowed = true;
+
   public coveyTownController: TownController;
 
   private _onGameReadyListeners: Callback[] = [];
@@ -200,6 +202,9 @@ export default class TownGameScene extends Phaser.Scene {
     if (!gameObjects) {
       throw new Error('Unable to move player without game objects created first');
     }
+    if (!this._movementAllowed) {
+      return;
+    }
     if (!this._lastLocation) {
       this._lastLocation = { moving: false, rotation: 'front', x: 0, y: 0 };
     }
@@ -266,6 +271,7 @@ export default class TownGameScene extends Phaser.Scene {
       pet.petSprite.anims.stop();
       console.log('stopped pet movement');
     }
+    this._movementAllowed = false;
   }
 
   updateSprite(
@@ -354,7 +360,7 @@ export default class TownGameScene extends Phaser.Scene {
 
   update() {
     // abstract into update sprite function
-    if (this._paused) {
+    if (this._paused || !this._movementAllowed) {
       return;
     }
     const gameObjects = this.coveyTownController.ourPlayer.gameObjects;
@@ -494,6 +500,9 @@ export default class TownGameScene extends Phaser.Scene {
     aboveLayer.setDepth(10);
     veryAboveLayer.setDepth(15);
 
+    // Make collison group of players and pets
+    const playerAndPetGroup = this.physics.add.group();
+
     // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
     // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
     const spawnPoint = this.map.findObject(
@@ -594,7 +603,13 @@ export default class TownGameScene extends Phaser.Scene {
         petLabel: petLabel,
       };
       this._collidingLayers.forEach(layer => {
-        this.physics.add.collider(petSprite, layer, this.stopPlayerAndPetMovement, undefined, this);
+        this.physics.add.collider(
+          [sprite, petSprite],
+          layer,
+          this.stopPlayerAndPetMovement,
+          undefined,
+          this,
+        );
         // this.physics.add.collider(sprite, layer, this.stopPlayerAndPetMovement, undefined, this);
       });
     }

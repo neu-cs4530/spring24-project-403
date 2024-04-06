@@ -211,9 +211,11 @@ export default class TownGameScene extends Phaser.Scene {
         switch (direction) {
           case 'left':
             pet.petSprite.x = gameObjects.sprite.x - PET_OFFSET;
+            console.log('moving pet left');
             break;
           case 'right':
             pet.petSprite.x = gameObjects.sprite.x + PET_OFFSET;
+            console.log('moving pet right');
             break;
           default:
             break;
@@ -228,9 +230,11 @@ export default class TownGameScene extends Phaser.Scene {
         switch (direction) {
           case 'back':
             pet.petSprite.y = gameObjects.sprite.y - PET_OFFSET;
+            console.log('moving pet back');
             break;
           case 'front':
             pet.petSprite.y = gameObjects.sprite.y + PET_OFFSET;
+            console.log('moving pet front');
             break;
           default:
             break;
@@ -244,6 +248,24 @@ export default class TownGameScene extends Phaser.Scene {
       this._lastLocation.rotation = destination.rotation;
     }
     this.coveyTownController.emitMovement(this._lastLocation);
+  }
+
+  stopPlayerAndPetMovement() {
+    //  TODO: this only sets the velocity to 0 for a lttle bit?
+    // also set collide() to true?
+    const gameObjects = this.coveyTownController.ourPlayer.gameObjects;
+    const pet = this.coveyTownController.ourPlayer.activePet;
+    console.log('stopping player and pet movement');
+    if (gameObjects) {
+      gameObjects.sprite.body.setVelocity(0);
+      gameObjects.sprite.anims.stop();
+      console.log('stopped player movement');
+    }
+    if (pet) {
+      pet.petSprite.body.setVelocity(0);
+      pet.petSprite.anims.stop();
+      console.log('stopped pet movement');
+    }
   }
 
   updateSprite(
@@ -269,18 +291,38 @@ export default class TownGameScene extends Phaser.Scene {
       case 'left':
         body.setVelocityX(-MOVEMENT_SPEED);
         sprite.anims.play('misa-left-walk', true);
+        if (pet) {
+          console.log('pet velocity mobig left');
+        } else {
+          console.log('player velocity moving left');
+        }
         break;
       case 'right':
         body.setVelocityX(MOVEMENT_SPEED);
         sprite.anims.play('misa-right-walk', true);
+        if (pet) {
+          console.log('pet velocity moving right');
+        } else {
+          console.log('player velocity moving right');
+        }
         break;
       case 'front':
         body.setVelocityY(MOVEMENT_SPEED);
         sprite.anims.play('misa-front-walk', true);
+        if (pet) {
+          console.log('pet velocity moving front');
+        } else {
+          console.log('player velocity moving front');
+        }
         break;
       case 'back':
         body.setVelocityY(-MOVEMENT_SPEED);
         sprite.anims.play('misa-back-walk', true);
+        if (pet) {
+          console.log('pet velocity moving back');
+        } else {
+          console.log('player velocity moving back');
+        }
         break;
       default:
         // Not moving
@@ -319,17 +361,8 @@ export default class TownGameScene extends Phaser.Scene {
     const pet = this.coveyTownController.ourPlayer.activePet;
     // update active pet here?
     if (gameObjects && this._cursors) {
-      // const prevVelocity = gameObjects.sprite.body.velocity.clone();
-
-      // if (!gameObjects.sprite.body || !gameObjects.label) {
-      //   return;
-      // }
-
       this.updateSprite(gameObjects.sprite, gameObjects.label);
       if (pet) {
-        // if (!pet.petSprite.body || !pet.petLabel) {
-        //   return;
-        // }
         this.updateSprite(pet.petSprite, pet.petLabel, true);
       }
 
@@ -337,9 +370,6 @@ export default class TownGameScene extends Phaser.Scene {
       const isMoving = primaryDirection !== undefined;
       const x = gameObjects.sprite.getBounds().centerX;
       const y = gameObjects.sprite.getBounds().centerY;
-
-      const playerX = gameObjects.sprite.x;
-      const playerY = gameObjects.sprite.y;
 
       //Move the sprite
       // update pet sprite location here
@@ -372,29 +402,6 @@ export default class TownGameScene extends Phaser.Scene {
           }
         });
         this.coveyTownController.emitMovement(this._lastLocation);
-
-        // if (pet) {
-        //   switch (primaryDirection) {
-        //     case 'left':
-        //       pet.petSprite.body.x = playerX + PET_OFFSET;
-        //       break;
-        //     case 'right':
-        //       pet.petSprite.body.x = playerX - PET_OFFSET;
-        //       break;
-        //     default:
-        //       break;
-        //   }
-        //   switch (primaryDirection) {
-        //     case 'back':
-        //       pet.petSprite.body.y = playerY + PET_OFFSET;
-        //       break;
-        //     case 'front':
-        //       pet.petSprite.body.y = playerY - PET_OFFSET;
-        //       break;
-        //     default:
-        //       break;
-        //   }
-        // }
       }
       //Update the location for the labels of all of the other players
       for (const player of this._players) {
@@ -561,7 +568,9 @@ export default class TownGameScene extends Phaser.Scene {
     this._collidingLayers.push(wallsLayer);
     this._collidingLayers.push(aboveLayer);
     this._collidingLayers.push(onTheWallsLayer);
-    this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
+    this._collidingLayers.forEach(layer =>
+      this.physics.add.collider(sprite, layer, this.stopPlayerAndPetMovement, undefined, this),
+    );
 
     const pet = this.coveyTownController.ourPlayer.activePet;
     if (pet) {
@@ -584,7 +593,10 @@ export default class TownGameScene extends Phaser.Scene {
         petSprite: petSprite,
         petLabel: petLabel,
       };
-      this._collidingLayers.forEach(layer => this.physics.add.collider(petSprite, layer));
+      this._collidingLayers.forEach(layer => {
+        this.physics.add.collider(petSprite, layer, this.stopPlayerAndPetMovement, undefined, this);
+        // this.physics.add.collider(sprite, layer, this.stopPlayerAndPetMovement, undefined, this);
+      });
     }
 
     // Create the player's walking animations from the texture atlas. These are stored in the global
@@ -696,7 +708,9 @@ export default class TownGameScene extends Phaser.Scene {
         label,
         locationManagedByGameScene: false,
       };
-      this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
+      this._collidingLayers.forEach(layer =>
+        this.physics.add.collider(sprite, layer, this.stopPlayerAndPetMovement, undefined, this),
+      );
     }
   }
 
@@ -726,7 +740,9 @@ export default class TownGameScene extends Phaser.Scene {
         petSprite: sprite,
         petLabel: label,
       };
-      this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
+      this._collidingLayers.forEach(layer =>
+        this.physics.add.collider(sprite, layer, this.stopPlayerAndPetMovement, undefined, this),
+      );
     }
   }
 

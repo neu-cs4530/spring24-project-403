@@ -14,7 +14,7 @@ export type PlayerGameObjects = {
   locationManagedByGameScene: boolean /* For the local player, the game scene will calculate the current location, and we should NOT apply updates when we receive events */;
 };
 
-export type PetInfo = {
+export type PetGameObjects = {
   name: string;
   pet: Pet;
   petSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -31,7 +31,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   private _pets: Pet[] | [];
 
-  public activePet?: PetInfo;
+  public activePet?: PetGameObjects;
 
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();

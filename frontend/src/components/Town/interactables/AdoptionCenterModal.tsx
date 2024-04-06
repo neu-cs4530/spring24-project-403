@@ -44,9 +44,10 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     }
   }, [coveyTownController, adoptionCenter]);
 
-  //useEffect(() => {
-  //  setActivePet(pets[0]);
-  //}, [pets]);
+  useEffect(() => {
+    console.log('Pets updated: ', pets);
+  }
+  , [pets]);
 
   const toast = useToast();
 
@@ -74,17 +75,19 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   function adoptPet(pet: Pet) {
     handleAdoption(pet);
     // replace the now adopted pet
-    setPets(adoptionCenterController.replenish());
+    setPets(adoptionCenterController.pets);
   }
 
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   const petDisplayName = (pet: Pet): string => {
-    return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
+    console.log(pet.petType, pet.id);
+    //return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
+    return "filler string while debugging";
   };
 
   const petImage = (pet: Pet): string => {
-    return `./assets/pets/${pet.constructor.name.toLowerCase()}.png`;
+    return `./assets/pets/${pet.petType.toLowerCase()}.png`;
   };
 
   return (

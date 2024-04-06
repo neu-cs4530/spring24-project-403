@@ -80,7 +80,6 @@ type WolfColor = 'grey' | 'white' | 'black' | 'brown';
 
 export interface PetAdoptionCenter extends Interactable {
   pets: Pet[];
-  replenish: () => Pet[];
 }
 
 export interface BoundingBox {

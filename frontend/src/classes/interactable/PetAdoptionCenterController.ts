@@ -1,9 +1,6 @@
 import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
-import Bear from '../Bear';
-import Mouse from '../Mouse';
 import PlayerController from '../PlayerController';
 import TownController from '../TownController';
-import Wolf from '../Wolf';
 import InteractableAreaController, {
   BaseInteractableEventMap,
   PET_ADOPTION_CENTER_TYPE,
@@ -42,11 +39,10 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     this._townController = townController;
     this._model = PetAdoptionCenter;
     this._pets = this._model.pets;
+    console.log('PetAdoptionCenterController constructor', PetAdoptionCenter);
   }
 
-
-
-  adoptPet(pet: Pet | undefined) {
+  public adoptPet(pet: Pet | undefined) {
     if (!pet) {
       return undefined;
     }
@@ -56,41 +52,36 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pet;
   }
 
-  /** Removes the pet at the given index from this controller's list of pets and replaces with a new randomly generated pet. Returns the new list of pets */
-  public replenish(): Pet[] {
-    this._model.replenish();
-    return this._model.pets;
-  }
-
   public get pets(): Pet[] {
-    if (!this._model.pets || this._model.pets.length === 0) {
-      this._model.replenish();
-    }
+    console.log('Asking controller for pets');
+    this._townController.emitPetAdoptionCenterAreaUpdate(this);
     return this._model.pets;
   }
 
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
+    console.log('PetAdoptionCenterController updateModel', newModel);
     this.occupants = newModel.occupants.map(occupantID =>
       this._townController.getPlayer(occupantID),
     );
+    this._pets = newModel.pets;
   }
 
   public isActive() {
     return this.occupants.length > 0;
   }
 
-  get friendlyName(): string {
+  public get friendlyName(): string {
     return this.id;
   }
 
-  get type(): string {
+  public get type(): string {
     return PET_ADOPTION_CENTER_TYPE;
   }
 
   /**
    * A pet adoption center is empty if there are no occupants in it.
    */
-  isEmpty(): boolean {
+  public isEmpty(): boolean {
     return this.occupants.length === 0;
   }
 
@@ -98,13 +89,12 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * Return a representation of this PetAdoptionCenterController that matches the
    * townService's representation and is suitable for transmitting over the network.
    */
-  toInteractableAreaModel(): PetAdoptionCenterModel {
+  public toInteractableAreaModel(): PetAdoptionCenterModel {
     return {
       id: this.id,
       occupants: this.occupants.map(player => player.id),
       type: 'PetAdoptionCenter',
       pets: this._pets,
-      replenish: () => this.replenish(),
     };
   }
 

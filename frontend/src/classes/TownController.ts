@@ -786,6 +786,15 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     this._socket.emit('interactableUpdate', viewingArea.toInteractableAreaModel());
   }
 
+    /**
+   * Emit a viewing area update to the townService
+   * @param viewingArea The Viewing Area Controller that is updated and should be emitted
+   *    with the event
+   */
+    public emitPetAdoptionCenterAreaUpdate(petAdoptionCenterArea: PetAdoptionCenterController) {
+      this._socket.emit('interactableUpdate', petAdoptionCenterArea.toInteractableAreaModel());
+    }
+
   /**
    * Determine which players are "nearby" -- that they should be included in our video call
    */

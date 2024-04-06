@@ -5,7 +5,7 @@ import InvalidParametersError from '../lib/InvalidParametersError';
 import IVideoClient from '../lib/IVideoClient';
 import Player from '../lib/Player';
 import TwilioVideo from '../lib/TwilioVideo';
-import { isViewingArea } from '../TestUtils';
+import { isPetAdoptionCenterArea, isViewingArea } from '../TestUtils';
 import {
   ChatMessage,
   ConversationArea as ConversationAreaModel,
@@ -14,6 +14,7 @@ import {
   InteractableCommand,
   InteractableCommandBase,
   Pet,
+  PetAdoptionCenter,
   PlayerLocation,
   ServerToClientEvents,
   SocketData,
@@ -178,6 +179,14 @@ export default class Town {
         );
         if (viewingArea) {
           (viewingArea as ViewingArea).updateModel(update);
+        }
+      } else if (isPetAdoptionCenterArea(update)) {
+        newPlayer.townEmitter.emit('interactableUpdate', update);
+        const petArea = this._interactables.find(
+          eachInteractable => eachInteractable.id === update.id,
+        );
+        if (petArea) {
+          (petArea as PetAdoptionCenterArea).updateModel(update as PetAdoptionCenter);
         }
       }
     });

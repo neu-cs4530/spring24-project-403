@@ -18,6 +18,7 @@ import {
   CoveyTownSocket,
   Direction,
   Interactable,
+  PetAdoptionCenter,
   PlayerLocation,
   ServerToClientEvents,
   SocketData,
@@ -211,4 +212,8 @@ export function isViewingArea(interactable: Interactable): interactable is Viewi
 
 export function isConversationArea(interactable: Interactable): interactable is ConversationArea {
   return 'topic' in interactable;
+}
+
+export function isPetAdoptionCenterArea(interactable: Interactable): interactable is PetAdoptionCenter {
+  return 'pets' in interactable;
 }

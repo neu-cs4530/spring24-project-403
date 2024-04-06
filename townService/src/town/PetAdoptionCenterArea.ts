@@ -12,6 +12,10 @@ import {
   Pet,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
+import WolfModel from '../lib/WolfModel';
+import { nanoid } from 'nanoid';
+import MouseModel from '../lib/MouseModel';
+import BearModel from '../lib/BearModel';
 
 export default class PetAdoptionCenter extends InteractableArea {
   MAX_PETS = 5;
@@ -30,10 +34,44 @@ export default class PetAdoptionCenter extends InteractableArea {
   ) {
     super(id, coordinates, townEmitter);
     this._pets = pets;
+    console.log('PetAdoptionCenter constructor', pets);
   }
 
-  replenish(): Pet[] {
+  public get pets(): Pet[] {
+    console.log('getting pets from backend')
+    if (!this._pets || this._pets.length === 0) {
+      this._pets = this.getRandomizedPets();
+    }
     return this._pets;
+  }
+
+  getRandomizedPets(): Pet[] {
+    const pets: Pet[] = [];
+    for (let i = 0; i < this.MAX_PETS; i++) {
+      if (Math.random() < 0.3) {
+        pets.push(new WolfModel(nanoid()));
+      } else if (Math.random() < 0.6) {
+        pets.push(new MouseModel(nanoid()));
+      } else {
+        pets.push(new BearModel(nanoid()));
+      }
+    }
+    return pets;
+  }
+
+  /**
+   * Updates the state of this ViewingArea, setting the video, isPlaying and progress properties
+   *
+   * @param viewingArea updated model
+   */
+  public updateModel({ pets }: PetAdoptionCenterModel): void {
+    if (!pets || pets.length === 0) {
+      this._pets = this.getRandomizedPets();
+    } else {
+      this._pets = pets;
+    }
+    this._emitAreaChanged();
+    console.log('PetAdoptionCenter updateModel', this._pets);
   }
 
   /**
@@ -62,8 +100,7 @@ export default class PetAdoptionCenter extends InteractableArea {
       id: this.id,
       occupants: this.occupantsByID,
       type: 'PetAdoptionCenter',
-      pets: [],
-      replenish: () => [],
+      pets: this._pets,
     };
   }
 
@@ -83,7 +120,7 @@ export default class PetAdoptionCenter extends InteractableArea {
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
     return new PetAdoptionCenter(
-      { id: name as InteractableID, pets: [], replenish: () => [], occupants: []},
+      { id: name as InteractableID, pets: [], occupants: []},
       rect,
       townEmitter
     );

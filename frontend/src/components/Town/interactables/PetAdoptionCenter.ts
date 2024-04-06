@@ -30,17 +30,13 @@ export default class PetAdoptionCenter extends Interactable {
     }
     return pets;
   }
-
-  replenish(): Pet[] {
-    this.pets = this.getRandomizedPets();
-    return this.pets;
-  }
   
   public get pets(): Pet[] {
+    console.log('getting pets from frontend')
     if (!this.pets || this.pets.length === 0) {
-      this.pets = this.getRandomizedPets();
+      this._pets = this.getRandomizedPets();
     }
-    return this.pets;
+    return this._pets;
   }
 
   public set pets(pets: Pet[]) {

@@ -32,7 +32,7 @@ export default abstract class BasePetModel implements PetModel {
   }
 
   get id(): string {
-    return this._id;
+    return this.id;
   }
 
   get ownerId(): string | undefined {

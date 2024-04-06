@@ -47,8 +47,8 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this.activePet = {
       name: 'Stuart',
       pet: stuart,
-      sprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
-      label: {} as Phaser.GameObjects.Text,
+      petSprite: {} as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody,
+      petLabel: {} as Phaser.GameObjects.Text,
     };
   }
 

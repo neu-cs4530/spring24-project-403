@@ -210,10 +210,10 @@ export default class TownGameScene extends Phaser.Scene {
         const direction = this.getNewMovementDirection();
         switch (direction) {
           case 'left':
-            pet.petSprite.body.x = destination.x - PET_OFFSET;
+            pet.petSprite.x = gameObjects.sprite.x - PET_OFFSET;
             break;
           case 'right':
-            pet.petSprite.body.x = destination.x + PET_OFFSET;
+            pet.petSprite.x = gameObjects.sprite.x + PET_OFFSET;
             break;
           default:
             break;
@@ -227,10 +227,10 @@ export default class TownGameScene extends Phaser.Scene {
         const direction = this.getNewMovementDirection();
         switch (direction) {
           case 'back':
-            pet.petSprite.body.y = destination.y - PET_OFFSET;
+            pet.petSprite.y = gameObjects.sprite.y - PET_OFFSET;
             break;
           case 'front':
-            pet.petSprite.body.y = destination.y + PET_OFFSET;
+            pet.petSprite.y = gameObjects.sprite.y + PET_OFFSET;
             break;
           default:
             break;
@@ -550,6 +550,19 @@ export default class TownGameScene extends Phaser.Scene {
       label,
       locationManagedByGameScene: true,
     };
+    // set on collide? to tell pet sprite to stop?
+
+    this._interactables = this.getInteractables();
+
+    this.moveOurPlayerTo({ rotation: 'front', moving: false, x: spawnPoint.x, y: spawnPoint.y });
+
+    // Watch the player and worldLayer for collisions, for the duration of the scene:
+    this._collidingLayers.push(worldLayer);
+    this._collidingLayers.push(wallsLayer);
+    this._collidingLayers.push(aboveLayer);
+    this._collidingLayers.push(onTheWallsLayer);
+    this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
+
     const pet = this.coveyTownController.ourPlayer.activePet;
     if (pet) {
       // create pet sprite here
@@ -571,21 +584,8 @@ export default class TownGameScene extends Phaser.Scene {
         petSprite: petSprite,
         petLabel: petLabel,
       };
+      this._collidingLayers.forEach(layer => this.physics.add.collider(petSprite, layer));
     }
-
-    this._interactables = this.getInteractables();
-
-    this.moveOurPlayerTo({ rotation: 'front', moving: false, x: spawnPoint.x, y: spawnPoint.y });
-
-    // Watch the player and worldLayer for collisions, for the duration of the scene:
-    this._collidingLayers.push(worldLayer);
-    this._collidingLayers.push(wallsLayer);
-    this._collidingLayers.push(aboveLayer);
-    this._collidingLayers.push(onTheWallsLayer);
-    if (pet && pet.petSprite) {
-      this._collidingLayers.forEach(layer => this.physics.add.collider(pet.petSprite, layer));
-    }
-    this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));
 
     // Create the player's walking animations from the texture atlas. These are stored in the global
     // animation manager so any sprite can access them.

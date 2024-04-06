@@ -196,7 +196,7 @@ export default class TownGameScene extends Phaser.Scene {
   moveOurPlayerTo(destination: Partial<PlayerLocation>) {
     const gameObjects = this.coveyTownController.ourPlayer.gameObjects;
     console.log('moving player');
-    // const pet = this.coveyTownController.ourPlayer.activePet;
+    const pet = this.coveyTownController.ourPlayer.activePet;
     if (!gameObjects) {
       throw new Error('Unable to move player without game objects created first');
     }
@@ -206,38 +206,36 @@ export default class TownGameScene extends Phaser.Scene {
     if (destination.x !== undefined) {
       gameObjects.sprite.x = destination.x;
       this._lastLocation.x = destination.x;
-      // if (pet) {
-      //   const direction = this.getNewMovementDirection();
-      //   switch (direction) {
-      //     case 'left':
-      //       pet.petSprite.x = destination.x - PET_OFFSET;
-      //       break;
-      //     case 'right':
-      //       pet.petSprite.x = destination.x + PET_OFFSET;
-      //       break;
-      //     default:
-      //       pet.petSprite.x = destination.x;
-      //       break;
-      //   }
-      // }
+      if (pet) {
+        const direction = this.getNewMovementDirection();
+        switch (direction) {
+          case 'left':
+            pet.petSprite.body.x = destination.x - PET_OFFSET;
+            break;
+          case 'right':
+            pet.petSprite.body.x = destination.x + PET_OFFSET;
+            break;
+          default:
+            break;
+        }
+      }
     }
     if (destination.y !== undefined) {
       gameObjects.sprite.y = destination.y;
       this._lastLocation.y = destination.y;
-      // if (pet) {
-      //   const direction = this.getNewMovementDirection();
-      //   switch (direction) {
-      //     case 'back':
-      //       pet.petSprite.y = destination.y - PET_OFFSET;
-      //       break;
-      //     case 'front':
-      //       pet.petSprite.y = destination.y + PET_OFFSET;
-      //       break;
-      //     default:
-      //       pet.petSprite.y = destination.y;
-      //       break;
-      //   }
-      // }
+      if (pet) {
+        const direction = this.getNewMovementDirection();
+        switch (direction) {
+          case 'back':
+            pet.petSprite.body.y = destination.y - PET_OFFSET;
+            break;
+          case 'front':
+            pet.petSprite.body.y = destination.y + PET_OFFSET;
+            break;
+          default:
+            break;
+        }
+      }
     }
     if (destination.moving !== undefined) {
       this._lastLocation.moving = destination.moving;
@@ -375,28 +373,28 @@ export default class TownGameScene extends Phaser.Scene {
         });
         this.coveyTownController.emitMovement(this._lastLocation);
 
-        if (pet) {
-          switch (primaryDirection) {
-            case 'left':
-              pet.petSprite.body.x = playerX + PET_OFFSET;
-              break;
-            case 'right':
-              pet.petSprite.body.x = playerX - PET_OFFSET;
-              break;
-            default:
-              break;
-          }
-          switch (primaryDirection) {
-            case 'back':
-              pet.petSprite.body.y = playerY + PET_OFFSET;
-              break;
-            case 'front':
-              pet.petSprite.body.y = playerY - PET_OFFSET;
-              break;
-            default:
-              break;
-          }
-        }
+        // if (pet) {
+        //   switch (primaryDirection) {
+        //     case 'left':
+        //       pet.petSprite.body.x = playerX + PET_OFFSET;
+        //       break;
+        //     case 'right':
+        //       pet.petSprite.body.x = playerX - PET_OFFSET;
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        //   switch (primaryDirection) {
+        //     case 'back':
+        //       pet.petSprite.body.y = playerY + PET_OFFSET;
+        //       break;
+        //     case 'front':
+        //       pet.petSprite.body.y = playerY - PET_OFFSET;
+        //       break;
+        //     default:
+        //       break;
+        //   }
+        // }
       }
       //Update the location for the labels of all of the other players
       for (const player of this._players) {

@@ -31,7 +31,7 @@ export default class PetAdoptionCenter extends Interactable {
     return pets;
   }
 
-  public replenish(): Pet[] {
+  replenish(): Pet[] {
     this.pets = this.getRandomizedPets();
     return this.pets;
   }

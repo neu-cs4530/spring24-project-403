@@ -21,17 +21,9 @@ import React from 'react';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
-import PetAdoptionCenter from './PetAdoptionCenter';
+import { InteractableID, Pet} from '../../../types/CoveyTownSocket';
+import PetAdoptionCenter  from './PetAdoptionCenter';
 import PetTransferScreen from './PetTransferScreen';
-=======
-import { InteractableID } from '../../../types/CoveyTownSocket';
->>>>>>> 8ceb3e3 (UI updates and addition of individual animal images)
-=======
-import { InteractableID, PetAdoptionCenter } from '../../../types/CoveyTownSocket';
->>>>>>> a1fc546 (Popup design with images)
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController =
@@ -79,14 +71,8 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  function adoptPet() {
-    handleAdoption();
-=======
   function adoptPet(pet: Pet) {
     handleAdoption(pet);
->>>>>>> f77f3ec (trying to keep state in the backend.)
     // replace the now adopted pet
     setPets(adoptionCenterController.replenish());
   }
@@ -98,37 +84,6 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   };
 
   const petImage = (pet: Pet): string => {
-    return `./assets/pets/${pet.constructor.name.toLowerCase()}.png`;
-  };
-
-  return (
-    <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
-      <GridItem height={'100%'}>
-        <h1>Adoptable Pets:</h1>
-        <Flex direction='column' align='center' justify='center'>
-          {pets.map((pet, index) => (
-            <Box key={index}>
-              <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button onClick={() => setActivePet(pet)}>{pet.id}</Button>
-            </Box>
-          ))}
-        </Flex>
-      </GridItem>
-      <GridItem height={'100%'}>
-        <h1>Adopt a {activePet && activePet.petType} today!</h1>
-        <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> Pet id: {activePet && activePet.id}</Text>
-        <Button onClick={adoptPet}>Adopt</Button>
-      </GridItem>
-    </Grid>
-=======
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-
-  const petDisplayName = (pet: BasePet): string => {
-    return pet.name || (pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id);
-  };
-
-  const petImage = (pet: BasePet): string => {
     return `./assets/pets/${pet.constructor.name.toLowerCase()}.png`;
   };
 
@@ -154,7 +109,6 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
         </Flex>
       ))}
     </VStack>
->>>>>>> 8ceb3e3 (UI updates and addition of individual animal images)
   );
 }
 

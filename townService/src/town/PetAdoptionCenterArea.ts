@@ -10,13 +10,12 @@ import {
   TownEmitter,
   PetAdoptionCenter as PetAdoptionCenterModel,
   Pet,
-  Wolf,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
 
 export default class PetAdoptionCenter extends InteractableArea {
   MAX_PETS = 5;
-  private pets: Pet[];
+  private _pets: Pet[];
 
   /**
    * Creates a new PetAdoptionCenter object that will represent a PetAdoptionCenter Area object in the town map.
@@ -25,33 +24,16 @@ export default class PetAdoptionCenter extends InteractableArea {
    * @param townEmitter An emitter that can be used by this pet adoption center area to broadcast updates to players in the town
    */
   public constructor(
-    { id, isPlaying, elapsedTimeSec: progress, video }: Omit<PetAdoptionCenterModel, 'type'>,
+    { id, pets }: Omit<PetAdoptionCenterModel, 'type'>,
     coordinates: BoundingBox,
     townEmitter: TownEmitter,
   ) {
     super(id, coordinates, townEmitter);
-    this._video = video;
-    this._elapsedTimeSec = progress;
-    this._isPlaying = isPlaying;
+    this._pets = pets;
   }
 
-  public replenish(): Pet[] {
-    this._model.replenish();
-    return this._model.pets;
-  }
-
-  getRandomizedPets(): Pet[] {
-    const pets: Pet[] = [];
-    for (let i = 0; i < this.MAX_PETS; i++) {
-      if (Math.random() < 0.3) {
-        pets.push(new Wolf()); // Use the imported 'Wolf' class
-      } else if (Math.random() < 0.6) {
-        pets.push(new Mouse());
-      } else {
-        pets.push(new Bear());
-      }
-    }
-    return pets;
+  replenish(): Pet[] {
+    return this._pets;
   }
 
   /**
@@ -100,7 +82,11 @@ export default class PetAdoptionCenter extends InteractableArea {
       throw new Error(`Malformed pet adoption center area ${name}`);
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
-    return new PetAdoptionCenter(name as InteractableID, rect, townEmitter);
+    return new PetAdoptionCenter(
+      { id: name as InteractableID, pets: [], replenish: () => [], occupants: []},
+      rect,
+      townEmitter
+    );
   }
 
   public handleCommand<CommandType extends InteractableCommand>(

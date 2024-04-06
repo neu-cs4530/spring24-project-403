@@ -160,7 +160,6 @@ export function useInteractableAreaOccupants(
   area: GenericInteractableAreaController,
 ): PlayerController[] {
   const [occupants, setOccupants] = useState(area.occupants);
-  console.log('here2');
   useEffect(() => {
     area.addListener('occupantsChange', setOccupants);
     return () => {

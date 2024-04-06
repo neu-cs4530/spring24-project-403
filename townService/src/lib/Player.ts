@@ -24,7 +24,7 @@ export default class Player {
   public readonly townEmitter: TownEmitter;
 
   /** A list of pets associated with this player */
-  public pets?: Pet[] | [];
+  public pets: Pet[] | [];
 
   constructor(userName: string, townEmitter: TownEmitter) {
     this.location = {
@@ -38,6 +38,19 @@ export default class Player {
     this._sessionToken = nanoid();
     this.townEmitter = townEmitter;
     this.pets = [];
+  }
+
+  public addPet(pet: Pet): PlayerModel {
+    if ((this.pets as Pet[]).includes(pet)) {
+      return this.toPlayerModel();
+    }
+    this.pets = [pet, ...this.pets];
+    return this.toPlayerModel();
+  }
+
+  public removePet(petData: Pet): PlayerModel {
+    this.pets = (this.pets as Pet[]).filter(pet => pet.id !== petData.id);
+    return this.toPlayerModel();
   }
 
   get userName(): string {

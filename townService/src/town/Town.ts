@@ -15,6 +15,7 @@ import {
   InteractableCommandBase,
   Pet,
   PetAdoptionCenter,
+  PlayerID,
   PlayerLocation,
   ServerToClientEvents,
   SocketData,
@@ -139,14 +140,20 @@ export default class Town {
       this._updatePlayerPets(newPlayer, petData);
     });
 
-    socket.on('playerRemovePet', (petData: Pet) => {
-      newPlayer.removePet(petData);
-      this._broadcastEmitter.emit('playerChangedPets', newPlayer.toPlayerModel());
+    socket.on('playerRemovePet', (petData: Pet, playerID: PlayerID) => {
+      const player = this._players.find(player => player.id === playerID);
+      const newModel = player?.removePet(petData);
+      if (newModel) {
+        this._broadcastEmitter.emit('playerChangedPets', newModel);
+      }
     });
 
-    socket.on('playerAddPet', (petData: Pet) => {
-      newPlayer.addPet(petData);
-      this._broadcastEmitter.emit('playerChangedPets', newPlayer.toPlayerModel());
+    socket.on('playerAddPet', (petData: Pet, playerID: PlayerID) => {
+      const player = this._players.find(player => player.id === playerID);
+      const newModel = player?.addPet(petData);
+      if (newModel) {
+        this._broadcastEmitter.emit('playerChangedPets', newModel);
+      }
     });
 
     // Register an event listener for the client socket: if the client disconnects,
@@ -251,7 +258,6 @@ export default class Town {
       eachInteractable => eachInteractable.id === location.interactableID,
     );
     if (petArea) {
-      console.log('removing pet from pet area', petData);
       (petArea as PetAdoptionCenterArea).removePet(petData);
     }
   }
@@ -264,7 +270,6 @@ export default class Town {
    * @param vehicle New location for this player
    */
     private _updatePlayerPets(player: Player, pet: Pet): void {
-      console.log('Adding pet to player backend');
       player.addPet(pet);
       this._broadcastEmitter.emit('playerChangedPets', player.toPlayerModel());
     }

@@ -296,6 +296,6 @@ export interface ClientToServerEvents {
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
   playerAdoptPet: (petData: Pet, location: PlayerLocation) => void;
-  playerAddPet: (petData: Pet) => void;
-  playerRemovePet: (petData: Pet) => void;
+  playerAddPet: (petData: Pet, playerID: PlayerID) => void;
+  playerRemovePet: (petData: Pet, playerID: PlayerID) => void;
 }

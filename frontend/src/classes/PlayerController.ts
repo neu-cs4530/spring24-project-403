@@ -38,16 +38,9 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
 
   set pets(pets: Pet[] | undefined) {
     if (pets) {
-      if (!this._pets) {
-        this._pets = pets;
-      }
-      pets.forEach(pet => {
-        if (!this._pets.find(p => p.id === pet.id)) {
-          this._pets = [...this._pets, pet];
-        }
-      });
+      this._pets = pets;
       this.emit('petsUpdated', pets);
-    }
+    };
   }
 
   get playerPets(): Pet[] | [] {

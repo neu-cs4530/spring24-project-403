@@ -41,17 +41,17 @@ export default class Player {
     this.pets = [];
   }
 
-  public addPet(pet: Pet): void {
+  public addPet(pet: Pet): PlayerModel{
     if ((this.pets as Pet[]).includes(pet)) {
-      return;
+      return this.toPlayerModel();
     }
     this.pets = [pet, ...this.pets];
-    console.log('Player with username:', this.userName, 'has pets:', this.pets);
+    return this.toPlayerModel();
   }
 
-  public removePet(petData: Pet) {
+  public removePet(petData: Pet): PlayerModel {
     this.pets = (this.pets as Pet[]).filter(pet => pet.id !== petData.id);
-    console.log('Player with username:', this.userName, 'has pets:', this.pets);
+    return this.toPlayerModel();
   }
 
   get userName(): string {

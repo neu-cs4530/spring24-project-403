@@ -50,7 +50,7 @@ export default function PetTransferScreen(): JSX.Element {
 
 
   const emitTransfer = (petToTransfer: Pet, ourPlayer: PlayerController, selectedPlayer: PlayerController) => {
-    townController.emitPetTransfer(petToTransfer, ourPlayer, selectedPlayer);
+    townController.emitPetTransfer(petToTransfer, selectedPlayer, ourPlayer);
   }
 
   function handleTransfer(playerID: string) {
@@ -117,7 +117,7 @@ export default function PetTransferScreen(): JSX.Element {
                     }}>
                     Transfer to{' '}
                     {(player.id === ourPlayer.id && 'you (disabled)') || player.userName}
-                  </Button>
+                  </Button> 
                 </VStack>
               </ListItem>
               <hr />

@@ -45,9 +45,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
 
   useEffect(() => {
     const handleUpdate = (petAdoptionCenter: PetAdoptionCenterController) => {
-      console.log('handling update from controller: ', petAdoptionCenter);
       setPets(petAdoptionCenter.pets);
-      console.log('New Pets should be: ', pets)
     }
 
     adoptionCenterController.addListener('update', handleUpdate);
@@ -56,12 +54,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     };
   }
   , [adoptionCenterController]);
-
-  useEffect(() => {
-    console.log('Pets updated: ', pets);
-  }
-  , [pets]);
-
+  
   const toast = useToast();
 
   function handleAdoption(adoptedPet: Pet) {

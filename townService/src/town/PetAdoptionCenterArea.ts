@@ -38,21 +38,12 @@ export default class PetAdoptionCenter extends InteractableArea {
   }
 
   public removePet(petData: Pet) {
-    console.log('Removing pet from pet adoption center', petData.id);
     this._pets = this._pets.filter(pet => pet.id !== petData.id);
     // replace the pet with a new one
     while (this._pets.length < this.MAX_PETS) {
       this._pets.push(this.getRandomizedPets()[0]);
     }
     this._emitAreaChanged();
-  }
-
-  public get pets(): Pet[] {
-    console.log('getting pets from backend')
-    if (!this._pets || this._pets.length === 0) {
-      this._pets = this.getRandomizedPets();
-    }
-    return this._pets;
   }
 
   getRandomizedPets(): Pet[] {

@@ -720,9 +720,10 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     public emitPetTransfer(toTransfer: Pet, to: PlayerController, from: PlayerController) {
       const ourPlayer = this._ourPlayer;
       assert(ourPlayer);
-      this._socket.emit('playerAddPet', toTransfer);
-      this._socket.emit('playerRemovePet', toTransfer);
-      this.emit('playerChangedPets', ourPlayer);
+      this._socket.emit('playerAddPet', toTransfer, to.id);
+      this._socket.emit('playerRemovePet', toTransfer, from.id);
+      this.emit('playerChangedPets', to);
+      this.emit('playerChangedPets', from);
     }
 
   /**

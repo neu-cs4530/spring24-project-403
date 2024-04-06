@@ -5,7 +5,7 @@ import { Pet as PetModel, PetType } from '../types/CoveyTownSocket';
  */
 export default abstract class BasePetModel implements PetModel {
   /** The unique identifier for this pet * */
-  private readonly _id: string;
+  private _id: string;
 
   /** The pet's name, which is not guaranteed to be unique within the town
    *  We will allow renaming of pets */
@@ -27,23 +27,23 @@ export default abstract class BasePetModel implements PetModel {
 
   petType!: PetType;
 
-  get name(): string | undefined {
+  public get name(): string | undefined {
     return this._name;
   }
 
-  get id(): string {
-    return this.id;
+  public get id(): string {
+    return this._id;
   }
 
-  get ownerId(): string | undefined {
+  public get ownerId(): string | undefined {
     return this._ownerId;
   }
 
-  get color(): string | undefined {
+  public get color(): string | undefined {
     return this._color;
   }
 
-  toPetModel(): PetModel {
+  public toPetModel(): PetModel {
     return {
       id: this._id,
       name: this._name,

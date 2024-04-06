@@ -18,6 +18,7 @@ import MouseModel from '../lib/MouseModel';
 import BearModel from '../lib/BearModel';
 
 export default class PetAdoptionCenter extends InteractableArea {
+
   MAX_PETS = 5;
   private _pets: Pet[];
 
@@ -34,7 +35,17 @@ export default class PetAdoptionCenter extends InteractableArea {
   ) {
     super(id, coordinates, townEmitter);
     this._pets = pets;
-    console.log('PetAdoptionCenter constructor', pets);
+  }
+
+  public removePet(petData: Pet) {
+    console.log('Removing pet from pet adoption center', petData.id);
+    this._pets = this._pets.filter(pet => pet.id !== petData.id);
+    // replace the pet with a new one
+    while (this._pets.length < this.MAX_PETS) {
+      this._pets.push(this.getRandomizedPets()[0]);
+    }
+    this._emitAreaChanged();
+    console.log('Pet adoption center pets after removal', this._pets);
   }
 
   public get pets(): Pet[] {
@@ -49,11 +60,11 @@ export default class PetAdoptionCenter extends InteractableArea {
     const pets: Pet[] = [];
     for (let i = 0; i < this.MAX_PETS; i++) {
       if (Math.random() < 0.3) {
-        pets.push(new WolfModel(nanoid()));
+        pets.push(new WolfModel(nanoid()).toPetModel());
       } else if (Math.random() < 0.6) {
-        pets.push(new MouseModel(nanoid()));
+        pets.push(new MouseModel(nanoid()).toPetModel());
       } else {
-        pets.push(new BearModel(nanoid()));
+        pets.push(new BearModel(nanoid()).toPetModel());
       }
     }
     return pets;
@@ -71,7 +82,6 @@ export default class PetAdoptionCenter extends InteractableArea {
       this._pets = pets;
     }
     this._emitAreaChanged();
-    console.log('PetAdoptionCenter updateModel', this._pets);
   }
 
   /**

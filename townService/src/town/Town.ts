@@ -134,7 +134,8 @@ export default class Town {
      * Register an event listener for the client socket: if the
      * client updates their pets, inform the CoveyTownController
      */
-    socket.on('playerAdoptPet', (petData: Pet) => {
+    socket.on('playerAdoptPet', (petData: Pet, location: PlayerLocation) => {
+      this._removePetFromPetAdoptionCenter(petData, location);
       this._updatePlayerPets(newPlayer, petData);
     });
 
@@ -234,6 +235,15 @@ export default class Town {
       }
     });
     return newPlayer;
+  }
+  private _removePetFromPetAdoptionCenter(petData: Pet, location: PlayerLocation) {
+    const petArea = this._interactables.find(
+      eachInteractable => eachInteractable.id === location.interactableID,
+    );
+    if (petArea) {
+      console.log('removing pet from pet area', petData);
+      (petArea as PetAdoptionCenterArea).removePet(petData);
+    }
   }
 
     /**

@@ -29,9 +29,8 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const adoptionCenterController =
     useInteractableAreaController<PetAdoptionCenterController>(interactableID);
   const coveyTownController = useTownController();
-  const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
+  const [adoptionCenter, setAdoptionCenter] = useState(adoptionCenterController?.toInteractableAreaModel());
   const [pets, setPets] = useState<Pet[]>([]);
-  //const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   useEffect(() => {
     if (adoptionCenter) {
@@ -43,6 +42,20 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
       coveyTownController.unPause();
     }
   }, [coveyTownController, adoptionCenter]);
+
+  useEffect(() => {
+    const handleUpdate = (petAdoptionCenter: PetAdoptionCenterController) => {
+      console.log('handling update from controller: ', petAdoptionCenter);
+      setPets(petAdoptionCenter.pets);
+      console.log('New Pets should be: ', pets)
+    }
+
+    adoptionCenterController.addListener('update', handleUpdate);
+    return () => {
+      adoptionCenterController.removeListener('update', handleUpdate);
+    };
+  }
+  , [adoptionCenterController]);
 
   useEffect(() => {
     console.log('Pets updated: ', pets);
@@ -81,9 +94,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   const petDisplayName = (pet: Pet): string => {
-    console.log(pet.petType, pet.id);
-    //return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
-    return "filler string while debugging";
+    return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
   };
 
   const petImage = (pet: Pet): string => {
@@ -103,7 +114,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
           borderRadius='md'>
           <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
           <VStack align='stretch'>
-            <Text>Type: {pet.constructor.name}</Text>
+            <Text>Type: {pet.petType}</Text>
             <Text>ID: {petDisplayName(pet)}</Text>
           </VStack>
           <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>

@@ -41,7 +41,11 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
       if (!this._pets) {
         this._pets = pets;
       }
-      this._pets = [...this._pets, ...pets];
+      pets.forEach(pet => {
+        if (!this._pets.find(p => p.id === pet.id)) {
+          this._pets = [...this._pets, pet];
+        }
+      });
     }
     console.log('Player with username:', this.userName, 'has pets:', this._pets);
   }

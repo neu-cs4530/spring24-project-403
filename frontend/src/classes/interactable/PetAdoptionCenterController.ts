@@ -11,7 +11,11 @@ import InteractableAreaController, {
  * are only ever emitted to local components (not to the townService).
  */
 export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
-  // TODO : Likely need to add "Adopt" event here
+  /**
+   * An update event indicates that the pet adoption center has changed in some way.
+   * Listeners are passed the updated PetAdoptionCenterController.
+   */
+  update: (petAdoptionCenter: PetAdoptionCenterController) => void;
 };
 
 /**
@@ -54,16 +58,19 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   public get pets(): Pet[] {
     console.log('Asking controller for pets');
-    this._townController.emitPetAdoptionCenterAreaUpdate(this);
-    return this._model.pets;
+    if (!this._pets || this._pets.length === 0) {
+      this._townController.emitPetAdoptionCenterAreaUpdate(this);
+    }
+    return this._pets;
   }
 
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
-    console.log('PetAdoptionCenterController updateModel', newModel);
+    console.log('Updating pet adoption center from: ', newModel);
     this.occupants = newModel.occupants.map(occupantID =>
       this._townController.getPlayer(occupantID),
     );
     this._pets = newModel.pets;
+    this.emit('update', this);
   }
 
   public isActive() {

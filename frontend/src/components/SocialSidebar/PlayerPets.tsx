@@ -1,7 +1,6 @@
+import { ListItem, UnorderedList } from '@chakra-ui/react';
 import React from 'react';
-import { ListItem, OrderedList, Text, UnorderedList } from '@chakra-ui/react';
 import PlayerController from '../../classes/PlayerController';
-import { Pet } from '../../types/CoveyTownSocket';
 
 type PlayerPetsProps = {
   player: PlayerController;

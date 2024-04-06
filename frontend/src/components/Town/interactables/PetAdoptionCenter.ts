@@ -3,6 +3,7 @@ import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
   MAX_PETS = 5;
+
   private _infoTextBox?: Phaser.GameObjects.Text;
 
   private _isInteracting = false;

@@ -5,7 +5,6 @@ import { Player as PlayerModel, PlayerLocation, TownEmitter, Pet } from '../type
  * Each user who is connected to a town is represented by a Player object
  */
 export default class Player {
-
   /** The current location of this user in the world map * */
   public location: PlayerLocation;
 
@@ -41,7 +40,7 @@ export default class Player {
     this.pets = [];
   }
 
-  public addPet(pet: Pet): PlayerModel{
+  public addPet(pet: Pet): PlayerModel {
     if ((this.pets as Pet[]).includes(pet)) {
       return this.toPlayerModel();
     }

@@ -214,6 +214,8 @@ export function isConversationArea(interactable: Interactable): interactable is 
   return 'topic' in interactable;
 }
 
-export function isPetAdoptionCenterArea(interactable: Interactable): interactable is PetAdoptionCenter {
+export function isPetAdoptionCenterArea(
+  interactable: Interactable,
+): interactable is PetAdoptionCenter {
   return 'pets' in interactable;
 }

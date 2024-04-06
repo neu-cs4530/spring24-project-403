@@ -1,8 +1,7 @@
 import {
-  Box,
   Button,
   Flex,
-  Grid,
+  Heading,
   Image,
   Modal,
   ModalBody,
@@ -11,25 +10,24 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useToast,
   VStack,
-  Heading,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';
 import { useInteractable, useInteractableAreaController } from '../../../classes/TownController';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
 import useTownController from '../../../hooks/useTownController';
-import { InteractableID, Pet} from '../../../types/CoveyTownSocket';
-import PetAdoptionCenter  from './PetAdoptionCenter';
+import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
+import PetAdoptionCenter from './PetAdoptionCenter';
 import PetTransferScreen from './PetTransferScreen';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController =
     useInteractableAreaController<PetAdoptionCenterController>(interactableID);
   const coveyTownController = useTownController();
-  const [adoptionCenter, setAdoptionCenter] = useState(adoptionCenterController?.toInteractableAreaModel());
+  const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<Pet[]>([]);
 
   useEffect(() => {
@@ -41,20 +39,19 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     } else {
       coveyTownController.unPause();
     }
-  }, [coveyTownController, adoptionCenter]);
+  }, [coveyTownController, adoptionCenter, adoptionCenterController.pets, pets]);
 
   useEffect(() => {
     const handleUpdate = (petAdoptionCenter: PetAdoptionCenterController) => {
       setPets(petAdoptionCenter.pets);
-    }
+    };
 
     adoptionCenterController.addListener('update', handleUpdate);
     return () => {
       adoptionCenterController.removeListener('update', handleUpdate);
     };
-  }
-  , [adoptionCenterController]);
-  
+  }, [adoptionCenterController, adoptionCenterController.pets, pets]);
+
   const toast = useToast();
 
   function handleAdoption(adoptedPet: Pet) {
@@ -97,24 +94,25 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   return (
     <VStack spacing={4} align='stretch' p={4}>
       <Heading size='md'>Adoptable Pets</Heading>
-      {pets && pets.map((pet, index) => (
-        <Flex
-          key={index}
-          align='center'
-          border='1px'
-          borderColor={borderColor}
-          p={4}
-          borderRadius='md'>
-          <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
-          <VStack align='stretch'>
-            <Text>Type: {pet.petType}</Text>
-            <Text>ID: {petDisplayName(pet)}</Text>
-          </VStack>
-          <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>
-            Adopt
-          </Button>
-        </Flex>
-      ))}
+      {pets &&
+        pets.map((pet, index) => (
+          <Flex
+            key={index}
+            align='center'
+            border='1px'
+            borderColor={borderColor}
+            p={4}
+            borderRadius='md'>
+            <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
+            <VStack align='stretch'>
+              <Text>Type: {pet.petType}</Text>
+              <Text>ID: {petDisplayName(pet)}</Text>
+            </VStack>
+            <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>
+              Adopt
+            </Button>
+          </Flex>
+        ))}
     </VStack>
   );
 }

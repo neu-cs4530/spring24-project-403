@@ -35,23 +35,24 @@ export default function PetTransferScreen(): JSX.Element {
     setMyPets(ourPlayer.pets || []);
   }, [ourPlayer.pets]);
 
-
   useEffect(() => {
     const handleUpdate = (pets: Pet[]) => {
       setMyPets(pets);
-    }
+    };
 
     ourPlayer.addListener('petsUpdated', handleUpdate);
     return () => {
       ourPlayer.removeListener('petsUpdated', handleUpdate);
     };
-  }
-  , [ourPlayer]);
+  }, [ourPlayer]);
 
-
-  const emitTransfer = (petToTransfer: Pet, ourPlayer: PlayerController, selectedPlayer: PlayerController) => {
-    townController.emitPetTransfer(petToTransfer, selectedPlayer, ourPlayer);
-  }
+  const emitTransfer = (
+    petToTransfer: Pet,
+    myPlayer: PlayerController,
+    selectedPlayer: PlayerController,
+  ) => {
+    townController.emitPetTransfer(petToTransfer, selectedPlayer, myPlayer);
+  };
 
   function handleTransfer(playerID: string) {
     const selectedPlayer = players.find(player => player.id === playerID);
@@ -117,7 +118,7 @@ export default function PetTransferScreen(): JSX.Element {
                     }}>
                     Transfer to{' '}
                     {(player.id === ourPlayer.id && 'you (disabled)') || player.userName}
-                  </Button> 
+                  </Button>
                 </VStack>
               </ListItem>
               <hr />
@@ -128,5 +129,3 @@ export default function PetTransferScreen(): JSX.Element {
     </Box>
   );
 }
-
-

@@ -27,10 +27,10 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   PetAdoptionCenterEvents,
   PetAdoptionCenterModel
 > {
-
-
   private _pets: Pet[];
-  private _model : PetAdoptionCenterModel;
+
+  private _model: PetAdoptionCenterModel;
+
   protected _townController: TownController;
 
   /**
@@ -38,7 +38,11 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * @param id
    * @param townController
    */
-  constructor(id: string, townController: TownController, PetAdoptionCenter: PetAdoptionCenterModel) {
+  constructor(
+    id: string,
+    townController: TownController,
+    PetAdoptionCenter: PetAdoptionCenterModel,
+  ) {
     super(id);
     this._townController = townController;
     this._model = PetAdoptionCenter;

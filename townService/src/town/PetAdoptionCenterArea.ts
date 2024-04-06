@@ -1,25 +1,24 @@
 import { ITiledMapObject } from '@jonbell/tiled-map-type-guard';
+import { nanoid } from 'nanoid';
+import BearModel from '../lib/BearModel';
 import InvalidParametersError from '../lib/InvalidParametersError';
+import MouseModel from '../lib/MouseModel';
 import Player from '../lib/Player';
+import WolfModel from '../lib/WolfModel';
 import {
   BoundingBox,
   InteractableCommand,
   InteractableCommandReturnType,
   InteractableID,
-  PetAdoptionCenterCommand,
-  TownEmitter,
-  PetAdoptionCenter as PetAdoptionCenterModel,
   Pet,
+  PetAdoptionCenter as PetAdoptionCenterModel,
+  TownEmitter,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
-import WolfModel from '../lib/WolfModel';
-import { nanoid } from 'nanoid';
-import MouseModel from '../lib/MouseModel';
-import BearModel from '../lib/BearModel';
 
 export default class PetAdoptionCenter extends InteractableArea {
-
   MAX_PETS = 5;
+
   private _pets: Pet[];
 
   /**
@@ -120,9 +119,9 @@ export default class PetAdoptionCenter extends InteractableArea {
     }
     const rect: BoundingBox = { x: mapObject.x, y: mapObject.y, width, height };
     return new PetAdoptionCenter(
-      { id: name as InteractableID, pets: [], occupants: []},
+      { id: name as InteractableID, pets: [], occupants: [] },
       rect,
-      townEmitter
+      townEmitter,
     );
   }
 
@@ -130,7 +129,6 @@ export default class PetAdoptionCenter extends InteractableArea {
     command: CommandType,
   ): InteractableCommandReturnType<CommandType> {
     if (command.type === 'PetAdoptionCenterAdopt') {
-      const adopt = command as PetAdoptionCenterCommand;
       this._emitAreaChanged();
       return {} as InteractableCommandReturnType<CommandType>;
     }

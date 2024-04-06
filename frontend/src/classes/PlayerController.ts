@@ -40,7 +40,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     if (pets) {
       this._pets = pets;
       this.emit('petsUpdated', pets);
-    };
+    }
   }
 
   get playerPets(): Pet[] | [] {

@@ -141,16 +141,16 @@ export default class Town {
     });
 
     socket.on('playerRemovePet', (petData: Pet, playerID: PlayerID) => {
-      const player = this._players.find(player => player.id === playerID);
-      const newModel = player?.removePet(petData);
+      const toRemove = this._players.find(player => player.id === playerID);
+      const newModel = toRemove?.removePet(petData);
       if (newModel) {
         this._broadcastEmitter.emit('playerChangedPets', newModel);
       }
     });
 
     socket.on('playerAddPet', (petData: Pet, playerID: PlayerID) => {
-      const player = this._players.find(player => player.id === playerID);
-      const newModel = player?.addPet(petData);
+      const toAdd = this._players.find(player => player.id === playerID);
+      const newModel = toAdd?.addPet(petData);
       if (newModel) {
         this._broadcastEmitter.emit('playerChangedPets', newModel);
       }
@@ -253,6 +253,7 @@ export default class Town {
     });
     return newPlayer;
   }
+
   private _removePetFromPetAdoptionCenter(petData: Pet, location: PlayerLocation) {
     const petArea = this._interactables.find(
       eachInteractable => eachInteractable.id === location.interactableID,
@@ -262,17 +263,17 @@ export default class Town {
     }
   }
 
-    /**
+  /**
    * Updates the pets of a player within the town
    *
    *
-   * @param player Player to update location for
+   * @param toUpdate Player to update location for
    * @param vehicle New location for this player
    */
-    private _updatePlayerPets(player: Player, pet: Pet): void {
-      player.addPet(pet);
-      this._broadcastEmitter.emit('playerChangedPets', player.toPlayerModel());
-    }
+  private _updatePlayerPets(toUpdate: Player, pet: Pet): void {
+    toUpdate.addPet(pet);
+    this._broadcastEmitter.emit('playerChangedPets', toUpdate.toPlayerModel());
+  }
 
   /**
    * Destroys all data related to a player in this town.

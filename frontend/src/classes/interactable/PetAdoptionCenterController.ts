@@ -26,10 +26,10 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   PetAdoptionCenterEvents,
   PetAdoptionCenterModel
 > {
-  MAX_PETS = 5;
 
-  private _pets: Pet[] = [];
 
+  private _pets: Pet[];
+  private _model : PetAdoptionCenterModel;
   protected _townController: TownController;
 
   /**
@@ -37,24 +37,14 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
    * @param id
    * @param townController
    */
-  constructor(id: string, townController: TownController) {
+  constructor(id: string, townController: TownController, PetAdoptionCenter: PetAdoptionCenterModel) {
     super(id);
     this._townController = townController;
+    this._model = PetAdoptionCenter;
+    this._pets = this._model.pets;
   }
 
-  getRandomizedPets(): Pet[] {
-    const pets: Pet[] = [];
-    for (let i = 0; i < this.MAX_PETS; i++) {
-      if (Math.random() < 0.3) {
-        pets.push(new Wolf());
-      } else if (Math.random() < 0.6) {
-        pets.push(new Mouse());
-      } else {
-        pets.push(new Bear());
-      }
-    }
-    return pets;
-  }
+
 
   adoptPet(pet: Pet | undefined) {
     if (!pet) {
@@ -68,13 +58,15 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   /** Removes the pet at the given index from this controller's list of pets and replaces with a new randomly generated pet. Returns the new list of pets */
   public replenish(): Pet[] {
-    this._pets = this.getRandomizedPets();
-    return this._pets;
+    this._model.replenish();
+    return this._model.pets;
   }
 
   public get pets(): Pet[] {
-    this._pets = this.getRandomizedPets();
-    return this._pets;
+    if (!this._model.pets || this._model.pets.length === 0) {
+      this._model.replenish();
+    }
+    return this._model.pets;
   }
 
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
@@ -111,6 +103,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
       id: this.id,
       occupants: this.occupants.map(player => player.id),
       type: 'PetAdoptionCenter',
+      pets: this._pets,
+      replenish: () => this.replenish(),
     };
   }
 

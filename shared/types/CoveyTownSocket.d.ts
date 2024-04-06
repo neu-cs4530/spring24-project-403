@@ -78,7 +78,10 @@ type MouseColor = 'white' | 'brown' | 'white_brown' | 'grey';
 
 type WolfColor = 'grey' | 'white' | 'black' | 'brown';
 
-export type PetAdoptionCenter = Interactable
+export interface PetAdoptionCenter extends Interactable {
+  pets: Pet[];
+  replenish: () => Pet[];
+}
 
 export interface BoundingBox {
   x: number;
@@ -276,7 +279,7 @@ export type InteractableCommandResponse<MessageType> = {
 }
 
 export interface ServerToClientEvents {
-  playerAdoptPet: (adoptingPlayer: Player) => void;
+  playerAdoptedPet: (adoptingPlayer: Player) => void;
   playerMoved: (movedPlayer: Player) => void;
   playerDisconnect: (disconnectedPlayer: Player) => void;
   playerJoined: (newPlayer: Player) => void;
@@ -293,4 +296,5 @@ export interface ClientToServerEvents {
   playerMovement: (movementData: PlayerLocation) => void;
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
+  playerAdoptPet: (petData: Pet) => void;
 }

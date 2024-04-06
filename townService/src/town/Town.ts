@@ -129,6 +129,14 @@ export default class Town {
     // Notify other players that this player has joined
     this._broadcastEmitter.emit('playerJoined', newPlayer.toPlayerModel());
 
+    /**
+     * Register an event listener for the client socket: if the
+     * client updates their pets, inform the CoveyTownController
+     */
+    socket.on('playerAdoptPet', (petData: Pet) => {
+      this._updatePlayerPets(newPlayer, petData);
+    });
+
     // Register an event listener for the client socket: if the client disconnects,
     // clean up our listener adapter, and then let the CoveyTownController know that the
     // player's session is disconnected
@@ -174,14 +182,6 @@ export default class Town {
       }
     });
 
-    /**
-     * Register an event listener for the client socket: if the
-     * client adopts a pet, inform the CoveyTownController
-     */
-    // socket.on('playerAdoptPet', (petData: Pet | undefined) => {
-    //  this._updatePlayerPets(newPlayer, petData);
-    // });
-
     // Set up a listener to process commands to interactables.
     // Dispatches commands to the appropriate interactable and sends the response back to the client
     socket.on('interactableCommand', (command: InteractableCommand & InteractableCommandBase) => {
@@ -226,6 +226,17 @@ export default class Town {
     });
     return newPlayer;
   }
+
+    /**
+   * Updates the pets of a player within the town
+   *
+   *
+   * @param player Player to update location for
+   * @param vehicle New location for this player
+   */
+    private _updatePlayerPets(player: Player, pet: Pet): void {
+      this._broadcastEmitter.emit('playerAdoptedPet', player.toPlayerModel());
+    }
 
   /**
    * Destroys all data related to a player in this town.

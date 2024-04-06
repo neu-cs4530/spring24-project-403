@@ -66,7 +66,7 @@ export type TownEvents = {
    * An event that indicates that a player has adopted a pet. This event is dispatched after updating the player presses the adopt button -
    * the new pet can be found on the PlayerController.
    */
-  playerAdoptPet: (changedPlayer: PlayerController) => void;
+  playerAdoptedPet: (changedPlayer: PlayerController) => void;
 
   /**
    * An event that indicates that the TownController is now connected to the townService
@@ -365,7 +365,8 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    * @param interactedObj
    */
   public interact<T extends Interactable>(interactedObj: T) {
-    this._interactableEmitter.emit(interactedObj.getType(), interactedObj);
+    this._interactableEmitter
+    .emit(interactedObj.getType(), interactedObj);
   }
 
   /**
@@ -395,23 +396,21 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     /**
      * When a player adopts a pet, update local state and emit an event to the controller's event listeners
      */
-    this._socket.on('playerAdoptPet', changedPlayer => {
+    this._socket.on('playerAdoptedPet', changedPlayer => {
       const playerToUpdate = this.players.find(eachPlayer => eachPlayer.id === changedPlayer.id);
       /**
        * This code will be used to update the player's sprite when they adopt a pet. TODO: Implement this
       if (playerToUpdate && playerToUpdate.gameObjects) {
         const { sprite } = playerToUpdate.gameObjects;
-        const vehicleType = playerToUpdate.vehicle ? playerToUpdate.vehicle.vehicleType : 'walk';
-        sprite.body.setVelocity(0, 0);
-        sprite.anims.stop();
         sprite.setTexture(
-          `${vehicleType}-atlas`,
-          `${vehicleType}-${playerToUpdate.location.rotation}`,
+          `${petType}-atlas`,
+          `${petType}-${playerToUpdate.location.rotation}`,
         );
       }
       */
       if (playerToUpdate) {
-        this.emit('playerAdoptPet', playerToUpdate);
+        playerToUpdate.pets = changedPlayer.pets;
+        this.emit('playerAdoptedPet', playerToUpdate);
       }
     });
 
@@ -647,7 +646,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
          */
     return new Promise<void>((resolve, reject) => {
       this._socket.connect();
-      this._socket.on('initialize', initialData => {
+      this._socket.on('initialize', (initialData): void => {
         this._providerVideoToken = initialData.providerVideoToken;
         this._friendlyNameInternal = initialData.friendlyName;
         this._townIsPubliclyListedInternal = initialData.isPubliclyListed;
@@ -677,7 +676,7 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
             );
           } else if (isPetAdoptionCenter(eachInteractable)) {
             this._interactableControllers.push(
-              new PetAdoptionCenterController(eachInteractable.id, this),
+              new PetAdoptionCenterController(eachInteractable.id, this, eachInteractable),
             );
           }
         });
@@ -698,14 +697,18 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    *
    * @param newPet
    */
-  public emitPetChange(newPet: Pet | undefined) {
-    //this._socket.emit('playerAdoptPet', newPet);
+  public emitPetChange(newPet: Pet) {
+    this._socket.emit('playerAdoptPet', newPet);
     const ourPlayer = this._ourPlayer;
     assert(ourPlayer);
     if (newPet) {
-      ourPlayer.pets = [newPet];
+      if (!ourPlayer.pets) {
+        ourPlayer.pets = [newPet];
+      } else {
+        ourPlayer.pets = ourPlayer.pets.concat([newPet]);
+      }
     }
-    //this.emit('playerAdoptPet', ourPlayer);
+    this.emit('playerAdoptedPet', ourPlayer);
   }
 
   /**

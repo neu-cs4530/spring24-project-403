@@ -1,18 +1,50 @@
+import Bear from '../../../classes/Bear';
+import Mouse from '../../../classes/Mouse';
+import Wolf from '../../../classes/Wolf';
 import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
-import { BoundingBox, Pet } from '../../../types/CoveyTownSocket';
+import { BoundingBox, Pet, InteractableType } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
+  MAX_PETS = 5;
   private _infoTextBox?: Phaser.GameObjects.Text;
 
   private _isInteracting = false;
+
+  private _pets: Pet[] = [];
 
   private _petAdoptionCenter?: PetAdoptionCenterController;
 
   //private _changeListener?: PetAdoptionCenterEvents['TODO'];
 
+  getRandomizedPets(): Pet[] {
+    const pets: Pet[] = [];
+    for (let i = 0; i < this.MAX_PETS; i++) {
+      if (Math.random() < 0.3) {
+        pets.push(new Wolf());
+      } else if (Math.random() < 0.6) {
+        pets.push(new Mouse());
+      } else {
+        pets.push(new Bear());
+      }
+    }
+    return pets;
+  }
+
+  public replenish(): Pet[] {
+    this.pets = this.getRandomizedPets();
+    return this.pets;
+  }
+  
+  public get pets(): Pet[] {
+    if (!this.pets || this.pets.length === 0) {
+      this.pets = this.getRandomizedPets();
+    }
+    return this.pets;
+  }
+
   public set pets(pets: Pet[]) {
-    this.pets = pets;
+    this._pets = pets;
   }
 
   getType(): KnownInteractableTypes {
@@ -35,6 +67,7 @@ export default class PetAdoptionCenter extends Interactable {
       this.name,
       { color: '#FFFFFF', backgroundColor: '#000000' },
     );
+    this.pets = this.getRandomizedPets();
   }
 
   public getBoundingBox(): BoundingBox {

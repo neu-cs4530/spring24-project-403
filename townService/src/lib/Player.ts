@@ -24,7 +24,7 @@ export default class Player {
   public readonly townEmitter: TownEmitter;
 
   /** A list of pets associated with this player */
-  public pets?: Pet[] | [];
+  public pets: Pet[] | [];
 
   constructor(userName: string, townEmitter: TownEmitter) {
     this.location = {

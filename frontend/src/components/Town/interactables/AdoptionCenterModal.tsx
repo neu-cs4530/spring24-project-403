@@ -39,28 +39,28 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<Pet[]>([]);
-  const [activePet, setActivePet] = useState<Pet>(pets[0]);
+  //const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   useEffect(() => {
     if (adoptionCenter) {
       coveyTownController.pause();
-      if (pets.length === 0) {
-        setPets(adoptionCenterController?.pets);
+      if (!pets || pets.length === 0) {
+        setPets(adoptionCenterController.pets);
       }
     } else {
       coveyTownController.unPause();
     }
   }, [coveyTownController, adoptionCenter]);
 
-  useEffect(() => {
-    setActivePet(pets[0]);
-  }, [pets]);
+  //useEffect(() => {
+  //  setActivePet(pets[0]);
+  //}, [pets]);
 
   const toast = useToast();
 
-  function handleAdoption() {
+  function handleAdoption(adoptedPet: Pet) {
     try {
-      const pet = adoptionCenterController.adoptPet(activePet);
+      const pet = adoptionCenterController.adoptPet(adoptedPet);
       if (!pet) {
         throw new Error('Error adopting pet.');
       }
@@ -80,8 +80,13 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   function adoptPet() {
     handleAdoption();
+=======
+  function adoptPet(pet: Pet) {
+    handleAdoption(pet);
+>>>>>>> f77f3ec (trying to keep state in the backend.)
     // replace the now adopted pet
     setPets(adoptionCenterController.replenish());
   }
@@ -130,7 +135,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   return (
     <VStack spacing={4} align='stretch' p={4}>
       <Heading size='md'>Adoptable Pets</Heading>
-      {pets.map((pet, index) => (
+      {pets && pets.map((pet, index) => (
         <Flex
           key={index}
           align='center'
@@ -143,7 +148,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
             <Text>Type: {pet.constructor.name}</Text>
             <Text>ID: {petDisplayName(pet)}</Text>
           </VStack>
-          <Button ml='auto' colorScheme='teal' size='sm' onClick={adoptPet}>
+          <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>
             Adopt
           </Button>
         </Flex>

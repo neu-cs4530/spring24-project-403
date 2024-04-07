@@ -1,4 +1,6 @@
 import { nanoid } from 'nanoid';
+import exp from 'constants';
+import e from 'express';
 import BearModel from './BearModel';
 import MouseModel from './MouseModel';
 import WolfModel from './WolfModel';
@@ -10,6 +12,7 @@ describe('BasePet', () => {
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
     expect(pet.color).toBeUndefined();
+    expect(pet.petType).toBe('bear');
   });
   it('should create a new bear with a specific name, id, and color', () => {
     const pet = new BearModel(nanoid(), 'Yogi', '123', 'brown');
@@ -17,6 +20,7 @@ describe('BasePet', () => {
     expect(pet.name).toBe('Yogi');
     expect(pet.ownerId).toBe('123');
     expect(pet.color).toBe('brown');
+    expect(pet.petType).toBe('bear');
   });
   it('should create a new mouse with a random id', () => {
     const pet = new MouseModel(nanoid());
@@ -24,6 +28,7 @@ describe('BasePet', () => {
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
     expect(pet.color).toBeUndefined();
+    expect(pet.petType).toBe('mouse');
   });
   it('should create a new mouse with a specific name, id, and color', () => {
     const pet = new MouseModel(nanoid(), 'Stuart', '123', 'white');
@@ -31,6 +36,7 @@ describe('BasePet', () => {
     expect(pet.name).toBe('Stuart');
     expect(pet.ownerId).toBe('123');
     expect(pet.color).toBe('white');
+    expect(pet.petType).toBe('mouse');
   });
   it('should create a new wolf with a random id and random color', () => {
     const pet = new WolfModel(nanoid(), undefined, undefined, undefined);
@@ -38,6 +44,7 @@ describe('BasePet', () => {
     expect(pet.name).toBeUndefined();
     expect(pet.ownerId).toBeUndefined();
     expect(pet.color).toBeUndefined();
+    expect(pet.petType).toBe('wolf');
   });
   it('should create a new wolf with a specific name, id, and color', () => {
     const pet = new WolfModel(nanoid(), 'Blaidd', '123', 'grey');
@@ -45,5 +52,6 @@ describe('BasePet', () => {
     expect(pet.name).toBe('Blaidd');
     expect(pet.ownerId).toBe('123');
     expect(pet.color).toBe('grey');
+    expect(pet.petType).toBe('wolf');
   });
 });

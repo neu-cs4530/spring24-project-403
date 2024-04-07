@@ -5,7 +5,7 @@ import InvalidParametersError from '../lib/InvalidParametersError';
 import IVideoClient from '../lib/IVideoClient';
 import Player from '../lib/Player';
 import TwilioVideo from '../lib/TwilioVideo';
-import { isViewingArea } from '../TestUtils';
+import { isPetAdoptionCenterArea, isViewingArea } from '../TestUtils';
 import {
   ChatMessage,
   ConversationArea as ConversationAreaModel,
@@ -14,6 +14,8 @@ import {
   InteractableCommand,
   InteractableCommandBase,
   Pet,
+  PetAdoptionCenter,
+  PlayerID,
   PlayerLocation,
   ServerToClientEvents,
   SocketData,
@@ -129,6 +131,31 @@ export default class Town {
     // Notify other players that this player has joined
     this._broadcastEmitter.emit('playerJoined', newPlayer.toPlayerModel());
 
+    /**
+     * Register an event listener for the client socket: if the
+     * client updates their pets, inform the CoveyTownController
+     */
+    socket.on('playerAdoptPet', (petData: Pet, location: PlayerLocation) => {
+      this._removePetFromPetAdoptionCenter(petData, location);
+      this._updatePlayerPets(newPlayer, petData);
+    });
+
+    socket.on('playerRemovePet', (petData: Pet, playerID: PlayerID) => {
+      const toRemove = this._players.find(player => player.id === playerID);
+      const newModel = toRemove?.removePet(petData);
+      if (newModel) {
+        this._broadcastEmitter.emit('playerChangedPets', newModel);
+      }
+    });
+
+    socket.on('playerAddPet', (petData: Pet, playerID: PlayerID) => {
+      const toAdd = this._players.find(player => player.id === playerID);
+      const newModel = toAdd?.addPet(petData);
+      if (newModel) {
+        this._broadcastEmitter.emit('playerChangedPets', newModel);
+      }
+    });
+
     // Register an event listener for the client socket: if the client disconnects,
     // clean up our listener adapter, and then let the CoveyTownController know that the
     // player's session is disconnected
@@ -171,16 +198,16 @@ export default class Town {
         if (viewingArea) {
           (viewingArea as ViewingArea).updateModel(update);
         }
+      } else if (isPetAdoptionCenterArea(update)) {
+        newPlayer.townEmitter.emit('interactableUpdate', update);
+        const petArea = this._interactables.find(
+          eachInteractable => eachInteractable.id === update.id,
+        );
+        if (petArea) {
+          (petArea as PetAdoptionCenterArea).updateModel(update as PetAdoptionCenter);
+        }
       }
     });
-
-    /**
-     * Register an event listener for the client socket: if the
-     * client adopts a pet, inform the CoveyTownController
-     */
-    // socket.on('playerAdoptPet', (petData: Pet | undefined) => {
-    //  this._updatePlayerPets(newPlayer, petData);
-    // });
 
     // Set up a listener to process commands to interactables.
     // Dispatches commands to the appropriate interactable and sends the response back to the client
@@ -225,6 +252,27 @@ export default class Town {
       }
     });
     return newPlayer;
+  }
+
+  private _removePetFromPetAdoptionCenter(petData: Pet, location: PlayerLocation) {
+    const petArea = this._interactables.find(
+      eachInteractable => eachInteractable.id === location.interactableID,
+    );
+    if (petArea) {
+      (petArea as PetAdoptionCenterArea).removePet(petData);
+    }
+  }
+
+  /**
+   * Updates the pets of a player within the town
+   *
+   *
+   * @param toUpdate Player to update location for
+   * @param vehicle New location for this player
+   */
+  private _updatePlayerPets(toUpdate: Player, pet: Pet): void {
+    toUpdate.addPet(pet);
+    this._broadcastEmitter.emit('playerChangedPets', toUpdate.toPlayerModel());
   }
 
   /**

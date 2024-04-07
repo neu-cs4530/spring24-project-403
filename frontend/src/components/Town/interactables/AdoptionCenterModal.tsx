@@ -1,9 +1,8 @@
 import {
-  Box,
   Button,
   Flex,
-  Grid,
-  GridItem,
+  Heading,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,6 +10,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  VStack,
+  useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ import PetAdoptionCenterController from '../../../classes/interactable/PetAdopti
 import useTownController from '../../../hooks/useTownController';
 import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
 import PetAdoptionCenter from './PetAdoptionCenter';
+import PetTransferScreen from './PetTransferScreen';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController =
@@ -27,28 +29,34 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<Pet[]>([]);
-  const [activePet, setActivePet] = useState<Pet>(pets[0]);
 
   useEffect(() => {
     if (adoptionCenter) {
       coveyTownController.pause();
-      if (pets.length === 0) {
-        setPets(adoptionCenterController?.pets);
+      if (!pets || pets.length === 0) {
+        setPets(adoptionCenterController.pets);
       }
     } else {
       coveyTownController.unPause();
     }
-  }, [coveyTownController, adoptionCenter]);
+  }, [coveyTownController, adoptionCenter, adoptionCenterController.pets, pets]);
 
   useEffect(() => {
-    setActivePet(pets[0]);
-  }, [pets]);
+    const handleUpdate = (petAdoptionCenter: PetAdoptionCenterController) => {
+      setPets(petAdoptionCenter.pets);
+    };
+
+    adoptionCenterController.addListener('update', handleUpdate);
+    return () => {
+      adoptionCenterController.removeListener('update', handleUpdate);
+    };
+  }, [adoptionCenterController, adoptionCenterController.pets, pets]);
 
   const toast = useToast();
 
-  function handleAdoption() {
+  function handleAdoption(adoptedPet: Pet) {
     try {
-      const pet = adoptionCenterController.adoptPet(activePet);
+      const pet = adoptionCenterController.adoptPet(adoptedPet);
       if (!pet) {
         throw new Error('Error adopting pet.');
       }
@@ -67,32 +75,45 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
     }
   }
 
-  function adoptPet() {
-    handleAdoption();
+  function adoptPet(pet: Pet) {
+    handleAdoption(pet);
     // replace the now adopted pet
-    setPets(adoptionCenterController.replenish());
+    setPets(adoptionCenterController.pets);
   }
 
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+
+  const petDisplayName = (pet: Pet): string => {
+    return pet.id.length > 20 ? pet.id.substring(0, 20) + '...' : pet.id;
+  };
+
+  const petImage = (pet: Pet): string => {
+    return `./assets/pets/${pet.petType.toLowerCase()}.png`;
+  };
+
   return (
-    <Grid templateColumns={'repeat(2, 1fr)'} autoColumns={'auto'} autoFlow={'row'} gap={2}>
-      <GridItem height={'100%'}>
-        <h1>Adoptable Pets:</h1>
-        <Flex direction='column' align='center' justify='center'>
-          {pets.map((pet, index) => (
-            <Box key={index}>
-              <img src={'https://placehold.co/20'} alt='Placeholder' />
-              <Button onClick={() => setActivePet(pet)}>{pet.id}</Button>
-            </Box>
-          ))}
-        </Flex>
-      </GridItem>
-      <GridItem height={'100%'}>
-        <h1>Adopt a {activePet && activePet.petType} today!</h1>
-        <img src={'https://placehold.co/400'} alt='Dog Placeholder' />
-        <Text fontSize='xl'> Pet id: {activePet && activePet.id}</Text>
-        <Button onClick={adoptPet}>Adopt</Button>
-      </GridItem>
-    </Grid>
+    <VStack spacing={4} align='stretch' p={4}>
+      <Heading size='md'>Adoptable Pets</Heading>
+      {pets &&
+        pets.map((pet, index) => (
+          <Flex
+            key={index}
+            align='center'
+            border='1px'
+            borderColor={borderColor}
+            p={4}
+            borderRadius='md'>
+            <Image src={petImage(pet)} alt='Pet' boxSize='50px' mr={4} />
+            <VStack align='stretch'>
+              <Text>Type: {pet.petType}</Text>
+              <Text>ID: {petDisplayName(pet)}</Text>
+            </VStack>
+            <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>
+              Adopt
+            </Button>
+          </Flex>
+        ))}
+    </VStack>
   );
 }
 
@@ -125,6 +146,7 @@ export default function PetAreaWrapper(): JSX.Element {
           <ModalCloseButton />
           <ModalBody>
             <PetAdoptionArea interactableID={adoptionCenter.id} />
+            <PetTransferScreen />
           </ModalBody>
         </ModalContent>
       </Modal>

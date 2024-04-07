@@ -1,19 +1,12 @@
-import PetAdoptionCenterController from '../../../classes/interactable/PetAdoptionCenterController';
-import { BoundingBox, Pet } from '../../../types/CoveyTownSocket';
+import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
 export default class PetAdoptionCenter extends Interactable {
+  MAX_PETS = 5;
+
   private _infoTextBox?: Phaser.GameObjects.Text;
 
   private _isInteracting = false;
-
-  private _petAdoptionCenter?: PetAdoptionCenterController;
-
-  //private _changeListener?: PetAdoptionCenterEvents['TODO'];
-
-  public set pets(pets: Pet[]) {
-    this.pets = pets;
-  }
 
   getType(): KnownInteractableTypes {
     return 'petAdoptionCenter';
@@ -21,7 +14,6 @@ export default class PetAdoptionCenter extends Interactable {
 
   removedFromScene(): void {
     super.removedFromScene();
-    //this._petAdoptionCenter?.removeListener('TODO', this._changeListener);
   }
 
   addedToScene() {

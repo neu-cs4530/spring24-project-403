@@ -30,9 +30,7 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   public gameObjects?: PlayerGameObjects;
 
   private _pets: Pet[] | [];
-
-  public activePet?: PetInfo;
-
+  
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();
     this._id = id;

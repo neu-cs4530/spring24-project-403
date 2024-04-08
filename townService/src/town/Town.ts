@@ -140,6 +140,10 @@ export default class Town {
       this._updatePlayerPets(newPlayer, petData);
     });
 
+    /**
+     * Register an event listener for the client socket: if the
+     * client removes a pet, inform the CoveyTownController
+     */
     socket.on('playerRemovePet', (petData: Pet, playerID: PlayerID) => {
       const toRemove = this._players.find(player => player.id === playerID);
       const newModel = toRemove?.removePet(petData);
@@ -148,11 +152,27 @@ export default class Town {
       }
     });
 
+    /**
+     * Register an event listener for the client socket: if the
+     * client adds a pet, inform the CoveyTownController
+     */
     socket.on('playerAddPet', (petData: Pet, playerID: PlayerID) => {
       const toAdd = this._players.find(player => player.id === playerID);
       const newModel = toAdd?.addPet(petData);
       if (newModel) {
         this._broadcastEmitter.emit('playerChangedPets', newModel);
+      }
+    });
+
+    /**
+     * Register an event listener for the client socket: if the
+     * client sets a pet as active, inform the CoveyTownController.
+     */
+    socket.on('playerSetActivePet', (petData: Pet) => {
+      const toUpdate = this._players.find(player => player.id === newPlayer.id);
+      if (toUpdate) {
+        toUpdate.setActivePet(petData);
+        this._broadcastEmitter.emit('playerChangedPets', toUpdate.toPlayerModel());
       }
     });
 

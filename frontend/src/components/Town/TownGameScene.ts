@@ -381,7 +381,7 @@ export default class TownGameScene extends Phaser.Scene {
           player.gameObjects.label.setX(player.gameObjects.sprite.body.x);
           player.gameObjects.label.setY(player.gameObjects.sprite.body.y - 20);
 
-          if (player.activePet) {
+          if (player.pets && player.pets[0]) {
             this.updatePet(player.location, player.gameObjects);
           }
         }
@@ -545,7 +545,7 @@ export default class TownGameScene extends Phaser.Scene {
       })
       .setDepth(6);
     let petSprite = undefined;
-    if (this.coveyTownController.ourPlayer.activePet) {
+    if (this.coveyTownController.ourPlayer.pets && this.coveyTownController.ourPlayer.pets[0]) {
       petSprite = this.physics.add
         .sprite(
           spawnPoint.x + PET_OFFSET_X,
@@ -667,7 +667,7 @@ export default class TownGameScene extends Phaser.Scene {
         },
       );
       let petSprite = undefined;
-      if (player.activePet) {
+      if (player.pets && player.pets[0]) {
         petSprite = this.physics.add
           .sprite(
             player.location.x + PET_OFFSET_X,

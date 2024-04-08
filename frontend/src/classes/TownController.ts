@@ -724,6 +724,18 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
   }
 
   /**
+   * Emit an active pet event for the current player, updating the state locally and
+   * also notifying the townService that our player has changed their active pet.
+   * @param pet The pet to set as active. 
+   */
+  public setActivePet(pet: Pet) {
+    const ourPlayer = this._ourPlayer;
+    assert(ourPlayer);
+    this._socket.emit('playerSetActivePet', pet);
+    this.emit('playerChangedPets', ourPlayer);
+  }
+
+  /**
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
    */
   public getPetAdoptionCenterController(

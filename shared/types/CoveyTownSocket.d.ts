@@ -303,4 +303,5 @@ export interface ClientToServerEvents {
   playerAdoptPet: (petData: Pet, location: PlayerLocation) => void;
   playerAddPet: (petData: Pet, playerID: PlayerID) => void;
   playerRemovePet: (petData: Pet, playerID: PlayerID) => void;
+  playerSetActivePet: (petData: Pet) => void;
 }

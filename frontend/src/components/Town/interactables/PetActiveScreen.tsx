@@ -5,12 +5,15 @@ import { Pet } from '../../../types/CoveyTownSocket';
 
 export default function ActivePetSelectionScreen(): JSX.Element {
   const { ourPlayer } = useTownController();
+  const townController = useTownController();
   const [activePetID, setActivePetID] = useState<string>('');
   const [myPets, setMyPets] = useState<Pet[]>([]);
   const toast = useToast();
+  const [activePet, setActivePet] = useState<Pet | undefined>(ourPlayer.pets && ourPlayer.pets[0]);
 
   useEffect(() => {
     setMyPets(ourPlayer.pets || []);
+    setActivePet(ourPlayer.pets && ourPlayer.pets[0]);
   }, [ourPlayer.pets]);
 
   useEffect(() => {
@@ -36,9 +39,9 @@ export default function ActivePetSelectionScreen(): JSX.Element {
       });
       return;
     }
-    console.log(`Setting active pet: ${pet.id}`);
     // TO-DO: Update backend to reflect change in activePet (PlayerController or TownController maybe)
     // Need something like... ourPlayer.setActivePet(pet);
+    townController.setActivePet(pet);
 
     toast({
       title: 'Active Pet Updated',
@@ -67,11 +70,11 @@ export default function ActivePetSelectionScreen(): JSX.Element {
         ))}
       </Select>
       <VStack>
-        {ourPlayer.activePet && (
+        {activePet && (
           <Text mt={2}>
             {/* TODO: Need to make it so it shows the activePet as it is changed */}
-            Current Active Pet: {ourPlayer.activePet.pet.color}{' '}
-            {ourPlayer.activePet.pet.petType.toLowerCase()} (ID: {ourPlayer.activePet.pet.id})
+            Current Active Pet: {activePet.color}{' '}
+            {activePet.petType.toLowerCase()} (ID: {activePet.id})
           </Text>
         )}
         <Button

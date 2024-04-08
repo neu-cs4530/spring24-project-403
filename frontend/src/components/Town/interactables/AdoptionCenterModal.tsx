@@ -88,7 +88,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   };
 
   const petImage = (pet: Pet): string => {
-    return `./assets/pets/${pet.petType.toLowerCase()}.png`;
+    return `./assets/pets/${pet.petType.toLowerCase()}-${pet.color}.png`;
   };
 
   return (
@@ -107,6 +107,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
             <VStack align='stretch'>
               <Text>Type: {pet.petType}</Text>
               <Text>ID: {petDisplayName(pet)}</Text>
+              <Text>Color: {pet.color}</Text>
             </VStack>
             <Button ml='auto' colorScheme='teal' size='sm' onClick={() => adoptPet(pet)}>
               Adopt

@@ -6,13 +6,16 @@ import MouseModel from '../lib/MouseModel';
 import Player from '../lib/Player';
 import WolfModel from '../lib/WolfModel';
 import {
+  BearColor,
   BoundingBox,
   InteractableCommand,
   InteractableCommandReturnType,
   InteractableID,
+  MouseColor,
   Pet,
   PetAdoptionCenter as PetAdoptionCenterModel,
   TownEmitter,
+  WolfColor,
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
 
@@ -47,13 +50,21 @@ export default class PetAdoptionCenter extends InteractableArea {
 
   getRandomizedPets(): Pet[] {
     const pets: Pet[] = [];
+    const bearColors: BearColor[] = ['black', 'brown'];
+    const mouseColors: MouseColor[] = ['white', 'brown', 'grey'];
+    const wolfColors: WolfColor[] = ['grey', 'brown'];
+
     for (let i = 0; i < this.MAX_PETS; i++) {
+      const bearColor = bearColors[Math.floor(Math.random() * bearColors.length)];
+      const mouseColor = mouseColors[Math.floor(Math.random() * mouseColors.length)];
+      const wolfColor = wolfColors[Math.floor(Math.random() * wolfColors.length)];
+
       if (Math.random() < 0.3) {
-        pets.push(new WolfModel(nanoid()).toPetModel());
+        pets.push(new WolfModel(nanoid(), undefined, undefined, wolfColor).toPetModel()); // Assuming constructor modification for color
       } else if (Math.random() < 0.6) {
-        pets.push(new MouseModel(nanoid()).toPetModel());
+        pets.push(new MouseModel(nanoid(), undefined, undefined, mouseColor).toPetModel()); // Assuming constructor modification for color
       } else {
-        pets.push(new BearModel(nanoid()).toPetModel());
+        pets.push(new BearModel(nanoid(), undefined, undefined, bearColor).toPetModel()); // Assuming constructor modification for color
       }
     }
     return pets;

@@ -74,9 +74,9 @@ export interface Pet {
 
 export type BearColor = 'black' | 'brown';
 
-type MouseColor = 'white' | 'brown' | 'white_brown' | 'grey';
+type MouseColor = 'white' | 'brown' | 'grey';
 
-type WolfColor = 'grey' | 'white' | 'black' | 'brown';
+type WolfColor = 'grey' | 'brown';
 
 export interface PetAdoptionCenter extends Interactable {
   pets: Pet[];

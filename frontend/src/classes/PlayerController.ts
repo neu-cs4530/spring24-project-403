@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
 import { Player as PlayerModel, PlayerLocation, Pet } from '../types/CoveyTownSocket';
+import Mouse from './Mouse';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
@@ -11,7 +12,13 @@ export type PlayerEvents = {
 export type PlayerGameObjects = {
   sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   label: Phaser.GameObjects.Text;
+  petSprite?: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   locationManagedByGameScene: boolean /* For the local player, the game scene will calculate the current location, and we should NOT apply updates when we receive events */;
+};
+
+export type PetInfo = {
+  name: string;
+  pet: Pet;
 };
 export default class PlayerController extends (EventEmitter as new () => TypedEmitter<PlayerEvents>) {
   private _location: PlayerLocation;
@@ -23,6 +30,8 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   public gameObjects?: PlayerGameObjects;
 
   private _pets: Pet[] | [];
+
+  public activePet?: PetInfo;
 
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();

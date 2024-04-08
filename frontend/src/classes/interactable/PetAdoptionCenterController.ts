@@ -16,7 +16,7 @@ import InteractableAreaController, {
  */
 export type PetAdoptionCenterEvents = BaseInteractableEventMap & {
   /**
-   * An update event indicates that the pet adoption center has changed in some way.
+   * An update event indicates that the pet adoption center has changed pets in some way.
    * Listeners are passed the updated PetAdoptionCenterController.
    */
   update: (petAdoptionCenter: PetAdoptionCenterController) => void;
@@ -53,7 +53,12 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     this._pets = this._model.pets;
   }
 
-  public adoptPet(pet: Pet | undefined) {
+  /**
+   * Adopt a pet from the pet adoption center.
+   * @param pet the pet to adopt
+   * @returns the pet that was adopted or undefined if the pet was not adopted.
+   */
+  public adoptPet(pet: Pet | undefined): Pet | undefined {
     if (!pet) {
       return undefined;
     }
@@ -62,6 +67,9 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return pet;
   }
 
+  /**
+   * Return the pets in the pet adoption center.
+   */
   public get pets(): Pet[] {
     if (!this._pets || this._pets.length === 0) {
       this._townController.emitPetAdoptionCenterAreaUpdate(this);
@@ -76,6 +84,10 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return this._player?.pets?.length || 0;
   }
 
+  /**
+   * Update this controller with new data of the pet adoption center model.
+   * @param newModel
+   */
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
     this.occupants = newModel.occupants.map(occupantID =>
       this._townController.getPlayer(occupantID),
@@ -84,14 +96,24 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     this.emit('update', this);
   }
 
+  /**
+   * Is the pet adoption center active?
+   * @returns true if the pet adoption center is active, false otherwise.
+   */
   public isActive() {
     return this.occupants.length > 0;
   }
 
+  /**
+   * Return the friendly name of the pet adoption center.
+   */
   public get friendlyName(): string {
     return this.id;
   }
 
+  /**
+   * Return the type of the pet adoption center.
+   */
   public get type(): string {
     return PET_ADOPTION_CENTER_TYPE;
   }

@@ -149,26 +149,45 @@ export default class TownGameScene extends Phaser.Scene {
       this._resourcePathPrefix + '/assets/atlas/atlas.png',
       this._resourcePathPrefix + '/assets/atlas/atlas.json',
     );
+    // Load bear with color variations
     this.load.spritesheet(
-      'wolves',
-      this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves.png',
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
+      'bears-black',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/bears-black.png',
+      { frameWidth: 32, frameHeight: 32 },
     );
     this.load.spritesheet(
-      'bears',
-      this._resourcePathPrefix + '/assets/atlas/pet-animate/bears.png',
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
+      'bears-brown',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/bears-brown.png',
+      { frameWidth: 32, frameHeight: 32 },
     );
-    this.load.spritesheet('mice', this._resourcePathPrefix + '/assets/atlas/pet-animate/mice.png', {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    // Load wolf with color variations
+    this.load.spritesheet(
+      'wolves-grey',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves-grey.png',
+      { frameWidth: 32, frameHeight: 32 },
+    );
+    this.load.spritesheet(
+      'wolves-brown',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves-brown.png',
+      { frameWidth: 32, frameHeight: 32 },
+    );
+
+    // Load mouse with color variations
+    this.load.spritesheet(
+      'mice-white',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-white.png',
+      { frameWidth: 32, frameHeight: 32 },
+    );
+    this.load.spritesheet(
+      'mice-brown',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-brown.png',
+      { frameWidth: 32, frameHeight: 32 },
+    );
+    this.load.spritesheet(
+      'mice-grey',
+      this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-grey.png',
+      { frameWidth: 32, frameHeight: 32 },
+    );
   }
 
   updatePlayers(players: PlayerController[]) {
@@ -241,7 +260,7 @@ export default class TownGameScene extends Phaser.Scene {
     const playerX = gameObjects.sprite.x;
     const playerY = gameObjects.sprite.y;
     const petSprite = gameObjects.petSprite;
-    const petType = 'bears'; // need to make this so it updates to the player's pet type
+    const petType = 'bears-black'; // need to make this so it updates to the player's pet type
     let animKey = `${petType}-`;
     assert(petSprite);
     switch (direction) {
@@ -417,7 +436,15 @@ export default class TownGameScene extends Phaser.Scene {
       return ret;
     });
 
-    const pets = ['wolves', 'bears', 'mice'];
+    const pets = [
+      'wolves-grey',
+      'wolves-brown',
+      'bears-black',
+      'bears-brown',
+      'mice-white',
+      'mice-brown',
+      'mice-grey',
+    ];
     const directions = ['right', 'forward', 'backward'];
     pets.forEach(pet => {
       directions.forEach((direction, index) => {
@@ -523,8 +550,8 @@ export default class TownGameScene extends Phaser.Scene {
         .sprite(
           spawnPoint.x + PET_OFFSET_X,
           spawnPoint.y + PET_OFFSET_Y,
-          'bears',
-          'bears-forward-walk', // will need to be updated to the pet type
+          'bears-black',
+          'bears-black-forward-walk', // will need to be updated to the pet type
         )
         .setSize(32, 32)
         .setOffset(PET_OFFSET_X, PET_OFFSET_Y)

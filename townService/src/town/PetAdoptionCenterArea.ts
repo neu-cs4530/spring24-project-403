@@ -51,8 +51,8 @@ export default class PetAdoptionCenter extends InteractableArea {
   getRandomizedPets(): Pet[] {
     const pets: Pet[] = [];
     const bearColors: BearColor[] = ['black', 'brown'];
-    const mouseColors: MouseColor[] = ['white', 'brown', 'white_brown', 'grey'];
-    const wolfColors: WolfColor[] = ['grey', 'white', 'black', 'brown'];
+    const mouseColors: MouseColor[] = ['white', 'brown', 'grey'];
+    const wolfColors: WolfColor[] = ['grey', 'brown'];
 
     for (let i = 0; i < this.MAX_PETS; i++) {
       const bearColor = bearColors[Math.floor(Math.random() * bearColors.length)];

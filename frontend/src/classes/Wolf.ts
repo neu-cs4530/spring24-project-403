@@ -2,7 +2,7 @@ import BasePet from './BasePet';
 import { WolfColor } from '../types/CoveyTownSocket';
 
 export default class Wolf extends BasePet {
-  static wolfColors: WolfColor[] = ['grey', 'white', 'black', 'brown'];
+  static wolfColors: WolfColor[] = ['grey', 'brown'];
 
   constructor(name?: string, ownerId?: string, color?: WolfColor) {
     if (name && ownerId && color) {

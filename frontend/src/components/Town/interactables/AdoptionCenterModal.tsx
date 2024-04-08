@@ -88,7 +88,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   };
 
   const petImage = (pet: Pet): string => {
-    return `./assets/pets/${pet.petType.toLowerCase()}.png`;
+    return `./assets/pets/${pet.petType.toLowerCase()}-${pet.color}.png`;
   };
 
   return (

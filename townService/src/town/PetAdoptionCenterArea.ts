@@ -41,6 +41,10 @@ export default class PetAdoptionCenter extends InteractableArea {
     this._pets = pets;
   }
 
+  /**
+   * Removes a pet from the pet adoption center area and replaces it with a new one.
+   * @param petData the pet to remove
+   */
   public removePet(petData: Pet) {
     this._pets = this._pets.filter(pet => pet.id !== petData.id);
     // replace the pet with a new one
@@ -50,7 +54,7 @@ export default class PetAdoptionCenter extends InteractableArea {
     this._emitAreaChanged();
   }
 
-  getRandomizedPets(): Pet[] {
+  private getRandomizedPets(): Pet[] {
     const pets: Pet[] = [];
     const bearColors: BearColor[] = ['black', 'brown'];
     const mouseColors: MouseColor[] = ['white', 'brown', 'grey'];
@@ -100,6 +104,9 @@ export default class PetAdoptionCenter extends InteractableArea {
     this._emitAreaChanged();
   }
 
+  /**
+   * Adds a player to this pet adoption center area.
+   */
   public get isActive(): boolean {
     return true;
   }

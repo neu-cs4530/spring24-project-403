@@ -29,6 +29,8 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<Pet[]>([]);
+  const [adoptedPetsCount, setAdoptedPetsCount] = useState<number>(0);
+  const maxPetsAllowed = 5;
 
   useEffect(() => {
     if (adoptionCenter) {
@@ -55,11 +57,21 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const toast = useToast();
 
   function handleAdoption(adoptedPet: Pet) {
+    if (adoptedPetsCount >= maxPetsAllowed) {
+      toast({
+        title: `Limit Reached`,
+        description: `You can only adopt up to ${maxPetsAllowed} pets.`,
+        status: 'warning',
+      });
+      return;
+    }
+
     try {
       const pet = adoptionCenterController.adoptPet(adoptedPet);
       if (!pet) {
         throw new Error('Error adopting pet.');
       }
+      setAdoptedPetsCount(adoptedPetsCount + 1);
       toast({
         title: `Success`,
         description: `You have adopted ${pet.id}!`,
@@ -69,7 +81,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
       console.log(error);
       toast({
         title: `Error`,
-        description: (error as Error).toString,
+        description: (error as Error).toString(),
         status: 'error',
       });
     }

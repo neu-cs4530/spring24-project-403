@@ -22,6 +22,7 @@ import useTownController from '../../../hooks/useTownController';
 import { InteractableID, Pet } from '../../../types/CoveyTownSocket';
 import PetAdoptionCenter from './PetAdoptionCenter';
 import PetTransferScreen from './PetTransferScreen';
+import ActivePetSelectionScreen from './PetActiveScreen';
 
 function PetAdoptionArea({ interactableID }: { interactableID: InteractableID }): JSX.Element {
   const adoptionCenterController =
@@ -160,6 +161,7 @@ export default function PetAreaWrapper(): JSX.Element {
           <ModalBody>
             <PetAdoptionArea interactableID={adoptionCenter.id} />
             <PetTransferScreen />
+            <ActivePetSelectionScreen />
           </ModalBody>
         </ModalContent>
       </Modal>

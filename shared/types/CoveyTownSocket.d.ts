@@ -29,6 +29,11 @@ export type TownSettingsUpdate = {
   isPubliclyListed?: boolean;
 }
 
+export type ActivePetUpdate = {
+  pet: Pet;
+  playerID: PlayerID;
+}
+
 export type Direction = 'front' | 'back' | 'left' | 'right';
 
 export type PlayerID = string;

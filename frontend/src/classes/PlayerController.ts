@@ -39,15 +39,6 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._userName = userName;
     this._location = location;
     this._pets = pets || [];
-
-    // Hardcode pet data for visiualization
-    // TODO: DELETE THIS
-    const stuart = new Mouse('Stuart', this._id, 'white');
-    this._pets.push(stuart);
-    this.activePet = {
-      name: 'Stuart',
-      pet: stuart,
-    };
   }
 
   get pets(): Pet[] | undefined {

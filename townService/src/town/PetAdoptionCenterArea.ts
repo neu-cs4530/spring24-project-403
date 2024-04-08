@@ -77,10 +77,10 @@ export default class PetAdoptionCenter extends InteractableArea {
     return pets;
   }
 
+
   /**
-   * Updates the state of this ViewingArea, setting the video, isPlaying and progress properties
-   *
-   * @param viewingArea updated model
+   * Updates this pet adoption center area with information from the given model.
+   * @param param0 the model to update this pet adoption center from.
    */
   public updateModel({ pets }: PetAdoptionCenterModel): void {
     if (!pets || pets.length === 0) {

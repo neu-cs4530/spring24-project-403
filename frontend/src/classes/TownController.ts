@@ -694,10 +694,10 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
    *
    * @param newPet
    */
-  public emitPetAdoption(newPet: Pet) {
+  public emitPetAdoption(newPet: Pet, interactableID: InteractableID) {
     const ourPlayer = this._ourPlayer;
     assert(ourPlayer);
-    this._socket.emit('playerAdoptPet', newPet, ourPlayer.location);
+    this._socket.emit('playerAdoptPet', newPet, interactableID);
     if (newPet || !ourPlayer.pets?.includes(newPet)) {
       if (!ourPlayer.pets) {
         ourPlayer.pets = [newPet];

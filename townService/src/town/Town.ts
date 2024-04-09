@@ -13,6 +13,7 @@ import {
   Interactable,
   InteractableCommand,
   InteractableCommandBase,
+  InteractableID,
   Pet,
   PetAdoptionCenter,
   PlayerID,
@@ -135,8 +136,8 @@ export default class Town {
      * Register an event listener for the client socket: if the
      * client updates their pets, inform the CoveyTownController
      */
-    socket.on('playerAdoptPet', (petData: Pet, location: PlayerLocation) => {
-      this._removePetFromPetAdoptionCenter(petData, location);
+    socket.on('playerAdoptPet', (petData: Pet, interactableID: InteractableID) => {
+      this._removePetFromPetAdoptionCenter(petData, interactableID);
       this._updatePlayerPets(newPlayer, petData);
     });
 
@@ -274,9 +275,9 @@ export default class Town {
     return newPlayer;
   }
 
-  private _removePetFromPetAdoptionCenter(petData: Pet, location: PlayerLocation) {
+  private _removePetFromPetAdoptionCenter(petData: Pet, interactableID: InteractableID) {
     const petArea = this._interactables.find(
-      eachInteractable => eachInteractable.id === location.interactableID,
+      eachInteractable => eachInteractable.id === interactableID,
     );
     if (petArea) {
       (petArea as PetAdoptionCenterArea).removePet(petData);

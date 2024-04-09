@@ -242,12 +242,8 @@ interface InteractableCommandBase {
   type: string;
 }
 
-export type InteractableCommand =  PetAdoptionCenterCommand | ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
-export interface PetAdoptionCenterCommand {
-  type: 'PetAdoptionCenterAdopt';
-  petID: string;
-  update: PetAdoptionCenter;
-}
+export type InteractableCommand =  ViewingAreaUpdateCommand | JoinGameCommand | GameMoveCommand<TicTacToeMove> | GameMoveCommand<ConnectFourMove> | StartGameCommand | LeaveGameCommand;
+
 export interface ViewingAreaUpdateCommand  {
   type: 'ViewingAreaUpdate';
   update: ViewingArea;
@@ -300,7 +296,7 @@ export interface ClientToServerEvents {
   playerMovement: (movementData: PlayerLocation) => void;
   interactableUpdate: (update: Interactable) => void;
   interactableCommand: (command: InteractableCommand & InteractableCommandBase) => void;
-  playerAdoptPet: (petData: Pet, location: PlayerLocation) => void;
+  playerAdoptPet: (petData: Pet, interactableID: InteractableID) => void;
   playerAddPet: (petData: Pet, playerID: PlayerID) => void;
   playerRemovePet: (petData: Pet, playerID: PlayerID) => void;
   playerSetActivePet: (petData: Pet) => void;

@@ -22,6 +22,8 @@ import InteractableArea from './InteractableArea';
 export default class PetAdoptionCenter extends InteractableArea {
   MAX_PETS = 5;
 
+  TYPES_OF_PETS = 3;
+
   private _pets: Pet[];
 
   /**
@@ -58,10 +60,11 @@ export default class PetAdoptionCenter extends InteractableArea {
       const bearColor = bearColors[Math.floor(Math.random() * bearColors.length)];
       const mouseColor = mouseColors[Math.floor(Math.random() * mouseColors.length)];
       const wolfColor = wolfColors[Math.floor(Math.random() * wolfColors.length)];
+      const petType = Math.floor(Math.random() * this.TYPES_OF_PETS);
 
-      if (Math.random() < 0.3) {
+      if (petType === 0) {
         pets.push(new WolfModel(nanoid(), undefined, undefined, wolfColor).toPetModel()); // Assuming constructor modification for color
-      } else if (Math.random() < 0.6) {
+      } else if (petType === 1) {
         pets.push(new MouseModel(nanoid(), undefined, undefined, mouseColor).toPetModel()); // Assuming constructor modification for color
       } else {
         pets.push(new BearModel(nanoid(), undefined, undefined, bearColor).toPetModel()); // Assuming constructor modification for color
@@ -136,13 +139,12 @@ export default class PetAdoptionCenter extends InteractableArea {
     );
   }
 
-  public handleCommand<CommandType extends InteractableCommand>(
-    command: CommandType,
-  ): InteractableCommandReturnType<CommandType> {
-    if (command.type === 'PetAdoptionCenterAdopt') {
-      this._emitAreaChanged();
-      return {} as InteractableCommandReturnType<CommandType>;
-    }
+  /**
+   * Handles a command from a player in this pet adoption center area.
+   */
+  public handleCommand<
+    CommandType extends InteractableCommand,
+  >(): InteractableCommandReturnType<CommandType> {
     throw new InvalidParametersError('Unknown command type');
   }
 }

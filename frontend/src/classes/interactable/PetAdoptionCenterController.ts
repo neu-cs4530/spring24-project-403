@@ -54,7 +54,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
       return undefined;
     }
     pet.ownerId = this._player?.id;
-    this._townController.emitPetAdoption(pet);
+    this._townController.emitPetAdoption(pet, this.id);
     return pet;
   }
 

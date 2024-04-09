@@ -78,7 +78,7 @@ export default function PetTransferScreen(): JSX.Element {
   }
 
   return (
-    <Box p={5} shadow='md' borderWidth='1px' borderRadius='lg' overflow='hidden'>
+    <Box p={5} borderRadius='lg' overflow='hidden'>
       <Heading as='h3' size='md' mb={4}>
         Pet Transfers
       </Heading>

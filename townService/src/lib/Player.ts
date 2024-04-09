@@ -40,6 +40,15 @@ export default class Player {
     this.pets = [];
   }
 
+  /**
+   * Sets the active pet for this player.
+   * @param petData The pet to be set as the active pet.
+   */
+  public setActivePet(petData: Pet) {
+    this.pets = this.pets.filter(pet => pet.id !== petData.id);
+    this.pets = [petData, ...this.pets];
+  }
+
   public addPet(pet: Pet): PlayerModel {
     if ((this.pets as Pet[]).includes(pet)) {
       return this.toPlayerModel();

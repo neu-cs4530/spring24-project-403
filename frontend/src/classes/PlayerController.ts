@@ -1,7 +1,6 @@
 import EventEmitter from 'events';
 import TypedEmitter from 'typed-emitter';
-import { Player as PlayerModel, PlayerLocation, Pet } from '../types/CoveyTownSocket';
-import Mouse from './Mouse';
+import { Pet, PlayerLocation, Player as PlayerModel } from '../types/CoveyTownSocket';
 export const MOVEMENT_SPEED = 175;
 
 export type PlayerEvents = {
@@ -30,8 +29,6 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
   public gameObjects?: PlayerGameObjects;
 
   private _pets: Pet[] | [];
-
-  public activePet?: PetInfo;
 
   constructor(id: string, userName: string, location: PlayerLocation, pets?: Pet[] | []) {
     super();

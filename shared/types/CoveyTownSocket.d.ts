@@ -29,6 +29,11 @@ export type TownSettingsUpdate = {
   isPubliclyListed?: boolean;
 }
 
+export type ActivePetUpdate = {
+  pet: Pet;
+  playerID: PlayerID;
+}
+
 export type Direction = 'front' | 'back' | 'left' | 'right';
 
 export type PlayerID = string;
@@ -298,4 +303,5 @@ export interface ClientToServerEvents {
   playerAdoptPet: (petData: Pet, location: PlayerLocation) => void;
   playerAddPet: (petData: Pet, playerID: PlayerID) => void;
   playerRemovePet: (petData: Pet, playerID: PlayerID) => void;
+  playerSetActivePet: (petData: Pet) => void;
 }

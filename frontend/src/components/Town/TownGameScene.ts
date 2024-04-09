@@ -259,7 +259,23 @@ export default class TownGameScene extends Phaser.Scene {
     const moving = location.moving;
     const playerX = gameObjects.sprite.x;
     const playerY = gameObjects.sprite.y;
-    const petSprite = gameObjects.petSprite;
+    let petSprite = undefined;
+    if (!gameObjects.petSprite) {
+      petSprite = this.physics.add
+        .sprite(
+          0,
+          0,
+          'bears-black',
+          'bears-black-forward-walk', // will need to be updated to the pet type
+        )
+        .setSize(32, 32)
+        .setOffset(PET_OFFSET_X, PET_OFFSET_Y)
+        .setDepth(5);
+      // add pet sprite to gameObjects
+      gameObjects.petSprite = petSprite;
+    } else {
+      petSprite = gameObjects.petSprite;
+    }
     const petType = 'bears-black'; // need to make this so it updates to the player's pet type
     let animKey = `${petType}-`;
     assert(petSprite);
@@ -381,7 +397,7 @@ export default class TownGameScene extends Phaser.Scene {
           player.gameObjects.label.setX(player.gameObjects.sprite.body.x);
           player.gameObjects.label.setY(player.gameObjects.sprite.body.y - 20);
 
-          if (player.activePet) {
+          if (player.pets && player.pets[0]) {
             this.updatePet(player.location, player.gameObjects);
           }
         }
@@ -544,23 +560,9 @@ export default class TownGameScene extends Phaser.Scene {
         backgroundColor: '#ffffff',
       })
       .setDepth(6);
-    let petSprite = undefined;
-    if (this.coveyTownController.ourPlayer.activePet) {
-      petSprite = this.physics.add
-        .sprite(
-          spawnPoint.x + PET_OFFSET_X,
-          spawnPoint.y + PET_OFFSET_Y,
-          'bears-black',
-          'bears-black-forward-walk', // will need to be updated to the pet type
-        )
-        .setSize(32, 32)
-        .setOffset(PET_OFFSET_X, PET_OFFSET_Y)
-        .setDepth(5);
-    }
     this.coveyTownController.ourPlayer.gameObjects = {
       sprite,
       label,
-      petSprite,
       locationManagedByGameScene: true,
     };
 
@@ -666,22 +668,9 @@ export default class TownGameScene extends Phaser.Scene {
           backgroundColor: '#ffffff',
         },
       );
-      let petSprite = undefined;
-      if (player.activePet) {
-        petSprite = this.physics.add
-          .sprite(
-            player.location.x + PET_OFFSET_X,
-            player.location.y + PET_OFFSET_Y,
-            'atlas',
-            'misa-front',
-          )
-          .setSize(32, 32)
-          .setOffset(0, 24);
-      }
       player.gameObjects = {
         sprite,
         label,
-        petSprite,
         locationManagedByGameScene: false,
       };
       this._collidingLayers.forEach(layer => this.physics.add.collider(sprite, layer));

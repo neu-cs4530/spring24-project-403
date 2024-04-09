@@ -73,8 +73,8 @@ export default function ActivePetSelectionScreen(): JSX.Element {
         {activePet && (
           <Text mt={2}>
             {/* TODO: Need to make it so it shows the activePet as it is changed */}
-            Current Active Pet: {activePet.color}{' '}
-            {activePet.petType.toLowerCase()} (ID: {activePet.id})
+            Current Active Pet: {activePet.color} {activePet.petType.toLowerCase()} (ID:{' '}
+            {activePet.id})
           </Text>
         )}
         <Button

@@ -1,9 +1,8 @@
 import { Box, Heading, ListItem, OrderedList, Tooltip } from '@chakra-ui/react';
-import React from 'react';
 import { usePlayers } from '../../classes/TownController';
 import useTownController from '../../hooks/useTownController';
 import PlayerName from './PlayerName';
-import PlayerPets from './PlayerPets';
+import React from 'react';
 
 /**
  * Lists the current players in the town, along with the current town's name and ID

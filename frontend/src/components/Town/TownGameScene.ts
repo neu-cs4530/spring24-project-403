@@ -276,7 +276,7 @@ export default class TownGameScene extends Phaser.Scene {
     } else {
       petSprite = gameObjects.petSprite;
     }
-    let animKey = `${pet.petType}-${pet.color}-`; // need to make this so it updates to the player's pet type
+    let animKey = `${pet.petType}-${pet.color}-`;
     switch (direction) {
       case 'left':
         petSprite.flipX = true;

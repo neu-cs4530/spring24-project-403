@@ -412,7 +412,6 @@ describe('TownController', () => {
         }
         let petAdoptionCenter: PetAdoptionCenter;
         let petAdoptionCenterController: PetAdoptionCenterController;
-        let eventListener: (update: PetAdoptionCenter) => void;
         beforeEach(() => {
           petAdoptionCenter = adoptionAreaOnTown();
           const controller = testController.petAdoptionCenterArea;

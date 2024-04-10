@@ -19,6 +19,13 @@ export default abstract class BasePetModel implements PetModel {
   /** The type of pet */
   abstract readonly petType: PetType;
 
+  /**
+   * Create a new pet
+   * @param id the unique identifier for this pet
+   * @param name the name of the pet
+   * @param ownerId the unique identifier of the pet's owner
+   * @param color the color of the pet
+   */
   constructor(id: string, name?: string, ownerId?: string, color?: string) {
     this._id = id;
     this._name = name;
@@ -58,6 +65,10 @@ export default abstract class BasePetModel implements PetModel {
     return this._color;
   }
 
+  /**
+   * Converts this pet to a pet model
+   * @returns the pet model representing this pet
+   */
   public toPetModel(): PetModel {
     return {
       id: this._id,

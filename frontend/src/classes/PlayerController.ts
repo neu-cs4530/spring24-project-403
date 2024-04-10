@@ -34,19 +34,23 @@ export default class PlayerController extends (EventEmitter as new () => TypedEm
     this._pets = pets || [];
   }
 
+  /**
+   * The pets of the player
+   * @returns the pets of the player
+   */
   get pets(): Pet[] | undefined {
     return this._pets;
   }
 
+  /**
+   * Set the pets of the player
+   * @param pets the pets of the player
+   */
   set pets(pets: Pet[] | undefined) {
     if (pets) {
       this._pets = pets;
       this.emit('petsUpdated', pets);
     }
-  }
-
-  get playerPets(): Pet[] | [] {
-    return this._pets;
   }
 
   set location(newLocation: PlayerLocation) {

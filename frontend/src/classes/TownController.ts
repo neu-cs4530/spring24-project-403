@@ -334,6 +334,12 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
     return this._interactableEmitter;
   }
 
+  /**
+   * Retrieve the pet adoption center controller that corresponds to a pet adoption
+   * center model
+   * @returns the pet adoption center controller
+   * @throws an error if no pet adoption center is found
+   */
   public get petAdoptionCenterArea() {
     const ret = this._interactableControllers.find(
       eachInteractable => eachInteractable instanceof PetAdoptionCenterController,
@@ -727,6 +733,8 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
 
   /**
    * Retrieve the pet adoption center controller that corresponds to a pet adoption center model, creating one if necessary
+   * @param petAdoptionCenter The pet adoption center model
+   * @returns the pet adoption center controller
    */
   public getPetAdoptionCenterController(
     petAdoptionCenter: PetAdoptionCenter,

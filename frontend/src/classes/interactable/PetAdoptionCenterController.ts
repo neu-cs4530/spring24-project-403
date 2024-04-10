@@ -1,8 +1,4 @@
-import {
-  Pet,
-  PetAdoptionCenter as PetAdoptionCenterModel,
-  Player,
-} from '../../types/CoveyTownSocket';
+import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
 import PlayerController from '../PlayerController';
 import TownController from '../TownController';
 import InteractableAreaController, {
@@ -39,8 +35,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   /**
    * Create a new PetAdoptionCenterController
-   * @param id
-   * @param townController
+   * @param id the unique identifier for this pet adoption center
+   * @param townController the TownController that manages this pet adoption center
    */
   constructor(
     id: string,
@@ -68,7 +64,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * Return the pets in the pet adoption center.
+   * Return the pets in the pet adoption center
+   * @returns the pets in the pet adoption center
    */
   public get pets(): Pet[] {
     if (!this._pets || this._pets.length === 0) {
@@ -77,6 +74,10 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
     return this._pets;
   }
 
+  /**
+   * Return the number of pets in the pet adoption center
+   * @returns the number of pets in the pet adoption center
+   */
   public get playerPetCount(): number {
     if (!this._pets || this._pets.length === 0) {
       this._townController.emitPetAdoptionCenterAreaUpdate(this);
@@ -86,7 +87,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   /**
    * Update this controller with new data of the pet adoption center model.
-   * @param newModel
+   * @param newModel the new data of the pet adoption center model
    */
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {
     this.occupants = newModel.occupants.map(occupantID =>
@@ -105,7 +106,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * Return the friendly name of the pet adoption center.
+   * Return the friendly name of the pet adoption center
+   * @returns the friendly name of the pet adoption center
    */
   public get friendlyName(): string {
     return this.id;
@@ -113,6 +115,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   /**
    * Return the type of the pet adoption center.
+   * @returns the type of the pet adoption center
    */
   public get type(): string {
     return PET_ADOPTION_CENTER_TYPE;
@@ -120,6 +123,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
 
   /**
    * A pet adoption center is empty if there are no occupants in it.
+   * @returns true if the pet adoption center is empty, false otherwise.
    */
   public isEmpty(): boolean {
     return this.occupants.length === 0;
@@ -128,6 +132,7 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   /**
    * Return a representation of this PetAdoptionCenterController that matches the
    * townService's representation and is suitable for transmitting over the network.
+   * @returns a representation of this PetAdoptionCenterController
    */
   public toInteractableAreaModel(): PetAdoptionCenterModel {
     return {
@@ -139,7 +144,8 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
   }
 
   /**
-   * Returns the player in the pet adoption center if there is one, or undefined otherwise
+   * The player in the pet adoption center if there is one, or undefined otherwise
+   * @returns the player in the pet adoption center if there is one, or undefined otherwise
    */
   private get _player(): PlayerController | undefined {
     const ourPlayer = this.occupants.find(

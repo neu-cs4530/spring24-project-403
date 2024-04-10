@@ -1,19 +1,32 @@
 import { BoundingBox } from '../../../types/CoveyTownSocket';
 import Interactable, { KnownInteractableTypes } from '../Interactable';
 
+/**
+ * A class representing the Pet Adoption Center
+ */
 export default class PetAdoptionCenter extends Interactable {
   private _infoTextBox?: Phaser.GameObjects.Text;
 
   private _isInteracting = false;
 
+  /**
+   * The type of the interactable
+   * @returns the type of the interactable
+   */
   getType(): KnownInteractableTypes {
     return 'petAdoptionCenter';
   }
 
+  /**
+   * Called when the interactable is removed from the scene
+   */
   removedFromScene(): void {
     super.removedFromScene();
   }
 
+  /**
+   * Called when the interactable is added to the scene
+   */
   addedToScene() {
     super.addedToScene();
     this.setTintFill();
@@ -27,6 +40,10 @@ export default class PetAdoptionCenter extends Interactable {
     );
   }
 
+  /**
+   * The bounding box of the interactable
+   * @returns the bounding box of the interactable
+   */
   public getBoundingBox(): BoundingBox {
     const { x, y, width, height } = this.getBounds();
     return { x, y, width, height };
@@ -48,10 +65,16 @@ export default class PetAdoptionCenter extends Interactable {
     this._infoTextBox.x = this.scene.scale.width / 2 - this._infoTextBox.width / 2;
   }
 
+  /**
+   * Called when the interactable overlaps with the player
+   */
   overlap(): void {
     this._showInfoBox();
   }
 
+  /**
+   * Called when the interactable stops overlapping with the player
+   */
   overlapExit(): void {
     this._infoTextBox?.setVisible(false);
     if (this._isInteracting) {
@@ -60,6 +83,9 @@ export default class PetAdoptionCenter extends Interactable {
     }
   }
 
+  /**
+   * Called when the player interacts with the interactable
+   */
   interact(): void {
     this._isInteracting = true;
   }

@@ -5,19 +5,24 @@ import { Pet as PetModel, PetType } from '../types/CoveyTownSocket';
  * An abstract class representing the basic attributes of a pet in the game
  */
 export default abstract class BasePet implements PetModel {
-  /** The unique identifier for this pet * */
+  /** The unique identifier for this pet */
   private readonly _id: string;
 
-  /** The pet's name, which is not guaranteed to be unique within the town
-   *  We will allow renaming of pets */
+  /** The pet's name, which is not guaranteed to be unique within the town  */
   protected _name?: string;
 
-  /** The unique identifier of the pet's owner * */
+  /** The unique identifier of the pet's owner */
   private _ownerId?: string;
 
-  /** The color of the pet * */
+  /** The color of the pet */
   protected _color?: string;
 
+  /**
+   * Create a new pet
+   * @param name the name of the pet
+   * @param ownerId the unique identifier of the pet's owner
+   * @param color the color of the pet
+   */
   constructor(name?: string, ownerId?: string, color?: string) {
     if (name && ownerId && color) {
       this._name = name;
@@ -107,7 +112,11 @@ export default abstract class BasePet implements PetModel {
    */
   public abstract makeSound(): string;
 
-  toPetModel(): PetModel {
+  /**
+   * Converts this pet to a pet model
+   * @returns the pet model representing this pet
+   */
+  public toPetModel(): PetModel {
     return {
       id: this._id,
       name: this._name,

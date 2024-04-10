@@ -68,6 +68,7 @@ export interface ConversationArea extends Interactable {
   topic?: string;
 };
 
+/* Types of pet we currently support */
 export type PetType = 'wolf' | 'bear' | 'mouse'
 export interface Pet {
   id: string;

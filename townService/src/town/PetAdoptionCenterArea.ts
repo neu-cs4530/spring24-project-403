@@ -19,6 +19,9 @@ import {
 } from '../types/CoveyTownSocket';
 import InteractableArea from './InteractableArea';
 
+/**
+ * A PetAdoptionCenter object represents a PetAdoptionCenter area object in the town map
+ */
 export default class PetAdoptionCenter extends InteractableArea {
   MAX_PETS = 5;
 
@@ -79,7 +82,7 @@ export default class PetAdoptionCenter extends InteractableArea {
 
   /**
    * Updates this pet adoption center area with information from the given model.
-   * @param param0 the model to update this pet adoption center from.
+   * @param pets the model to update this pet adoption center from.
    */
   public updateModel({ pets }: PetAdoptionCenterModel): void {
     if (!pets || pets.length === 0) {
@@ -113,6 +116,7 @@ export default class PetAdoptionCenter extends InteractableArea {
   /**
    * Convert this PetAdoptionCenterArea instance to a simple PetAdoptionCenter suitable for
    * transporting over a socket to a client.
+   * @returns a PetAdoptionCenterModel that represents this PetAdoptionCenterArea
    */
   public toModel(): PetAdoptionCenterModel {
     return {
@@ -127,7 +131,7 @@ export default class PetAdoptionCenter extends InteractableArea {
    * Creates a new Pet Adoption Center object that will represent a PetAdoptionCenter Area object in the town map.
    * @param mapObject An ITiledMapObject that represents a rectangle in which this pet adoption center area exists
    * @param townEmitter An emitter that can be used by this pet adoption center area to broadcast updates to players in the town
-   * @returns
+   * @returns A new PetAdoptionCenter object
    */
   public static fromMapObject(
     mapObject: ITiledMapObject,

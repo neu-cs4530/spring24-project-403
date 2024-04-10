@@ -254,6 +254,12 @@ export default class TownGameScene extends Phaser.Scene {
     this.coveyTownController.emitMovement(this._lastLocation);
   }
 
+  /**
+   * Update the pet sprite based on the player's location
+   * @param location The location of the player
+   * @param gameObjects The game objects of the player
+   * @param pet The pet of the player
+   */
   updatePet(location: PlayerLocation, gameObjects: PlayerGameObjects, pet: Pet) {
     const direction = location.rotation;
     const moving = location.moving;

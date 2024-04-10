@@ -18,6 +18,9 @@ import PlayerName from '../../SocialSidebar/PlayerName';
 import PlayerPets from '../../SocialSidebar/PlayerPets';
 import PlayerController from '../../../classes/PlayerController';
 
+/**
+ * A screen that allows players to transfer pets to other players
+ */
 export default function PetTransferScreen(): JSX.Element {
   const players = usePlayers();
   const { ourPlayer } = useTownController();
@@ -54,6 +57,10 @@ export default function PetTransferScreen(): JSX.Element {
     townController.emitPetTransfer(petToTransfer, selectedPlayer, myPlayer);
   };
 
+  /**
+   *
+   * @param playerID The ID of the player to transfer the pet to
+   */
   function handleTransfer(playerID: string) {
     const selectedPlayer = players.find(player => player.id === playerID);
     const petToTransfer = ourPlayer.pets?.find(pet => pet.id === petToTransferID);

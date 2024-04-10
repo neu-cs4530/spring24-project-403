@@ -1,10 +1,6 @@
 import assert from 'assert';
 import { mock, mockClear } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
-// if we need:
-// import Bear from '../Bear';
-// import Mouse from '../Mouse';
-// import Wolf from '../Wolf';
 import PlayerController from '../PlayerController';
 import TownController from '../TownController';
 import PetAdoptionCenterController, {

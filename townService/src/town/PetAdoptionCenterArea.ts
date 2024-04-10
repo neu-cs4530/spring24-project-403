@@ -49,12 +49,12 @@ export default class PetAdoptionCenter extends InteractableArea {
     this._pets = this._pets.filter(pet => pet.id !== petData.id);
     // replace the pet with a new one
     while (this._pets.length < this.MAX_PETS) {
-      this._pets.push(this.getRandomizedPets()[0]);
+      this._pets.push(this._getRandomizedPets()[0]);
     }
     this._emitAreaChanged();
   }
 
-  private getRandomizedPets(): Pet[] {
+  private _getRandomizedPets(): Pet[] {
     const pets: Pet[] = [];
     const bearColors: BearColor[] = ['black', 'brown'];
     const mouseColors: MouseColor[] = ['white', 'brown', 'grey'];
@@ -77,14 +77,13 @@ export default class PetAdoptionCenter extends InteractableArea {
     return pets;
   }
 
-
   /**
    * Updates this pet adoption center area with information from the given model.
    * @param param0 the model to update this pet adoption center from.
    */
   public updateModel({ pets }: PetAdoptionCenterModel): void {
     if (!pets || pets.length === 0) {
-      this._pets = this.getRandomizedPets();
+      this._pets = this._getRandomizedPets();
     } else {
       this._pets = pets;
     }

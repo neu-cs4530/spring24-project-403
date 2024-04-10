@@ -7,7 +7,7 @@ type PlayerPetsProps = {
 };
 
 export default function PlayerPets({ player }: PlayerPetsProps): JSX.Element {
-  if (player.playerPets.length === 0) {
+  if (player.pets && player.pets.length === 0) {
     return (
       <UnorderedList spacing={3}>
         <ListItem>No pets</ListItem>
@@ -17,11 +17,12 @@ export default function PlayerPets({ player }: PlayerPetsProps): JSX.Element {
 
   return (
     <UnorderedList spacing={3}>
-      {player.playerPets.map(pet => (
-        <ListItem key={pet.id}>
-          {pet.petType} (ID: {pet.id})
-        </ListItem>
-      ))}
+      {player.pets &&
+        player.pets.map(pet => (
+          <ListItem key={pet.id}>
+            {pet.petType} (ID: {pet.id})
+          </ListItem>
+        ))}
     </UnorderedList>
   );
 }

@@ -49,6 +49,11 @@ export default class Player {
     this.pets = [petData, ...this.pets];
   }
 
+  /**
+   * Adds a pet to the player's list of pets.
+   * @param pet The pet to be added.
+   * @returns The updated player model.
+   */
   public addPet(pet: Pet): PlayerModel {
     if ((this.pets as Pet[]).includes(pet)) {
       return this.toPlayerModel();
@@ -57,6 +62,11 @@ export default class Player {
     return this.toPlayerModel();
   }
 
+  /**
+   * Removes a pet from the player's list of pets.
+   * @param petData The pet to be removed.
+   * @returns The updated player model.
+   */
   public removePet(petData: Pet): PlayerModel {
     this.pets = (this.pets as Pet[]).filter(pet => pet.id !== petData.id);
     return this.toPlayerModel();

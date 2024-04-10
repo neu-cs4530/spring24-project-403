@@ -55,5 +55,19 @@ describe('BasePet', () => {
     expect(pet.petType).toBe('wolf');
     expect(pet.makeSound()).toBe('Awooo!');
   });
-  // TODO: test errors
+  it('should throw an error when creating a new bear with invalid constructor arguments', () => {
+    expect(() => new Bear('Yogi', '123', undefined)).toThrowError(
+      'Invalid constructor arguments for Bear object',
+    );
+  });
+  it('should throw an error when creating a new mouse with invalid constructor arguments', () => {
+    expect(() => new Mouse('Stuart', undefined, 'white')).toThrowError(
+      'Invalid constructor arguments for Mouse object',
+    );
+  });
+  it('should throw an error when creating a new wolf with invalid constructor arguments', () => {
+    expect(() => new Wolf(undefined, '123', 'grey')).toThrowError(
+      'Invalid constructor arguments for Wolf object',
+    );
+  });
 });

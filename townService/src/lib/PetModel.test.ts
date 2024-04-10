@@ -1,6 +1,4 @@
 import { nanoid } from 'nanoid';
-import exp from 'constants';
-import e from 'express';
 import BearModel from './BearModel';
 import MouseModel from './MouseModel';
 import WolfModel from './WolfModel';

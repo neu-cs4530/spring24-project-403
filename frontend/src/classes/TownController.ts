@@ -396,16 +396,6 @@ export default class TownController extends (EventEmitter as new () => TypedEmit
      */
     this._socket.on('playerChangedPets', changedPlayer => {
       const playerToUpdate = this.players.find(eachPlayer => eachPlayer.id === changedPlayer.id);
-      /**
-       * This code will be used to update the player's sprite when they adopt a pet. TODO: Implement this
-      if (playerToUpdate && playerToUpdate.gameObjects) {
-        const { sprite } = playerToUpdate.gameObjects;
-        sprite.setTexture(
-          `${petType}-atlas`,
-          `${petType}-${playerToUpdate.location.rotation}`,
-        );
-      }
-      */
       if (playerToUpdate) {
         playerToUpdate.pets = changedPlayer.pets;
       }

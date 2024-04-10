@@ -1,4 +1,3 @@
-import Accessory from './Accessory';
 import { nanoid } from 'nanoid';
 import { Pet as PetModel, PetType } from '../types/CoveyTownSocket';
 
@@ -18,8 +17,6 @@ export default abstract class BasePet implements PetModel {
 
   // protected abstract _color: string;
   protected _color?: string;
-
-  private readonly _accessories: Accessory[] = [];
 
   constructor(name?: string, ownerId?: string, color?: string) {
     if (name && ownerId && color) {
@@ -67,25 +64,8 @@ export default abstract class BasePet implements PetModel {
     this._color = value;
   }
 
-  get accessories(): Accessory[] {
-    return this._accessories;
-  }
-
   public getRandomColor(options: string[]): string {
     return options[Math.floor(Math.random() * options.length)];
-  }
-
-  public addAccessory(accessory: Accessory): void {
-    this._accessories.push(accessory);
-  }
-
-  public removeAccessory(accessory: Accessory): void {
-    const index = this._accessories.indexOf(accessory);
-    if (index > -1) {
-      this._accessories.splice(index, 1);
-    } else {
-      throw new Error('Pet does not have this accessory');
-    }
   }
 
   toPetModel(): PetModel {

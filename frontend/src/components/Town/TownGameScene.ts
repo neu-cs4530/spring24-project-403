@@ -5,7 +5,7 @@ import PlayerController, {
   PlayerGameObjects,
 } from '../../classes/PlayerController';
 import TownController from '../../classes/TownController';
-import { PlayerLocation } from '../../types/CoveyTownSocket';
+import { Pet, PlayerLocation } from '../../types/CoveyTownSocket';
 import { Callback } from '../VideoCall/VideoFrontend/types';
 import Interactable from './Interactable';
 import ConversationArea from './interactables/ConversationArea';
@@ -151,40 +151,40 @@ export default class TownGameScene extends Phaser.Scene {
     );
     // Load bear with color variations
     this.load.spritesheet(
-      'bears-black',
+      'bear-black',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/bears-black.png',
       { frameWidth: 32, frameHeight: 32 },
     );
     this.load.spritesheet(
-      'bears-brown',
+      'bear-brown',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/bears-brown.png',
       { frameWidth: 32, frameHeight: 32 },
     );
     // Load wolf with color variations
     this.load.spritesheet(
-      'wolves-grey',
+      'wolf-grey',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves-grey.png',
       { frameWidth: 32, frameHeight: 32 },
     );
     this.load.spritesheet(
-      'wolves-brown',
+      'wolf-brown',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/wolves-brown.png',
       { frameWidth: 32, frameHeight: 32 },
     );
 
     // Load mouse with color variations
     this.load.spritesheet(
-      'mice-white',
+      'mouse-white',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-white.png',
       { frameWidth: 32, frameHeight: 32 },
     );
     this.load.spritesheet(
-      'mice-brown',
+      'mouse-brown',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-brown.png',
       { frameWidth: 32, frameHeight: 32 },
     );
     this.load.spritesheet(
-      'mice-grey',
+      'mouse-grey',
       this._resourcePathPrefix + '/assets/atlas/pet-animate/mice-grey.png',
       { frameWidth: 32, frameHeight: 32 },
     );
@@ -254,7 +254,7 @@ export default class TownGameScene extends Phaser.Scene {
     this.coveyTownController.emitMovement(this._lastLocation);
   }
 
-  updatePet(location: PlayerLocation, gameObjects: PlayerGameObjects) {
+  updatePet(location: PlayerLocation, gameObjects: PlayerGameObjects, pet: Pet) {
     const direction = location.rotation;
     const moving = location.moving;
     const playerX = gameObjects.sprite.x;
@@ -265,8 +265,8 @@ export default class TownGameScene extends Phaser.Scene {
         .sprite(
           0,
           0,
-          'bears-black',
-          'bears-black-forward-walk', // will need to be updated to the pet type
+          '',
+          '', // will need to be updated to the pet type
         )
         .setSize(32, 32)
         .setOffset(PET_OFFSET_X, PET_OFFSET_Y)
@@ -276,9 +276,7 @@ export default class TownGameScene extends Phaser.Scene {
     } else {
       petSprite = gameObjects.petSprite;
     }
-    const petType = 'bears-black'; // need to make this so it updates to the player's pet type
-    let animKey = `${petType}-`;
-    assert(petSprite);
+    let animKey = `${pet.petType}-${pet.color}-`;
     switch (direction) {
       case 'left':
         petSprite.flipX = true;
@@ -295,9 +293,8 @@ export default class TownGameScene extends Phaser.Scene {
         animKey += 'backward-walk';
         break;
     }
-    if (moving) {
-      petSprite.anims.play(animKey, true);
-    } else {
+    petSprite.anims.play(animKey, true);
+    if (!moving) {
       petSprite.anims.stop();
     }
     petSprite.setX(playerX + PET_OFFSET_X);
@@ -317,7 +314,6 @@ export default class TownGameScene extends Phaser.Scene {
       body.setVelocity(0);
 
       const primaryDirection = this.getNewMovementDirection();
-      // add pet here
       switch (primaryDirection) {
         case 'left':
           body.setVelocityX(-MOVEMENT_SPEED);
@@ -391,14 +387,14 @@ export default class TownGameScene extends Phaser.Scene {
         this.coveyTownController.emitMovement(this._lastLocation);
       }
 
-      //Update the location for the labels of all of the other players
+      //Update the location for the labels and pets of all of the other players
       for (const player of this._players) {
         if (player.gameObjects?.label && player.gameObjects?.sprite.body) {
           player.gameObjects.label.setX(player.gameObjects.sprite.body.x);
           player.gameObjects.label.setY(player.gameObjects.sprite.body.y - 20);
 
           if (player.pets && player.pets[0]) {
-            this.updatePet(player.location, player.gameObjects);
+            this.updatePet(player.location, player.gameObjects, player.pets[0]);
           }
         }
       }
@@ -453,13 +449,13 @@ export default class TownGameScene extends Phaser.Scene {
     });
 
     const pets = [
-      'wolves-grey',
-      'wolves-brown',
-      'bears-black',
-      'bears-brown',
-      'mice-white',
-      'mice-brown',
-      'mice-grey',
+      'wolf-grey',
+      'wolf-brown',
+      'bear-black',
+      'bear-brown',
+      'mouse-white',
+      'mouse-brown',
+      'mouse-grey',
     ];
     const directions = ['right', 'forward', 'backward'];
     pets.forEach(pet => {

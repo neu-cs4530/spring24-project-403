@@ -293,9 +293,8 @@ export default class TownGameScene extends Phaser.Scene {
         animKey += 'backward-walk';
         break;
     }
-    if (moving) {
-      petSprite.anims.play(animKey, true);
-    } else {
+    petSprite.anims.play(animKey, true);
+    if (!moving) {
       petSprite.anims.stop();
     }
     petSprite.setX(playerX + PET_OFFSET_X);
@@ -315,7 +314,6 @@ export default class TownGameScene extends Phaser.Scene {
       body.setVelocity(0);
 
       const primaryDirection = this.getNewMovementDirection();
-      // add pet here
       switch (primaryDirection) {
         case 'left':
           body.setVelocityX(-MOVEMENT_SPEED);
@@ -389,7 +387,7 @@ export default class TownGameScene extends Phaser.Scene {
         this.coveyTownController.emitMovement(this._lastLocation);
       }
 
-      //Update the location for the labels of all of the other players
+      //Update the location for the labels and pets of all of the other players
       for (const player of this._players) {
         if (player.gameObjects?.label && player.gameObjects?.sprite.body) {
           player.gameObjects.label.setX(player.gameObjects.sprite.body.x);

@@ -1,7 +1,8 @@
 import BasePet from './BasePet';
-import { WolfColor } from '../types/CoveyTownSocket';
+import { WolfColor, PetType } from '../types/CoveyTownSocket';
 
 export default class Wolf extends BasePet {
+  /* The colors a wolf can be */
   static wolfColors: WolfColor[] = ['grey', 'brown'];
 
   constructor(name?: string, ownerId?: string, color?: WolfColor) {
@@ -18,6 +19,13 @@ export default class Wolf extends BasePet {
     this.petType = 'wolf';
   }
 
+  /* The type of pet */
+  readonly petType: PetType;
+
+  /**
+   * The sound the wolf makes
+   * @returns the sound the wolf makes
+   */
   public makeSound(): string {
     return 'Awooo!';
   }

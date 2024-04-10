@@ -1,7 +1,8 @@
 import BasePet from './BasePet';
-import { MouseColor } from '../types/CoveyTownSocket';
+import { MouseColor, PetType } from '../types/CoveyTownSocket';
 
 export default class Mouse extends BasePet {
+  /* The colors a mouse can be */
   static mouseColors: MouseColor[] = ['white', 'brown', 'grey'];
 
   constructor(name?: string, ownerId?: string, color?: MouseColor) {
@@ -17,6 +18,13 @@ export default class Mouse extends BasePet {
     this.petType = 'mouse';
   }
 
+  /* The type of pet */
+  readonly petType: PetType;
+
+  /**
+   * The sound the mouse makes
+   * @returns the sound the mouse makes
+   */
   public makeSound(): string {
     return 'Squeak!';
   }

@@ -16,11 +16,13 @@ import {
   ServerToClientEvents,
   TownJoinResponse,
   ViewingArea,
+  PetAdoptionCenter,
 } from '../types/CoveyTownSocket';
-import { isConversationArea, isViewingArea } from '../types/TypeUtils';
+import { isConversationArea, isPetAdoptionCenter, isViewingArea } from '../types/TypeUtils';
 import PlayerController from './PlayerController';
 import TownController, { TownEvents } from './TownController';
 import ViewingAreaController from './interactable/ViewingAreaController';
+import PetAdoptionCenterController from './interactable/PetAdoptionCenterController';
 
 /**
  * Mocks the socket-io client constructor such that it will always return the same
@@ -399,8 +401,71 @@ describe('TownController', () => {
           expect(listener).toBeCalledWith(viewingArea.video);
         });
       });
+
+      describe('Pet Adoption Center updates', () => {
+        function adoptionAreaOnTown() {
+          return {
+            ...(townJoinResponse.interactables.find(eachInteractable =>
+              isPetAdoptionCenter(eachInteractable),
+            ) as PetAdoptionCenter),
+          };
+        }
+        let petAdoptionCenter: PetAdoptionCenter;
+        let petAdoptionCenterController: PetAdoptionCenterController;
+        let eventListener: (update: PetAdoptionCenter) => void;
+        beforeEach(() => {
+          petAdoptionCenter = adoptionAreaOnTown();
+          const controller = testController.petAdoptionCenterArea;
+          if (!controller) {
+            fail(
+              `Could not find pet adoption center controller for pet adoption area ${petAdoptionCenter.id}`,
+            );
+          }
+          petAdoptionCenterController = controller;
+        });
+        it('Updates the pet adoption center model', () => {
+          petAdoptionCenter.pets = [];
+          petAdoptionCenter.pets.push({
+            id: nanoid(),
+            name: nanoid(),
+            ownerId: nanoid(),
+            color: nanoid(),
+            petType: 'bear',
+          });
+          const petEventListener = getEventListener(mockSocket, 'interactableUpdate');
+          petEventListener(petAdoptionCenter);
+          expect(petAdoptionCenterController.toInteractableAreaModel()).toEqual(petAdoptionCenter);
+        });
+        it('Emits an occupantsChange event if the occupants changed', () => {
+          petAdoptionCenter.occupants = [
+            townJoinResponse.userID,
+            townJoinResponse.currentPlayers[1].id,
+          ];
+
+          //Set up an occupantsChange listener
+          const occupantsChangeListener = jest.fn();
+          petAdoptionCenterController.addListener('occupantsChange', occupantsChangeListener);
+
+          // Perform the update
+          const petEventListener = getEventListener(mockSocket, 'interactableUpdate');
+          petEventListener(petAdoptionCenter);
+
+          expect(occupantsChangeListener).toBeCalledTimes(1);
+        });
+        it('Does not emit an occupantsChange if the occupants have not changed', () => {
+          //Set up an occupantsChange listener
+          const occupantsChangeListener = jest.fn();
+          petAdoptionCenterController.addListener('occupantsChange', occupantsChangeListener);
+
+          const petEventListener = getEventListener(mockSocket, 'interactableUpdate');
+          petEventListener(petAdoptionCenter);
+
+          expect(occupantsChangeListener).not.toBeCalled();
+        });
+      });
     });
   });
+
   describe('Processing events that are received over the socket from the townService', () => {
     let testPlayer: PlayerModel;
     let testPlayerPlayersChangedFn: jest.MockedFunction<TownEvents['playersChanged']>;

@@ -175,6 +175,12 @@ export async function mockTownControllerConnection(
       occupants: [],
       type: 'ConversationArea',
     } as ConversationArea);
+    responseToSendController.interactables.push({
+      id: nanoid(),
+      pets: [],
+      occupants: [],
+      type: 'PetAdoptionCenter',
+    } as ConversationArea);
     for (let i = 0; i < 10; i++) {
       const playerID = nanoid();
       responseToSendController.currentPlayers.push({

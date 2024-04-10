@@ -1,4 +1,8 @@
-import { Pet, PetAdoptionCenter as PetAdoptionCenterModel } from '../../types/CoveyTownSocket';
+import {
+  Pet,
+  PetAdoptionCenter as PetAdoptionCenterModel,
+  Player,
+} from '../../types/CoveyTownSocket';
 import PlayerController from '../PlayerController';
 import TownController from '../TownController';
 import InteractableAreaController, {
@@ -63,6 +67,13 @@ export default class PetAdoptionCenterController extends InteractableAreaControl
       this._townController.emitPetAdoptionCenterAreaUpdate(this);
     }
     return this._pets;
+  }
+
+  public get playerPetCount(): number {
+    if (!this._pets || this._pets.length === 0) {
+      this._townController.emitPetAdoptionCenterAreaUpdate(this);
+    }
+    return this._player?.pets?.length || 0;
   }
 
   protected _updateFrom(newModel: PetAdoptionCenterModel): void {

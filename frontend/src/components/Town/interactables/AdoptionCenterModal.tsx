@@ -30,7 +30,9 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   const coveyTownController = useTownController();
   const adoptionCenter = adoptionCenterController?.toInteractableAreaModel();
   const [pets, setPets] = useState<Pet[]>([]);
-  const [adoptedPetsCount, setAdoptedPetsCount] = useState<number>(0);
+  const [adoptedPetsCount, setAdoptedPetsCount] = useState<number>(
+    adoptionCenterController.playerPetCount,
+  );
   const maxPetsAllowed = 5;
 
   useEffect(() => {
@@ -47,6 +49,7 @@ function PetAdoptionArea({ interactableID }: { interactableID: InteractableID })
   useEffect(() => {
     const handleUpdate = (petAdoptionCenter: PetAdoptionCenterController) => {
       setPets(petAdoptionCenter.pets);
+      setAdoptedPetsCount(petAdoptionCenter.playerPetCount);
     };
 
     adoptionCenterController.addListener('update', handleUpdate);
